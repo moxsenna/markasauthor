@@ -6,7 +6,7 @@
 | **Harga** | Rp1.500.000 (sekali bayar) |
 | **Posisi dalam lini** | Tier entry / jalur turun dari Author Homebase. Bukan produk yang dipromosikan — ditawarkan sebagai jawaban saat calon klien keberatan harga hero. |
 | **Target produksi** | ≤ 2 hari kerja per situs (setelah materi lengkap) |
-| **Status dokumen** | Draft v1 — 2026-07-06 |
+| **Status dokumen** | Draft v1.1 — 2026-07-15 |
 
 ---
 
@@ -60,7 +60,7 @@ Situs **one-page** (single scroll) dengan section berikut, berurutan:
 - Satu formulir: **nama + nomor WhatsApp** (email opsional) → tersimpan otomatis ke **Google Sheet milik klien** (lihat §4).
 - Tombol "Ikuti Saluran WhatsApp [Nama Pena]" bersebelahan — jalur kabar cepat untuk pembaca.
 - Copy standar: "Jadi yang pertama tahu karya terbaru [Nama Pena]".
-- Tanpa lead magnet, tanpa kabar rilis terkelola (fitur hero).
+- Tanpa lead magnet; tanpa kabar rilis **multi-kanal terotomatisasi** (fitur hero). Draft pesan WA via Assistant/Dashboard (§3.7) = post manual penulis.
 
 ### 3.5 Collaboration Kit (ringkas)
 - Section "Kerja Sama": bio pendek (±100 kata), genre/spesialisasi, statistik ringkas (total pembaca/karya), kontak kerja sama (email/WA manajemen).
@@ -69,6 +69,8 @@ Situs **one-page** (single scroll) dengan section berikut, berurutan:
 ### 3.6 Footer
 - Link semua medsos + KBM.
 - Badge "Dibangun oleh MarkasAuthor" → link ke situs MarkasAuthor. **(Wajib di semua tier — mesin akuisisi.)**
+
+Public site tetap **one-page**. §3.7 = surface operasional terpisah (add-on), bukan section scroll publik.
 
 ### 3.7 MarkasAuthor Assistant + Dashboard Penulis (ops — semua tier)
 
@@ -110,7 +112,7 @@ Harga add-on bulanan: lihat paket Care / Active / Managed di PRD Author Homebase
 | Formulir pembaca | Nama + nomor WA → **Google Sheet milik klien** (Google Form embed atau Apps Script endpoint) + tombol ikuti **Saluran WhatsApp** penulis | Pembaca & penulis KBM hidup di WA, bukan email; Sheet = daftar kontak yang benar-benar dimiliki klien; tanpa backend buatan sendiri, gratis selamanya |
 | Analytics | Cloudflare Web Analytics (akun klien) | Gratis, tanpa cookie banner |
 
-**Yang sengaja TIDAK dipakai:** CMS (Notion/Supabase/Decap), database custom, backend/Workers custom. Update konten = jasa (retainer atau per-request), bukan self-service.
+**Yang sengaja TIDAK dipakai:** CMS bebas (Notion/Supabase/Decap), database custom untuk public site. Update konten **publik penuh** di luar allowlist = jasa (retainer/per-request). **Ops allowlist** (Assistant/Dashboard add-on: Update Bab, draft WA, dll. — lihat §3.7) adalah self-service terbatas, bukan edit HTML/source bebas.
 
 ---
 
@@ -136,6 +138,8 @@ Harga add-on bulanan: lihat paket Care / Active / Managed di PRD Author Homebase
 - [ ] Lighthouse mobile: Perf ≥ 95, SEO ≥ 95.
 - [ ] Tidak ada satu pun konten chapter/cerita ter-host di situs.
 - [ ] Surat Kepemilikan Aset ditandatangani kedua pihak.
+- [ ] (Bila klien ambil add-on Assistant) alur Update Bab di bot **atau** dashboard: preview → konfirmasi → undo teruji; tidak ada edit HTML bebas.
+- [ ] Draft pesan Saluran WA bisa disalin; penulis memposting manual.
 
 ---
 
@@ -148,7 +152,7 @@ Harga add-on bulanan: lihat paket Care / Active / Managed di PRD Author Homebase
 | Konten bonus / deleted scene | Upgrade → Author Homebase |
 | Peta baca multi-seri | Upgrade → Author Homebase |
 | Halaman semesta/tokoh | Signature Universe / add-on Wiki |
-| Edit konten sendiri (CMS) | Add-on khusus Signature |
+| Edit konten bebas / CMS web | Signature (atau di luar scope); ops allowlist §3.7 ≠ CMS |
 | Update rutin oleh kita | Retainer "Penjaga Rumah" Rp150rb/bln |
 
 ## 8. Jalur Upgrade
