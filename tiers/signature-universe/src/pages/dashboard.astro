@@ -17,80 +17,55 @@ const initialTab = (Astro.url.searchParams.get('tab') || 'ringkasan') as string;
 ---
 
 <OpsLayout penName={author.penName} activeTab={initialTab}>
-  <!-- Nav slot -->
-  <slot name="nav">
-    <OpsNav activeTab={initialTab} />
-  </slot>
+  <OpsNav slot="nav" activeTab={initialTab} />
 
-  <!-- Tab Content -->
   <div id="tab-content">
-    {
-      initialTab === 'ringkasan' && (
-        <TabRingkasan penName={author.penName} tagline={author.tagline} />
-      )
-    }
-    {
-      initialTab === 'rilis' && (
-        <TabRilis works={author.works} fallbackChapters={author.latestChapters} />
-      )
-    }
-    {
-      initialTab === 'database' && (
-        <TabDatabase readers={author.demoReaders} />
-      )
-    }
-    {
-      initialTab === 'bonus' && (
-        <TabBonus bonuses={author.bonuses} />
-      )
-    }
-    {
-      initialTab === 'peta' && (
-        <TabPeta readingMain={author.readingMain} readingSide={author.readingSide} />
-      )
-    }
-    {
-      initialTab === 'karya' && (
-        <TabKarya works={author.works} />
-      )
-    }
-    {
-      initialTab === 'tema' && <TabTema />
-    }
-    {
-      initialTab === 'universe' && <TabUniverse />
-    }
+    {initialTab === 'ringkasan' && (
+      <TabRingkasan penName={author.penName} tagline={author.tagline} />
+    )}
+    {initialTab === 'rilis' && (
+      <TabRilis works={author.works} fallbackChapters={author.latestChapters} />
+    )}
+    {initialTab === 'database' && <TabDatabase readers={author.demoReaders} />}
+    {initialTab === 'bonus' && <TabBonus bonuses={author.bonuses} />}
+    {initialTab === 'peta' && (
+      <TabPeta readingMain={author.readingMain} readingSide={author.readingSide} />
+    )}
+    {initialTab === 'karya' && <TabKarya works={author.works} />}
+    {initialTab === 'tema' && <TabTema />}
+    {initialTab === 'universe' && <TabUniverse />}
+    {!['ringkasan', 'rilis', 'database', 'bonus', 'peta', 'karya', 'tema', 'universe'].includes(
+      initialTab,
+    ) && (
+      <div style="text-align:center;padding:80px 20px">
+        <h2 style="font-family:'Playfair Display',serif;font-size:24px;color:#3B2A28;margin-bottom:8px">
+          Tab tidak dikenal
+        </h2>
+        <p style="color:#7A5a50;font-size:14px">Pilih menu di sidebar kiri.</p>
+      </div>
+    )}
   </div>
 
   <script>
-    // Client-side: tab switching via nav buttons
-    // This handles the sidebar nav clicks and query param updates
-
-    interface NavBtn extends HTMLButtonElement {
-      dataset: DOMStringMap & { tab?: string };
-    }
-
     function switchTab(tab: string) {
       const url = new URL(window.location.href);
       url.searchParams.set('tab', tab);
       window.location.href = url.toString();
     }
 
-    // Attach click handlers to nav buttons
-    document.querySelectorAll<NavBtn>('.ops-nav-btn').forEach((btn) => {
+    document.querySelectorAll<HTMLButtonElement>('.ops-nav-btn').forEach((btn) => {
       const tab = btn.dataset.tab;
-      if (tab) {
-        btn.addEventListener('click', () => {
-          switchTab(tab);
-        });
+      const enabled = btn.dataset.enabled !== 'false';
+      if (tab && enabled) {
+        btn.addEventListener('click', () => switchTab(tab));
       }
     });
 
-    // Attach click handlers to inline CTA links that use ?tab=
-    document.querySelectorAll<HTMLAnchorElement>('[data-go-rilis]').forEach((a) => {
+    document.querySelectorAll<HTMLAnchorElement>('[data-go-tab]').forEach((a) => {
       a.addEventListener('click', (e) => {
         e.preventDefault();
-        switchTab('rilis');
+        const tab = a.dataset.goTab;
+        if (tab) switchTab(tab);
       });
     });
   </script>

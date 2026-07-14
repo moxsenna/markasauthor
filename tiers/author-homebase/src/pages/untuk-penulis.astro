@@ -9,9 +9,7 @@ const author = authorData as AuthorData;
 ---
 
 <OpsLayout penName={author.penName} activeTab="telegram">
-  <slot name="nav">
-    <OpsNav activeTab="telegram" />
-  </slot>
+  <OpsNav slot="nav" activeTab="telegram" />
 
   <div style="margin-bottom:12px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
     <a

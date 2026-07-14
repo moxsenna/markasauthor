@@ -9,22 +9,20 @@ const author = authorData as AuthorData;
 ---
 
 <OpsLayout penName={author.penName} activeTab="telegram">
-  <slot name="nav">
-    <OpsNav activeTab="telegram" />
-  </slot>
+  <OpsNav slot="nav" activeTab="telegram" />
 
   <div style="margin-bottom:12px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
     <a
       href="/dashboard"
       style="font-size:13px;color:#7A5A50;text-decoration:none;display:inline-flex;align-items:center;gap:4px"
     >
-      &larr; Dashboard
+      ← Dashboard
     </a>
     <a
       href="/"
       style="font-size:13px;color:#7A5A50;text-decoration:none;display:inline-flex;align-items:center;gap:4px"
     >
-      &larr; Beranda
+      ← Beranda
     </a>
   </div>
 
@@ -34,7 +32,8 @@ const author = authorData as AuthorData;
     Simulasi Telegram
   </h1>
   <p style="margin:0 0 20px;max-width:620px;font-size:14px;line-height:1.6;color:#7A5A50">
-    Notifikasi &amp; aksi cepat dari HP &mdash; simulasi frontend, bukan bot asli. Data disimpan di <em>localStorage</em>.
+    Notifikasi &amp; aksi cepat dari HP — simulasi frontend, bukan bot asli. Data disimpan di
+    <em>localStorage</em>.
   </p>
 
   <TelegramMock />

@@ -13,23 +13,27 @@ export interface Props {
 
 const { activeTab } = Astro.props;
 
+// Same order as prototype; locked items visible for upgrade story
 const navItems: NavItem[] = [
   { key: 'ringkasan', label: 'Ringkasan', enabled: true },
   { key: 'rilis', label: 'Kabar Rilis', enabled: true },
-  { key: 'database', label: 'Database', enabled: true },
-  { key: 'tema', label: 'Tema', enabled: true },
+  { key: 'karya', label: 'Rak Buku', enabled: false },
   { key: 'bonus', label: 'Ruang Bonus', enabled: false },
   { key: 'peta', label: 'Peta Baca', enabled: false },
+  { key: 'database', label: 'Database Pembaca', enabled: true },
+  { key: 'tema', label: 'Tema Situs', enabled: true },
 ];
 ---
 
-<nav style="display:flex;flex-direction:column;gap:4px;padding-top:16px">
+<nav style="display:flex;flex-direction:column;gap:4px;padding-top:16px;flex:1;overflow-y:auto">
   {
     navItems.map((item) => {
       const isActive = activeTab === item.key;
       return (
         <button
+          type="button"
           data-tab={item.key}
+          data-enabled={item.enabled ? 'true' : 'false'}
           class="ops-nav-btn"
           style={{
             display: 'flex',
@@ -46,6 +50,7 @@ const navItems: NavItem[] = [
             fontWeight: isActive ? 600 : 400,
             color: isActive ? '#5C2430' : item.enabled ? '#D9C4BB' : '#8A7670',
             opacity: item.enabled ? 1 : 0.55,
+            width: '100%',
           }}
         >
           <span
@@ -60,8 +65,8 @@ const navItems: NavItem[] = [
                   : 'rgba(217,196,187,.12)',
               flex: 'none',
             }}
-          ></span>
-          <span>{item.label}</span>
+          />
+          <span style="flex:1">{item.label}</span>
           {!item.enabled && <UpgradeLock />}
         </button>
       );
