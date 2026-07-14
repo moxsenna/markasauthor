@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHeader from '../../components/public/SiteHeader.astro';
+import SiteFooter from '../../components/public/SiteFooter.astro';
+import authorData from '../../data/author.json';
+import type { AuthorData } from '../../lib/types';
+
+const author = authorData as AuthorData;
+const universe = author.universe;
+
+if (!universe) {
+  return Astro.redirect('/universe');
+}
+
+const { name, locations } = universe;
+---
+
+<BaseLayout
+  title={`Peta — Semesta ${name} — ${author.penName}`}
+  description={`Lokasi-lokasi dalam semesta ${name}`}
+>
+  <SiteHeader penName={author.penName} currentPath="/universe" />
+
+  <main class="flex flex-col" style="background:linear-gradient(180deg,#F4E3DE 0%,#FBF6EF 100%)">
+    <section class="pt-9 pb-2 px-5">
+      <a href="/universe" class="text-[11px] tracking-[.1em] text-faint font-semibold no-underline">&larr; Semesta {name}</a>
+      <h1 class="mt-2 mb-[10px] font-serif text-[32px] font-semibold leading-[1.2] text-ink">
+        Peta Semesta
+      </h1>
+      <p class="m-0 mb-6 text-[15px] leading-[1.7] text-ink-soft">
+        Lokasi-lokasi yang membentuk latar cerita di semesta ini.
+      </p>
+    </section>
+
+    <section class="px-5 pb-11">
+      <div class="flex flex-col gap-4">
+        {locations.map((loc) => (
+          <div
+            class="bg-card border border-rose/16 rounded-[18px] p-[18px_20px] shadow-[0_2px_10px_rgba(92,36,48,.06)]"
+          >
+            <div class="flex items-center gap-[12px] mb-[10px]">
+              <div class="flex-none w-[44px] h-[44px] rounded-[14px] bg-blush border border-rose/20 flex items-center justify-center text-[20px]">
+                &#128205;
+              </div>
+              <h3 class="m-0 font-serif text-[18px] font-semibold text-ink leading-[1.3]">{loc.name}</h3>
+            </div>
+            <p class="m-0 text-[14px] leading-[1.65] text-ink-soft">
+              {loc.blurb}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Back -->
+    <section class="px-5 pb-11">
+      <a
+        href="/universe"
+        class="flex items-center justify-center min-h-[50px] bg-rose text-paper rounded-[14px] text-[15px] font-semibold no-underline"
+      >
+        Kembali ke Semesta &larr;
+      </a>
+    </section>
+  </main>
+
+  <SiteFooter author={author} />
+</BaseLayout>

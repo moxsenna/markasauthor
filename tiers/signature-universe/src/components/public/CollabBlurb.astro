@@ -1,0 +1,88 @@
+---
+import type { AuthorData } from '../../lib/types';
+
+export interface Props {
+  author: AuthorData;
+  /** Show the PDF download section; Starter=false */
+  full?: boolean;
+}
+
+const { author, full = false } = Astro.props;
+const { collab } = author;
+---
+
+<section class="pt-8 px-5 pb-5">
+  <h2 class="m-0 mb-3 font-serif text-[22px] font-semibold text-ink">Kerja Sama</h2>
+
+  <!-- Stats grid -->
+  <div class="grid grid-cols-3 gap-[10px] mb-7">
+    {collab.stats.map((s) => (
+      <div class="bg-card border border-rose/16 rounded-[14px] p-[14px_10px] text-center">
+        <p class="m-0 font-serif text-[22px] font-bold text-rose-deep leading-[1.1]">
+          {s.value}
+        </p>
+        <p class="mt-[5px] mb-0 text-[11px] leading-[1.4] text-faint">
+          {s.label}
+        </p>
+      </div>
+    ))}
+  </div>
+
+  <!-- Open to -->
+  <h3 class="m-0 mb-3 font-serif text-[18px] font-semibold text-ink">
+    Kerja sama yang dibuka
+  </h3>
+  <div class="flex flex-col gap-2 mb-7">
+    {collab.openTo.map((item) => (
+      <div class="flex items-center gap-3 bg-blush rounded-[12px] py-[13px] px-4">
+        <span class="w-[6px] h-[6px] rounded-full bg-rose flex-none"></span>
+        <span class="text-[15px] text-[#4A3833]">{item}</span>
+      </div>
+    ))}
+  </div>
+
+  <!-- PDF + management contact (full mode only for hero/signature) -->
+  {full && (
+    <>
+      <h3 class="m-0 mb-3 font-serif text-[22px] font-semibold text-ink">
+        Aset media
+      </h3>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1 aspect-[3/4] rounded-[12px] border border-rose/18 flex items-center justify-center" style="background:repeating-linear-gradient(45deg,#EBD8D2 0 8px,#F4E7E2 8px 16px)">
+          <span class="font-mono text-[10px] text-faint text-center">foto HD penulis<br/>(unduh)</span>
+        </div>
+        <div class="flex-1 aspect-[3/4] rounded-[12px] border border-rose/18 flex items-center justify-center" style="background:repeating-linear-gradient(45deg,#EBD8D2 0 8px,#F4E7E2 8px 16px)">
+          <span class="font-mono text-[10px] text-faint text-center">mockup cover<br/>(unduh)</span>
+        </div>
+      </div>
+      <a
+        href="/assets/collab-kit-placeholder.pdf"
+        class="flex items-center justify-center gap-2 min-h-[52px] bg-rose text-paper rounded-[14px] text-[15px] font-semibold no-underline mb-2"
+      >
+        Unduh Collaboration Kit (PDF)
+      </a>
+      <p class="m-0 mb-8 text-[12px] text-faint text-center">
+        {collab.kitNote}
+      </p>
+    </>
+  )}
+
+  <!-- Management WA card -->
+  <div class="bg-rose-deep rounded-[22px] py-[26px] px-6 text-blush text-center">
+    <h3 class="m-0 mb-2 font-serif text-[22px] font-semibold text-paper">
+      Kontak manajemen
+    </h3>
+    <p class="m-0 mb-4 text-[14px] leading-[1.6] text-[#E3C6C0]">
+      Untuk penawaran penerbitan, adaptasi, atau kolaborasi brand &mdash; hubungi
+      langsung via WhatsApp. Dibalas dalam 1&ndash;2 hari kerja.
+    </p>
+    <a
+      href={author.managementWa}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="flex items-center justify-center min-h-[52px] bg-wa text-paper rounded-[14px] text-[16px] font-semibold no-underline"
+    >
+      WhatsApp Manajemen
+    </a>
+  </div>
+</section>

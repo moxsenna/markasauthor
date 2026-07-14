@@ -1,0 +1,122 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/public/SiteHeader.astro';
+import HeroIdentity from '../components/public/HeroIdentity.astro';
+import Bookshelf from '../components/public/Bookshelf.astro';
+import AuthorTimeline from '../components/public/AuthorTimeline.astro';
+import ReaderForm from '../components/public/ReaderForm.astro';
+import CollabBlurb from '../components/public/CollabBlurb.astro';
+import SiteFooter from '../components/public/SiteFooter.astro';
+import authorData from '../data/author.json';
+
+const author = authorData as import('../lib/types').AuthorData;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: author.penName,
+  description: author.bioShort,
+  url: Astro.url.href,
+  sameAs: author.socials.map((s) => s.url),
+};
+---
+
+<BaseLayout
+  title={`${author.penName} — ${author.tagline}`}
+  description={author.bioShort}
+  jsonLd={jsonLd}
+>
+  <SiteHeader penName={author.penName} currentPath="/" />
+
+  <main class="flex flex-col">
+    <HeroIdentity
+      author={author}
+      showChapterCard={true}
+      showReadingCta={true}
+    />
+
+    <!-- Bonus teaser section (from prototype: links to /bonus) -->
+    <section class="mt-10 bg-gradient-to-b from-blush to-[#EFD8D2] border-t border-b border-rose/12 py-8 px-5">
+      <span class="inline-flex items-center gap-2 text-[11px] tracking-[.16em] text-alert font-semibold">
+        <span class="w-2 h-2 rounded-full bg-alert"></span>
+        GRATIS &middot; KHUSUS PEMBACA
+      </span>
+      <h2 class="mt-[10px] mb-2 font-serif text-[28px] font-semibold leading-[1.2] text-ink">
+        Ruang Bonus Pembaca
+      </h2>
+      <p class="m-0 mb-[18px] text-[15px] leading-[1.7] text-ink-soft">
+        Adegan yang dipotong, sudut pandang tokoh lain, dan surat yang tak pernah dikirim &mdash; tidak ada di KBM, hanya di sini. Cukup tinggalkan nama dan nomor WhatsApp untuk membukanya.
+      </p>
+
+      <!-- Bonus teaser cards (locked preview from data) -->
+      <div class="flex flex-col gap-[10px] mb-[18px]">
+        {author.bonuses.map((b) => (
+          <a href="/bonus" class="flex items-center gap-3 bg-card border border-rose/18 rounded-[14px] py-[14px] px-4 no-underline shadow-[0_2px_10px_rgba(92,36,48,.07)] hover:shadow-[0_4px_14px_rgba(92,36,48,.12)] transition-shadow">
+            <div class="flex-1 min-w-0">
+              <span class="text-[10px] tracking-[.14em] text-faint font-semibold">{b.jenis}</span>
+              <h3 class="mt-[3px] mb-0 font-serif text-[16px] font-semibold leading-[1.3] text-ink">{b.title}</h3>
+            </div>
+            <span class="flex-none text-[9px] tracking-[.1em] font-semibold text-faint border border-rose/25 rounded-full py-[5px] px-[9px]">
+              TERKUNCI
+            </span>
+          </a>
+        ))}
+      </div>
+      <a
+        href="/bonus"
+        class="flex items-center justify-center min-h-[54px] w-full bg-rose text-paper rounded-[14px] text-[16px] font-semibold no-underline shadow-[0_6px_18px_rgba(92,36,48,.28)]"
+      >
+        Buka Bonus Gratis &rarr;
+      </a>
+      <p class="mt-3 mb-0 text-[12px] text-muted text-center">
+        {author.bonuses.length} konten eksklusif &middot; bertambah seiring cerita berjalan
+      </p>
+    </section>
+
+    <Bookshelf works={author.works} />
+
+    <!-- Reading CTA banner -->
+    {author.readingMain && author.readingMain.length > 0 && (
+      <section class="mt-8 mx-5 bg-card border border-rose/16 rounded-[22px] py-7 px-6 text-center">
+        <h2 class="m-0 mb-2 font-serif text-[22px] font-semibold text-ink leading-[1.25]">
+          Mulai baca dari mana?
+        </h2>
+        <p class="m-0 mb-[18px] text-[14px] leading-[1.6] text-muted">
+          Ikuti panduan urutan baca agar tidak kena bocoran cerita.
+        </p>
+        <a
+          href="/peta-baca"
+          class="flex items-center justify-center gap-2 min-h-[52px] bg-rose text-paper rounded-[14px] text-[15px] font-semibold no-underline"
+        >
+          Lihat Peta Baca &rarr;
+        </a>
+      </section>
+    )}
+
+    <AuthorTimeline timeline={author.timeline} />
+
+    <!-- Universe teaser -->
+    {author.universe && (
+      <section class="mt-8 mx-5 bg-card border border-rose/16 rounded-[22px] py-7 px-6 text-center">
+        <h2 class="m-0 mb-2 font-serif text-[22px] font-semibold text-ink leading-[1.25]">
+          Jelajahi Semesta &ldquo;{author.universe.name}&rdquo;
+        </h2>
+        <p class="m-0 mb-[18px] text-[14px] leading-[1.6] text-muted">
+          Tokoh, linimasa cerita, lokasi, dan trivia di balik layar semesta ini.
+        </p>
+        <a
+          href="/universe"
+          class="flex items-center justify-center gap-2 min-h-[52px] bg-rose text-paper rounded-[14px] text-[15px] font-semibold no-underline"
+        >
+          Buka Semesta &rarr;
+        </a>
+      </section>
+    )}
+
+    <ReaderForm />
+
+    <CollabBlurb author={author} full={true} />
+  </main>
+
+  <SiteFooter author={author} />
+</BaseLayout>

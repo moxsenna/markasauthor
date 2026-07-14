@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SiteHeader from '../../../components/public/SiteHeader.astro';
+import SiteFooter from '../../../components/public/SiteFooter.astro';
+import authorData from '../../../data/author.json';
+import type { AuthorData } from '../../../lib/types';
+
+const author = authorData as AuthorData;
+
+export async function getStaticPaths() {
+  const data = (await import('../../../data/author.json')).default as AuthorData;
+  const chars = data.universe?.characters ?? [];
+  return chars.map((ch) => ({
+    params: { slug: ch.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const universe = author.universe;
+const character = universe?.characters.find((ch) => ch.slug === slug);
+
+if (!character || !universe) {
+  return Astro.redirect('/universe/tokoh');
+}
+---
+
+<BaseLayout
+  title={`${character.name} — Tokoh — ${author.penName}`}
+  description={character.quote}
+>
+  <SiteHeader penName={author.penName} currentPath="/universe" />
+
+  <main class="flex flex-col">
+    <section class="pt-9 pb-10 px-5 bg-gradient-to-b from-blush to-paper">
+      <a href="/universe/tokoh" class="text-[11px] tracking-[.1em] text-faint font-semibold no-underline">&larr; Semua tokoh</a>
+
+      <!-- Avatar -->
+      <div class="mx-auto mt-6 mb-5 w-[88px] h-[88px] rounded-full bg-rose-deep flex items-center justify-center text-[36px] text-paper font-serif font-semibold shadow-[0_6px_18px_rgba(92,36,48,.25)]">
+        {character.name.charAt(0)}
+      </div>
+
+      <h1 class="m-0 mb-[6px] font-serif text-[32px] font-semibold leading-[1.2] text-ink text-center">
+        {character.name}
+      </h1>
+      <p class="m-0 mb-5 text-[14px] text-faint text-center">
+        {character.role}
+      </p>
+
+      <!-- Quote -->
+      <blockquote class="mx-0 my-6 px-5 py-4 border-l-[3px] border-rose rounded-r-[8px] bg-blush">
+        <p class="m-0 text-[16px] leading-[1.7] text-ink-soft italic">
+          &ldquo;{character.quote}&rdquo;
+        </p>
+      </blockquote>
+
+      <!-- Bio -->
+      <div class="mb-6">
+        <h2 class="m-0 mb-2 font-serif text-[18px] font-semibold text-ink">Biografi</h2>
+        <p class="m-0 text-[15px] leading-[1.7] text-ink-soft">
+          {character.bio}
+        </p>
+      </div>
+
+      <!-- Relations -->
+      {character.relations.length > 0 && (
+        <div>
+          <h2 class="m-0 mb-2 font-serif text-[18px] font-semibold text-ink">Terhubung dengan</h2>
+          <div class="flex flex-wrap gap-2">
+            {character.relations.map((rel) => {
+              const related = universe.characters.find((c) => c.name === rel);
+              if (related) {
+                return (
+                  <a
+                    href={`/universe/tokoh/${related.slug}`}
+                    class="inline-flex items-center gap-[6px] bg-card border border-rose/18 rounded-full py-[6px] px-[14px] text-[14px] text-ink no-underline hover:bg-blush transition-colors"
+                  >
+                    <span class="flex-none w-[24px] h-[24px] rounded-full bg-rose text-paper flex items-center justify-center text-[11px] font-semibold">{related.name.charAt(0)}</span>
+                    {related.name}
+                  </a>
+                );
+              }
+              return (
+                <span class="inline-flex items-center bg-card border border-rose/18 rounded-full py-[6px] px-[14px] text-[14px] text-muted">
+                  {rel}
+                </span>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </section>
+
+    <!-- Back to universe -->
+    <section class="px-5 pb-11">
+      <a
+        href="/universe"
+        class="flex items-center justify-center min-h-[50px] bg-rose text-paper rounded-[14px] text-[15px] font-semibold no-underline"
+      >
+        Kembali ke Semesta &larr;
+      </a>
+    </section>
+  </main>
+
+  <SiteFooter author={author} />
+</BaseLayout>

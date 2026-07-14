@@ -1,0 +1,88 @@
+---
+import type { AuthorData } from '../../lib/types';
+
+export interface Props {
+  author: AuthorData;
+  showChapterCard?: boolean;
+  showReadingCta?: boolean;
+}
+
+const { author, showChapterCard = false, showReadingCta = false } = Astro.props;
+const chapter = author.latestChapters?.[0];
+---
+
+<section class="pt-10 pb-9 px-6 text-center bg-gradient-to-b from-blush to-paper">
+  <!-- Photo placeholder -->
+  <div class="w-[124px] h-[124px] mx-auto mb-[18px] rounded-full border border-rose/25 p-[5px]">
+    <div class="w-full h-full rounded-full bg-[length:16px_16px] flex items-center justify-center" style="background-image:repeating-linear-gradient(45deg,#EBD8D2 0 8px,#F4E7E2 8px 16px)">
+      <span class="font-mono text-[10px] text-muted">foto penulis</span>
+    </div>
+  </div>
+
+  <!-- H1 -->
+  <h1 class="m-0 mb-2 font-serif text-[36px] font-semibold leading-[1.15] text-ink">
+    {author.penName}
+  </h1>
+
+  <!-- Tagline -->
+  <p class="m-0 mb-[14px] italic text-[16px] leading-[1.5] text-muted">
+    {author.tagline}
+  </p>
+
+  <!-- KBM Badge -->
+  <div class="inline-flex items-center gap-2 bg-rose-deep text-blush rounded-full px-4 py-2 text-[13px] tracking-[.03em]">
+    <span class="text-[#E4B87E]">&#9733;</span>
+    <span>Penulis Terlaris KBM App 2024</span>
+  </div>
+
+  <!-- Bio -->
+  <p class="mt-[18px] mb-[22px] mx-auto max-w-[320px] text-[16px] leading-[1.7] text-ink-soft">
+    {author.bioShort}
+  </p>
+
+  <!-- CTA buttons -->
+  <div class="flex flex-col gap-[10px] max-w-[320px] mx-auto">
+    <a
+      href={author.waChannelUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="flex items-center justify-center min-h-[52px] bg-wa text-paper rounded-[14px] text-[16px] font-semibold no-underline"
+    >
+      Ikuti Saluran WhatsApp
+    </a>
+
+    {showReadingCta && (
+      <a
+        href="/peta-baca"
+        class="flex items-center justify-center min-h-[52px] bg-transparent border border-[1.5px] border-rose text-rose rounded-[14px] font-body text-[16px] font-semibold no-underline cursor-pointer"
+      >
+        Mulai baca dari mana?
+      </a>
+    )}
+  </div>
+
+  <!-- Chapter card -->
+  {showChapterCard && chapter && (
+    <div class="mt-8 mx-auto max-w-[320px]">
+      <div class="bg-card border border-rose/16 rounded-[18px] p-5 shadow-[0_2px_12px_rgba(92,36,48,.06)] text-left">
+        <div class="flex items-center gap-2 mb-[10px]">
+          <span class="w-2 h-2 rounded-full bg-alert"></span>
+          <span class="text-[11px] tracking-[.14em] text-alert font-semibold">BARU TERBIT</span>
+          <span class="ml-auto text-[12px] text-faint">{chapter.date}</span>
+        </div>
+        <p class="m-0 mb-[2px] text-[13px] text-muted italic">{chapter.workTitle}</p>
+        <h3 class="m-0 mb-[14px] font-serif text-[21px] font-semibold leading-[1.3] text-ink">
+          {chapter.title}
+        </h3>
+        <a
+          href={chapter.kbmUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex items-center justify-center gap-[6px] min-h-[48px] bg-rose text-paper rounded-[12px] text-[15px] font-semibold no-underline"
+        >
+          Baca di KBM &rarr;
+        </a>
+      </div>
+    </div>
+  )}
+</section>

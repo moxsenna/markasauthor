@@ -1,0 +1,487 @@
+---
+import authorData from '../../data/author.json';
+import type { AuthorData } from '../../lib/types';
+
+const author = authorData as AuthorData;
+const works = author.works;
+const fallbackChapters = author.latestChapters;
+---
+
+<div
+  id="telegram-mock-root"
+  style="display:flex;justify-content:center;align-items:flex-start;padding:40px 16px 60px"
+>
+  <!-- Phone Frame -->
+  <div
+    style="width:100%;max-width:420px;background:#0F1A1C;border-radius:28px;overflow:hidden;box-shadow:0 12px 48px rgba(0,0,0,.28);border:2px solid #1C2E32"
+  >
+    <!-- Header Bar -->
+    <div
+      style="display:flex;align-items:center;gap:10px;padding:14px 18px;background:#1C2E32;border-bottom:1px solid rgba(255,255,255,.06)"
+    >
+      <div
+        style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#7A3341,#5C2430);flex:none;display:flex;align-items:center;justify-content:center;font-size:18px;color:#F4E3DE"
+      >
+        &#9993;
+      </div>
+      <div style="min-width:0">
+        <p
+          style="margin:0;font-size:15px;font-weight:600;color:#FBF6EF;font-family:'Playfair Display',Georgia,serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"
+        >
+          MarkasAuthor Assistant
+        </p>
+        <p style="margin:0;font-size:11px;color:#8AA0A4;font-style:italic">
+          Simulasi &mdash; bukan bot asli
+        </p>
+      </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div
+      id="tg-chat"
+      style="display:flex;flex-direction:column;gap:10px;padding:18px 14px;height:520px;overflow-y:auto;background:#0A1517"
+    >
+      <!-- Initial bot greeting -->
+      <div style="align-self:flex-start;max-width:85%">
+        <div
+          style="background:#1C2E32;color:#DDE4E6;border-radius:16px 16px 16px 4px;padding:12px 16px;font-family:Lora,Georgia,serif;font-size:14px;line-height:1.7"
+        >
+          Halo, <strong style="color:#E8C4C8">{author.penName}</strong>! &#128075;<br />
+          Ini simulasi notifikasi Telegram untuk Homebase Studio. Apa yang ingin dicoba?
+        </div>
+      </div>
+
+      <!-- Menu buttons -->
+      <div
+        id="tg-menu"
+        style="display:flex;flex-direction:column;gap:6px;padding-left:6px;max-width:85%;align-self:flex-start"
+      >
+        <button
+          class="tg-menu-btn"
+          data-tg-action="update"
+          style="background:rgba(122,51,65,.18);border:1px solid rgba(122,51,65,.3);border-radius:14px;padding:10px 18px;color:#E8C4C8;font-family:Lora,Georgia,serif;font-size:14px;cursor:pointer;text-align:left;transition:background .15s"
+          onmouseenter="this.style.background='rgba(122,51,65,.30)'"
+          onmouseleave="this.style.background='rgba(122,51,65,.18)'"
+        >
+          &#9997; Update Bab
+        </button>
+        <button
+          class="tg-menu-btn"
+          data-tg-action="riwayat"
+          style="background:rgba(122,51,65,.18);border:1px solid rgba(122,51,65,.3);border-radius:14px;padding:10px 18px;color:#E8C4C8;font-family:Lora,Georgia,serif;font-size:14px;cursor:pointer;text-align:left;transition:background .15s"
+          onmouseenter="this.style.background='rgba(122,51,65,.30)'"
+          onmouseleave="this.style.background='rgba(122,51,65,.18)'"
+        >
+          &#128196; Riwayat
+        </button>
+        <button
+          class="tg-menu-btn"
+          data-tg-action="bantuan"
+          style="background:rgba(122,51,65,.18);border:1px solid rgba(122,51,65,.3);border-radius:14px;padding:10px 18px;color:#E8C4C8;font-family:Lora,Georgia,serif;font-size:14px;cursor:pointer;text-align:left;transition:background .15s"
+          onmouseenter="this.style.background='rgba(122,51,65,.30)'"
+          onmouseleave="this.style.background='rgba(122,51,65,.18)'"
+        >
+          &#10067; Bantuan
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="application/json" id="tg-works-data">
+  {JSON.stringify(works)}
+</script>
+<script type="application/json" id="tg-fallback-data">
+  {JSON.stringify(fallbackChapters)}
+</script>
+
+<script>
+  import { publishChapter, buildWaMessage, loadDemoState } from '../../lib/demo-store';
+  import type { LatestChapter, Work } from '../../lib/types';
+
+  const worksEl = document.getElementById('tg-works-data');
+  const fallbackEl = document.getElementById('tg-fallback-data');
+  const works: Work[] = worksEl ? JSON.parse(worksEl.textContent || '[]') : [];
+  const fallbackChapters: LatestChapter[] = fallbackEl ? JSON.parse(fallbackEl.textContent || '[]') : [];
+
+  const chatContainer = document.getElementById('tg-chat')!;
+  const menuEl = document.getElementById('tg-menu')!;
+
+  let selectedWork: Work | null = null;
+  let chapterTitle = '';
+  let chapterTeaser = '';
+
+  function scrollToBottom() {
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+  }
+
+  function clearDynamic() {
+    const dynamic = chatContainer.querySelectorAll('.tg-dynamic');
+    dynamic.forEach((el) => el.remove());
+  }
+
+  function botBubble(html: string): HTMLDivElement {
+    const wrap = document.createElement('div');
+    wrap.className = 'tg-dynamic';
+    wrap.style.cssText = 'align-self:flex-start;max-width:85%';
+    const bubble = document.createElement('div');
+    bubble.style.cssText =
+      'background:#1C2E32;color:#DDE4E6;border-radius:16px 16px 16px 4px;padding:12px 16px;font-family:Lora,Georgia,serif;font-size:14px;line-height:1.7';
+    bubble.innerHTML = html;
+    wrap.appendChild(bubble);
+    return wrap;
+  }
+
+  function userBubble(text: string): HTMLDivElement {
+    const wrap = document.createElement('div');
+    wrap.className = 'tg-dynamic';
+    wrap.style.cssText = 'align-self:flex-end;max-width:80%';
+    const bubble = document.createElement('div');
+    bubble.style.cssText =
+      'background:#7A3341;color:#FBF6EF;border-radius:16px 16px 4px 16px;padding:10px 16px;font-family:Lora,Georgia,serif;font-size:14px;line-height:1.5';
+    bubble.textContent = text;
+    wrap.appendChild(bubble);
+    return wrap;
+  }
+
+  function workButtons(callback: (w: Work) => void): HTMLDivElement {
+    const wrap = document.createElement('div');
+    wrap.className = 'tg-dynamic';
+    wrap.style.cssText =
+      'display:flex;flex-direction:column;gap:6px;padding-left:6px;max-width:85%;align-self:flex-start';
+
+    works.forEach((w) => {
+      const btn = document.createElement('button');
+      btn.textContent = `${w.title} (${w.status})`;
+      btn.style.cssText =
+        'background:rgba(122,51,65,.15);border:1px solid rgba(122,51,65,.25);border-radius:12px;padding:9px 16px;color:#E8C4C8;font-family:Lora,Georgia,serif;font-size:13px;cursor:pointer;text-align:left';
+      btn.addEventListener('mouseenter', () => {
+        btn.style.background = 'rgba(122,51,65,.28)';
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.background = 'rgba(122,51,65,.15)';
+      });
+      btn.addEventListener('click', () => callback(w));
+      wrap.appendChild(btn);
+    });
+
+    return wrap;
+  }
+
+  function textInput(
+    placeholder: string,
+    onSubmit: (value: string) => void,
+    showSkip = false,
+    onSkip?: () => void,
+  ): HTMLDivElement {
+    const wrap = document.createElement('div');
+    wrap.className = 'tg-dynamic';
+    wrap.style.cssText =
+      'display:flex;flex-direction:column;gap:8px;align-self:stretch;padding-left:6px';
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = placeholder;
+    input.style.cssText =
+      'width:100%;height:44px;padding:0 14px;border-radius:22px;border:1px solid rgba(255,255,255,.12);background:#1C2E32;color:#FBF6EF;font-family:Lora,Georgia,serif;font-size:14px;box-sizing:border-box;outline:none';
+
+    const btnRow = document.createElement('div');
+    btnRow.style.cssText = 'display:flex;gap:8px';
+
+    const submitBtn = document.createElement('button');
+    submitBtn.textContent = 'Kirim';
+    submitBtn.style.cssText =
+      'height:36px;padding:0 18px;background:#7A3341;color:#FBF6EF;border:none;border-radius:18px;font-family:Lora,Georgia,serif;font-size:13px;font-weight:600;cursor:pointer';
+
+    const doSubmit = () => {
+      const val = input.value.trim();
+      if (val) {
+        onSubmit(val);
+        wrap.remove();
+      }
+    };
+
+    submitBtn.addEventListener('click', doSubmit);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') doSubmit();
+    });
+
+    btnRow.appendChild(submitBtn);
+
+    if (showSkip && onSkip) {
+      const skipBtn = document.createElement('button');
+      skipBtn.textContent = 'Lewati';
+      skipBtn.style.cssText =
+        'height:36px;padding:0 18px;background:transparent;color:#8AA0A4;border:1px solid rgba(255,255,255,.1);border-radius:18px;font-family:Lora,Georgia,serif;font-size:13px;cursor:pointer';
+      skipBtn.addEventListener('click', () => {
+        onSkip();
+        wrap.remove();
+      });
+      btnRow.appendChild(skipBtn);
+    }
+
+    wrap.appendChild(input);
+    wrap.appendChild(btnRow);
+
+    setTimeout(() => input.focus(), 80);
+
+    return wrap;
+  }
+
+  function actionButtons(actions: { label: string; style: 'primary' | 'danger'; onClick: () => void }[]): HTMLDivElement {
+    const row = document.createElement('div');
+    row.className = 'tg-dynamic';
+    row.style.cssText = 'display:flex;gap:8px;padding-left:6px;align-self:flex-start';
+
+    actions.forEach((a) => {
+      const btn = document.createElement('button');
+      btn.innerHTML = a.label;
+      if (a.style === 'primary') {
+        btn.style.cssText =
+          'height:42px;padding:0 20px;background:#7A3341;color:#FBF6EF;border:none;border-radius:21px;font-family:Lora,Georgia,serif;font-size:14px;font-weight:600;cursor:pointer';
+      } else {
+        btn.style.cssText =
+          'height:42px;padding:0 20px;background:transparent;color:#D97A7A;border:1px solid rgba(217,122,122,.3);border-radius:21px;font-family:Lora,Georgia,serif;font-size:14px;cursor:pointer';
+      }
+      btn.addEventListener('click', a.onClick);
+      row.appendChild(btn);
+    });
+
+    return row;
+  }
+
+  function backToMenuBtn(): HTMLButtonElement {
+    const btn = document.createElement('button');
+    btn.className = 'tg-dynamic';
+    btn.textContent = 'Kembali ke Menu';
+    btn.style.cssText =
+      'height:36px;padding:0 18px;background:transparent;color:#8AA0A4;border:1px solid rgba(255,255,255,.08);border-radius:18px;font-family:Lora,Georgia,serif;font-size:13px;cursor:pointer;align-self:flex-start;margin-left:6px';
+    btn.addEventListener('click', resetToMenu);
+    return btn;
+  }
+
+  function resetToMenu() {
+    clearDynamic();
+    selectedWork = null;
+    chapterTitle = '';
+    chapterTeaser = '';
+    menuEl.style.display = 'flex';
+    scrollToBottom();
+  }
+
+  function showWaPreview(chapter: LatestChapter) {
+    const msg = buildWaMessage(chapter);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'tg-dynamic';
+    wrap.style.cssText = 'align-self:flex-start;max-width:85%;display:flex;flex-direction:column;gap:8px';
+
+    // Success text
+    const ok = document.createElement('div');
+    ok.style.cssText =
+      'background:#1C2E32;color:#7CC9A4;border-radius:16px 16px 16px 4px;padding:10px 16px;font-family:Lora,Georgia,serif;font-size:13px';
+    ok.innerHTML = '&#10003; Bab tersimpan! Berikut pesan siap-tempel:';
+    wrap.appendChild(ok);
+
+    // WA draft
+    const draft = document.createElement('div');
+    draft.style.cssText =
+      'background:#0D2A1E;border:1px solid rgba(30,122,87,.25);border-radius:14px;padding:12px 16px;font-family:Lora,Georgia,serif;font-size:12.5px;line-height:1.7;color:#DDE4E6;white-space:pre-wrap';
+    draft.textContent = msg;
+    wrap.appendChild(draft);
+
+    // Buttons: salin + kembali
+    const btnRow = document.createElement('div');
+    btnRow.style.cssText = 'display:flex;gap:8px';
+
+    const copyBtn = document.createElement('button');
+    copyBtn.textContent = 'Salin Pesan WA';
+    copyBtn.style.cssText =
+      'height:36px;padding:0 18px;background:#1E7A57;color:#FBF6EF;border:none;border-radius:18px;font-family:Lora,Georgia,serif;font-size:13px;font-weight:600;cursor:pointer';
+    copyBtn.addEventListener('click', () => {
+      try {
+        navigator.clipboard.writeText(msg);
+      } catch (_) { /* ignore */ }
+      copyBtn.textContent = '\u2713 Tersalin';
+      copyBtn.style.background = '#3E8A60';
+      setTimeout(() => {
+        copyBtn.textContent = 'Salin Pesan WA';
+        copyBtn.style.background = '#1E7A57';
+      }, 2000);
+    });
+
+    const backBtn = document.createElement('button');
+    backBtn.textContent = 'Kembali';
+    backBtn.style.cssText =
+      'height:36px;padding:0 18px;background:transparent;color:#8AA0A4;border:1px solid rgba(255,255,255,.08);border-radius:18px;font-family:Lora,Georgia,serif;font-size:13px;cursor:pointer';
+    backBtn.addEventListener('click', resetToMenu);
+
+    btnRow.appendChild(copyBtn);
+    btnRow.appendChild(backBtn);
+    wrap.appendChild(btnRow);
+
+    chatContainer.appendChild(wrap);
+    scrollToBottom();
+  }
+
+  function showPublishPreview() {
+    const w = selectedWork!;
+
+    let previewHtml = `<strong>Pratinjau Bab Baru</strong><br/><br/>
+      <strong>Karya:</strong> ${w.title}<br/>
+      <strong>Judul:</strong> ${chapterTitle}`;
+
+    if (chapterTeaser) {
+      previewHtml += `<br/><strong>Teaser:</strong> <em>"${chapterTeaser}"</em>`;
+    }
+
+    previewHtml +=
+      '<br/><br/><span style="font-size:12px;color:#8AA0A4">Apakah sudah benar?</span>';
+
+    chatContainer.appendChild(botBubble(previewHtml));
+    chatContainer.appendChild(
+      actionButtons([
+        {
+          label: '&#10003; Publikasikan',
+          style: 'primary',
+          onClick: () => {
+            const chapter: LatestChapter = {
+              workSlug: w.slug,
+              workTitle: w.title,
+              title: chapterTitle,
+              date: new Date().toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+              }),
+              kbmUrl: w.kbmUrl,
+              teaser: chapterTeaser || undefined,
+            };
+
+            publishChapter('signature', chapter, fallbackChapters);
+
+            // Remove the preview & action buttons (last 2 dynamic elements)
+            const dynamics = chatContainer.querySelectorAll('.tg-dynamic');
+            const lastTwo = Array.from(dynamics).slice(-2);
+            lastTwo.forEach((el) => el.remove());
+
+            showWaPreview(chapter);
+          },
+        },
+        {
+          label: '&#10007; Batalkan',
+          style: 'danger',
+          onClick: () => {
+            // Remove preview & buttons
+            const dynamics = chatContainer.querySelectorAll('.tg-dynamic');
+            const lastTwo = Array.from(dynamics).slice(-2);
+            lastTwo.forEach((el) => el.remove());
+
+            chatContainer.appendChild(botBubble('Dibatalkan.'));
+            setTimeout(resetToMenu, 800);
+            scrollToBottom();
+          },
+        },
+      ]),
+    );
+    scrollToBottom();
+  }
+
+  // ---- Menu handler ----
+  function handleMenu(action: string) {
+    menuEl.style.display = 'none';
+    clearDynamic();
+
+    if (action === 'update') {
+      chatContainer.appendChild(botBubble('Karya mana yang akan di-update?'));
+
+      chatContainer.appendChild(
+        workButtons((w) => {
+          selectedWork = w;
+          chapterTitle = '';
+          chapterTeaser = '';
+
+          chatContainer.appendChild(userBubble(w.title));
+          chatContainer.appendChild(
+            botBubble(
+              'Judul bab barunya apa?<br/><span style="font-size:12px;color:#8AA0A4">Misal: <em>Bab 48 &mdash; Pintu yang Terbuka</em></span>',
+            ),
+          );
+          chatContainer.appendChild(
+            textInput('Bab 48 — …', (val) => {
+              chapterTitle = val;
+              chatContainer.appendChild(userBubble(val));
+              chatContainer.appendChild(
+                botBubble(
+                  'Teaser satu kalimat?<br/><span style="font-size:12px;color:#8AA0A4">Opsional &mdash; tanpa isi cerita, bisa dilewati</span>',
+                ),
+              );
+              chatContainer.appendChild(
+                textInput(
+                  'Satu kalimat penggoda…',
+                  (teaserVal) => {
+                    chapterTeaser = teaserVal;
+                    if (teaserVal) chatContainer.appendChild(userBubble(teaserVal));
+                    showPublishPreview();
+                  },
+                  true,
+                  () => {
+                    chapterTeaser = '';
+                    showPublishPreview();
+                  },
+                ),
+              );
+              scrollToBottom();
+            }),
+          );
+          scrollToBottom();
+        }),
+      );
+
+    } else if (action === 'riwayat') {
+      const state = loadDemoState('signature', fallbackChapters);
+      const history = state.history?.filter((c) => c.workSlug && c.title).slice(0, 10) ?? [];
+
+      let html = '<strong>Riwayat Rilis</strong><br/><br/>';
+      if (history.length === 0) {
+        html += '<span style="color:#8AA0A4;font-style:italic">Belum ada rilis dari simulasi ini.</span>';
+      } else {
+        history.forEach((r) => {
+          html += `<div style="margin-bottom:7px;padding-bottom:7px;border-bottom:1px solid rgba(255,255,255,.06)">
+            <span style="color:#E8C4C8;font-weight:600">${r.workTitle}</span> &mdash; ${r.title}<br/>
+            <span style="font-size:11px;color:#8AA0A4">${r.date}</span>
+          </div>`;
+        });
+      }
+
+      chatContainer.appendChild(botBubble(html));
+      chatContainer.appendChild(backToMenuBtn());
+
+    } else if (action === 'bantuan') {
+      chatContainer.appendChild(
+        botBubble(
+          `<strong>Tentang Simulasi Ini</strong><br/><br/>
+          Start-up ini mendemonstrasikan <strong style="color:#E8C4C8">dual-surface</strong> manajemen penulis:<br/><br/>
+          <strong>&#8226; Dashboard</strong> &mdash; kontrol penuh via /dashboard (desktop)<br/>
+          <strong>&#8226; Telegram</strong> &mdash; notifikasi & aksi cepat dari HP<br/><br/>
+          Hanya penulis yang sudah <strong style="color:#E8C4C8">allowlist</strong> yang bisa terhubung ke bot asli.
+          Simulasi ini hanya demo &mdash; semua data disimpan di <em>localStorage</em> browser Anda.<br/><br/>
+          <strong>&#8226; Semesta</strong> &mdash; Kelola tokoh, linimasa, lokasi, trivia semesta di tab Semesta pada dashboard.`,
+        ),
+      );
+      chatContainer.appendChild(backToMenuBtn());
+    }
+
+    scrollToBottom();
+  }
+
+  // Bind menu buttons
+  document.querySelectorAll<HTMLElement>('.tg-menu-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const action = btn.dataset.tgAction;
+      if (action) handleMenu(action);
+    });
+  });
+
+  scrollToBottom();
+</script>

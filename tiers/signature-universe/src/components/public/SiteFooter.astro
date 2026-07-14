@@ -1,0 +1,88 @@
+---
+import type { AuthorData } from '../../lib/types';
+
+export interface Props {
+  author: AuthorData;
+}
+
+const { author } = Astro.props;
+
+const footerNav = [
+  { label: 'Beranda', href: '/' },
+  { label: 'Ruang Bonus', href: '/bonus' },
+  { label: 'Peta Baca', href: '/peta-baca' },
+  { label: 'Kolaborasi', href: '/kolaborasi' },
+  { label: 'Karya', href: '/karya' },
+  { label: 'Semesta', href: '/universe' },
+];
+---
+
+<footer class="mt-auto bg-ink text-[#D9C4BB] py-8 px-6">
+  <p class="m-0 mb-1 font-serif text-[20px] font-semibold text-paper">
+    {author.penName}
+  </p>
+  <p class="m-0 mb-[18px] text-[13px] italic text-[#B99A8E]">
+    Semua cerita dibaca di KBM App.
+  </p>
+
+  <!-- Social links -->
+  <div class="flex flex-wrap gap-x-[18px] gap-y-2 mb-5">
+    {author.socials.map((s) => (
+      <a
+        href={s.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-[14px] text-[#D9C4BB] underline underline-offset-[3px] py-[6px] px-0"
+      >
+        {s.label}
+      </a>
+    ))}
+    <a
+      href={author.waChannelUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="text-[14px] text-[#D9C4BB] underline underline-offset-[3px] py-[6px] px-0"
+    >
+      WhatsApp
+    </a>
+  </div>
+
+  <!-- Page links -->
+  <div class="flex flex-wrap gap-x-[18px] gap-y-2 mb-5">
+    {footerNav.map((item) => (
+      <a
+        href={item.href}
+        class="text-[14px] text-[#D9C4BB] underline underline-offset-[3px] py-[6px] px-0"
+      >
+        {item.label}
+      </a>
+    ))}
+  </div>
+
+  <!-- Badge -->
+  <p class="m-0 mb-[18px] text-[12px] text-faint">
+    Dibangun oleh <span class="text-[#C99B94] font-semibold">MarkasAuthor</span>
+  </p>
+
+  <!-- Demo links -->
+  <div class="flex flex-wrap gap-x-[18px] gap-y-2 mb-5">
+    <a
+      href="/dashboard"
+      class="text-[14px] text-[#D9C4BB] underline underline-offset-[3px] py-[6px] px-0"
+    >
+      Area penulis (demo)
+    </a>
+    <a
+      href="/untuk-penulis"
+      class="text-[14px] text-[#D9C4BB] underline underline-offset-[3px] py-[6px] px-0"
+    >
+      Untuk Penulis
+    </a>
+  </div>
+
+  <!-- Copyright -->
+  <p class="m-0 text-[11px] leading-[1.6] text-[#8A6F64]">
+    &copy; 2026 {author.penName} &middot; Situs ini tidak memuat isi cerita &mdash;
+    seluruh bab dibaca di KBM App.
+  </p>
+</footer>

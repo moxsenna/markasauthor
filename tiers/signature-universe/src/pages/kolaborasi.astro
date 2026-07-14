@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/public/SiteHeader.astro';
+import SiteFooter from '../components/public/SiteFooter.astro';
+import CollabBlurb from '../components/public/CollabBlurb.astro';
+import authorData from '../data/author.json';
+import type { AuthorData } from '../lib/types';
+
+const author = authorData as AuthorData;
+---
+
+<BaseLayout
+  title={`Kolaborasi — ${author.penName}`}
+  description={`Bekerja sama dengan ${author.penName}. Penerbitan, adaptasi, kolaborasi brand.`}
+>
+  <SiteHeader penName={author.penName} currentPath="/kolaborasi" />
+
+  <main class="flex flex-col">
+    <CollabBlurb author={author} full={true} />
+  </main>
+
+  <SiteFooter author={author} />
+</BaseLayout>
