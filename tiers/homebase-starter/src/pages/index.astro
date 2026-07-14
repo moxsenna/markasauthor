@@ -1,7 +1,48 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/public/SiteHeader.astro';
+import HeroIdentity from '../components/public/HeroIdentity.astro';
+import Bookshelf from '../components/public/Bookshelf.astro';
+import AuthorTimeline from '../components/public/AuthorTimeline.astro';
+import ReaderForm from '../components/public/ReaderForm.astro';
+import CollabBlurb from '../components/public/CollabBlurb.astro';
+import SiteFooter from '../components/public/SiteFooter.astro';
+import authorData from '../data/author.json';
+
+const author = authorData as import('../lib/types').AuthorData;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: author.penName,
+  description: author.bioShort,
+  url: Astro.url.href,
+  sameAs: author.socials.map((s) => s.url),
+};
 ---
 
-<Layout title="Homebase Starter">
-  <h1>Homebase Starter scaffold OK</h1>
-</Layout>
+<BaseLayout
+  title={`${author.penName} — ${author.tagline}`}
+  description={author.bioShort}
+  jsonLd={jsonLd}
+>
+  <SiteHeader penName={author.penName} />
+
+  <main class="flex flex-col">
+    <HeroIdentity
+      author={author}
+      showChapterCard={false}
+      showReadingCta={false}
+    />
+
+    <Bookshelf works={author.works} />
+
+    <AuthorTimeline timeline={author.timeline} />
+
+    <ReaderForm />
+
+    <CollabBlurb author={author} full={false} />
+  </main>
+
+  <SiteFooter author={author} />
+</BaseLayout>

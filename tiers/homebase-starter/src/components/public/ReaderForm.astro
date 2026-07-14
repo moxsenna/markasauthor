@@ -1,0 +1,94 @@
+---
+export interface Props {
+  /** Form heading text */
+  heading?: string;
+  /** Form description */
+  description?: string;
+  /** Submit button text */
+  cta?: string;
+  /** Privacy note below form */
+  privacyNote?: string;
+}
+
+const {
+  heading = 'Jangan ketinggalan bab baru',
+  description = 'Tinggalkan nama dan nomor WhatsApp — setiap ada bab baru atau bonus eksklusif, kamu yang pertama tahu.',
+  cta = 'Daftar Kabar Rilis',
+  privacyNote = 'Nomormu aman, hanya untuk kabar rilis — tidak dibagikan ke siapa pun.',
+} = Astro.props;
+---
+
+<section class="mx-5 my-9 bg-rose-deep rounded-[22px] py-7 px-6 text-blush">
+  <h2 class="m-0 mb-[6px] font-serif text-[24px] font-semibold leading-[1.25] text-paper">
+    {heading}
+  </h2>
+  <p class="m-0 mb-[18px] text-[14px] leading-[1.65] text-[#E3C6C0]">
+    {description}
+  </p>
+
+  <form id="reader-form" class="flex flex-col gap-[10px]">
+    <input
+      type="text"
+      id="reader-nama"
+      placeholder="Nama panggilanmu"
+      class="min-h-[50px] px-4 rounded-[12px] border border-paper/25 bg-paper text-ink font-body text-[16px] placeholder:text-[#B39A90]"
+      required
+    />
+    <input
+      type="tel"
+      id="reader-wa"
+      placeholder="Nomor WhatsApp (08…)"
+      class="min-h-[50px] px-4 rounded-[12px] border border-paper/25 bg-paper text-ink font-body text-[16px] placeholder:text-[#B39A90]"
+      required
+    />
+    <p id="form-error" class="hidden m-0 text-[13px] text-[#F0B9A8]"></p>
+    <button
+      type="submit"
+      class="min-h-[52px] bg-[#D8A7A4] text-[#4A1D26] border-none rounded-[12px] font-body text-[16px] font-semibold cursor-pointer"
+    >
+      {cta}
+    </button>
+    <p id="form-success" class="hidden m-0 mt-1 text-[14px] text-[#E4B87E] font-semibold text-center">
+      Terdaftar (simulasi)
+    </p>
+  </form>
+
+  <p class="mt-[14px] mb-0 text-[12px] leading-[1.6] text-[#C99B94]">
+    {privacyNote}
+  </p>
+</section>
+
+<script>
+  (function () {
+    const form = document.getElementById('reader-form') as HTMLFormElement | null;
+    if (!form) return;
+
+    const namaInput = document.getElementById('reader-nama') as HTMLInputElement | null;
+    const waInput = document.getElementById('reader-wa') as HTMLInputElement | null;
+    const errorEl = document.getElementById('form-error') as HTMLElement | null;
+    const successEl = document.getElementById('form-success') as HTMLElement | null;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      if (errorEl) errorEl.classList.add('hidden');
+      if (successEl) successEl.classList.add('hidden');
+
+      const nama = (namaInput?.value ?? '').trim();
+      const waRaw = (waInput?.value ?? '').replace(/[^0-9+]/g, '');
+
+      if (!nama || waRaw.length < 9) {
+        if (errorEl) {
+          errorEl.textContent = 'Mohon isi nama dan nomor WhatsApp yang benar, ya.';
+          errorEl.classList.remove('hidden');
+        }
+        return;
+      }
+
+      // Simulated success
+      if (errorEl) errorEl.classList.add('hidden');
+      if (successEl) successEl.classList.remove('hidden');
+      form.reset();
+    });
+  })();
+</script>

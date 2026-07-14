@@ -1,0 +1,13 @@
+---
+export interface Props {
+  penName: string;
+}
+
+const { penName } = Astro.props;
+---
+
+<header class="sticky top-0 z-40 flex items-center justify-between px-5 py-3 bg-paper/95 backdrop-blur-[8px] border-b border-rose/12">
+  <span class="font-serif text-[19px] font-semibold tracking-[.02em] text-rose-deep">
+    {penName}
+  </span>
+</header>
