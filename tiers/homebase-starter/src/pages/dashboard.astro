@@ -9,61 +9,147 @@ import authorData from '../data/author.json';
 import type { AuthorData } from '../lib/types';
 
 const author = authorData as AuthorData;
-const initialTab = (Astro.url.searchParams.get('tab') || 'ringkasan') as string;
-const enabledTabs = ['ringkasan', 'rilis', 'database', 'tema'];
+const initialTab = 'ringkasan';
+const tabs = ['ringkasan', 'rilis', 'karya', 'bonus', 'peta', 'database', 'tema'] as const;
+const locked = new Set(['karya', 'bonus', 'peta']);
 ---
 
 <OpsLayout penName={author.penName} activeTab={initialTab}>
   <OpsNav slot="nav" activeTab={initialTab} />
 
   <div id="tab-content">
-    {initialTab === 'ringkasan' && (
+    <div class="ops-tab-panel" data-tab-panel="ringkasan">
       <TabRingkasan penName={author.penName} tagline={author.tagline} />
-    )}
-    {initialTab === 'rilis' && (
+    </div>
+    <div class="ops-tab-panel" data-tab-panel="rilis" hidden>
       <TabRilis works={author.works} fallbackChapters={author.latestChapters} />
-    )}
-    {initialTab === 'database' && <TabDatabase readers={author.demoReaders} />}
-    {initialTab === 'tema' && <TabTema />}
-    {!enabledTabs.includes(initialTab) && (
+    </div>
+    <div class="ops-tab-panel" data-tab-panel="database" hidden>
+      <TabDatabase readers={author.demoReaders} />
+    </div>
+    <div class="ops-tab-panel" data-tab-panel="tema" hidden>
+      <TabTema />
+    </div>
+    <div class="ops-tab-panel" data-tab-panel="karya" hidden>
       <div style="text-align:center;padding:80px 20px">
         <h2 style="font-family:'Playfair Display',serif;font-size:24px;color:#3B2A28;margin-bottom:8px">
-          Fitur tier di atas
+          Rak Buku ops — Author Homebase
         </h2>
         <p style="color:#7A5A50;font-size:14px;max-width:420px;margin:0 auto 18px">
-          Tab ini terkunci di Homebase Starter. Upgrade ke Author Homebase untuk Ruang Bonus, Peta Baca, dan Rak Buku ops.
+          Kelola urutan rak buku di dashboard tersedia mulai tier Author Homebase.
         </p>
         <a
-          href="https://ma-author-homebase.pages.dev/dashboard"
+          href="https://ma-author-homebase.pages.dev/dashboard?tab=karya"
           style="display:inline-flex;align-items:center;height:44px;padding:0 20px;background:#7A3341;color:#FBF6EF;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none"
         >
           Lihat demo Author Homebase →
         </a>
       </div>
-    )}
+    </div>
+    <div class="ops-tab-panel" data-tab-panel="bonus" hidden>
+      <div style="text-align:center;padding:80px 20px">
+        <h2 style="font-family:'Playfair Display',serif;font-size:24px;color:#3B2A28;margin-bottom:8px">
+          Ruang Bonus — Author Homebase
+        </h2>
+        <p style="color:#7A5A50;font-size:14px;max-width:420px;margin:0 auto 18px">
+          Gate bonus + kelola konten eksklusif ada di Author Homebase.
+        </p>
+        <a
+          href="https://ma-author-homebase.pages.dev/dashboard?tab=bonus"
+          style="display:inline-flex;align-items:center;height:44px;padding:0 20px;background:#7A3341;color:#FBF6EF;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none"
+        >
+          Lihat demo Author Homebase →
+        </a>
+      </div>
+    </div>
+    <div class="ops-tab-panel" data-tab-panel="peta" hidden>
+      <div style="text-align:center;padding:80px 20px">
+        <h2 style="font-family:'Playfair Display',serif;font-size:24px;color:#3B2A28;margin-bottom:8px">
+          Peta Baca — Author Homebase
+        </h2>
+        <p style="color:#7A5A50;font-size:14px;max-width:420px;margin:0 auto 18px">
+          Edit urutan baca multi-node ada di Author Homebase.
+        </p>
+        <a
+          href="https://ma-author-homebase.pages.dev/dashboard?tab=peta"
+          style="display:inline-flex;align-items:center;height:44px;padding:0 20px;background:#7A3341;color:#FBF6EF;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none"
+        >
+          Lihat demo Author Homebase →
+        </a>
+      </div>
+    </div>
   </div>
 
-  <script>
-    function switchTab(tab: string) {
-      const url = new URL(window.location.href);
-      url.searchParams.set('tab', tab);
-      window.location.href = url.toString();
+  <script define:vars={{ tabs }}>
+    const VALID = new Set(tabs);
+
+    function activeFromUrl() {
+      const t = new URL(window.location.href).searchParams.get('tab') || 'ringkasan';
+      return VALID.has(t) ? t : 'ringkasan';
     }
 
-    document.querySelectorAll<HTMLButtonElement>('.ops-nav-btn').forEach((btn) => {
-      const tab = btn.dataset.tab;
-      const enabled = btn.dataset.enabled !== 'false';
-      if (tab && enabled) {
-        btn.addEventListener('click', () => switchTab(tab));
-      }
-    });
-
-    document.querySelectorAll<HTMLAnchorElement>('[data-go-tab]').forEach((a) => {
-      a.addEventListener('click', (e) => {
-        e.preventDefault();
-        const tab = a.dataset.goTab;
-        if (tab) switchTab(tab);
+    function paintNav(tab) {
+      document.querySelectorAll('.ops-nav-btn').forEach((btn) => {
+        const on = btn.dataset.tab === tab;
+        btn.style.background = on ? '#F4E3DE' : 'transparent';
+        btn.style.fontWeight = on ? '600' : '400';
+        btn.style.color = on ? '#5C2430' : btn.dataset.enabled === 'false' ? '#8A7670' : '#D9C4BB';
+        const spans = btn.querySelectorAll('span');
+        if (spans[0]) {
+          spans[0].style.background = on
+            ? '#7A3341'
+            : btn.dataset.enabled === 'false'
+              ? 'rgba(217,196,187,.12)'
+              : 'rgba(217,196,187,.35)';
+        }
       });
-    });
+    }
+
+    function showTab(tab, push) {
+      if (!VALID.has(tab)) tab = 'ringkasan';
+      document.querySelectorAll('[data-tab-panel]').forEach((panel) => {
+        const on = panel.getAttribute('data-tab-panel') === tab;
+        if (on) panel.removeAttribute('hidden');
+        else panel.setAttribute('hidden', '');
+      });
+      paintNav(tab);
+      const url = new URL(window.location.href);
+      if (url.searchParams.get('tab') !== tab) {
+        url.searchParams.set('tab', tab);
+        if (push) history.pushState({ tab }, '', url.toString());
+        else history.replaceState({ tab }, '', url.toString());
+      }
+    }
+
+    function bind() {
+      document.querySelectorAll('.ops-nav-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          // locked items still open upgrade panel if they have a panel
+          const tab = btn.dataset.tab;
+          if (tab) showTab(tab, true);
+        });
+      });
+
+      document.querySelectorAll('[data-go-tab], [data-go-rilis], a[href*="tab="]').forEach((el) => {
+        el.addEventListener('click', (e) => {
+          let tab = el.dataset?.goTab;
+          if (el.dataset?.goRilis !== undefined && !tab) tab = 'rilis';
+          if (!tab && el.getAttribute) {
+            const href = el.getAttribute('href') || '';
+            const m = href.match(/[?&]tab=([a-z]+)/i);
+            if (m) tab = m[1];
+          }
+          if (tab && VALID.has(tab)) {
+            e.preventDefault();
+            showTab(tab, true);
+          }
+        });
+      });
+
+      window.addEventListener('popstate', () => showTab(activeFromUrl(), false));
+      showTab(activeFromUrl(), false);
+    }
+
+    bind();
   </script>
 </OpsLayout>

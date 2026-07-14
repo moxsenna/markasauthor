@@ -12,27 +12,36 @@ import authorData from '../data/author.json';
 import type { AuthorData } from '../lib/types';
 
 const author = authorData as AuthorData;
-const initialTab = (Astro.url.searchParams.get('tab') || 'ringkasan') as string;
+const initialTab = 'ringkasan';
+const tabs = ['ringkasan', 'rilis', 'karya', 'bonus', 'peta', 'database', 'tema', 'universe'] as const;
 ---
 
 <OpsLayout penName={author.penName} activeTab={initialTab}>
   <OpsNav slot="nav" activeTab={initialTab} />
 
   <div id="tab-content">
-    {initialTab === 'ringkasan' && (
+    <div class="ops-tab-panel" data-tab-panel="ringkasan">
       <TabRingkasan penName={author.penName} tagline={author.tagline} />
-    )}
-    {initialTab === 'rilis' && (
+    </div>
+    <div class="ops-tab-panel" data-tab-panel="rilis" hidden>
       <TabRilis works={author.works} fallbackChapters={author.latestChapters} />
-    )}
-    {initialTab === 'database' && <TabDatabase readers={author.demoReaders} />}
-    {initialTab === 'bonus' && <TabBonus bonuses={author.bonuses} />}
-    {initialTab === 'peta' && (
+    </div>
+    <div class="ops-tab-panel" data-tab-panel="karya" hidden>
+      <TabKarya works={author.works} />
+    </div>
+    <div class="ops-tab-panel" data-tab-panel="bonus" hidden>
+      <TabBonus bonuses={author.bonuses} />
+    </div>
+    <div class="ops-tab-panel" data-tab-panel="peta" hidden>
       <TabPeta readingMain={author.readingMain} readingSide={author.readingSide} />
-    )}
-    {initialTab === 'karya' && <TabKarya works={author.works} />}
-    {initialTab === 'tema' && <TabTema />}
-    {initialTab === 'universe' && (
+    </div>
+    <div class="ops-tab-panel" data-tab-panel="database" hidden>
+      <TabDatabase readers={author.demoReaders} />
+    </div>
+    <div class="ops-tab-panel" data-tab-panel="tema" hidden>
+      <TabTema />
+    </div>
+    <div class="ops-tab-panel" data-tab-panel="universe" hidden>
       <div style="text-align:center;padding:80px 20px">
         <h2 style="font-family:'Playfair Display',serif;font-size:24px;color:#3B2A28;margin-bottom:8px">
           Semesta — Signature
@@ -47,40 +56,79 @@ const initialTab = (Astro.url.searchParams.get('tab') || 'ringkasan') as string;
           Lihat demo Signature →
         </a>
       </div>
-    )}
-    {!['ringkasan', 'rilis', 'database', 'bonus', 'peta', 'karya', 'tema', 'universe'].includes(
-      initialTab,
-    ) && (
-      <div style="text-align:center;padding:80px 20px">
-        <h2 style="font-family:'Playfair Display',serif;font-size:24px;color:#3B2A28;margin-bottom:8px">
-          Tab tidak dikenal
-        </h2>
-        <p style="color:#7A5A50;font-size:14px">Pilih menu di sidebar kiri.</p>
-      </div>
-    )}
+    </div>
   </div>
 
-  <script>
-    function switchTab(tab: string) {
-      const url = new URL(window.location.href);
-      url.searchParams.set('tab', tab);
-      window.location.href = url.toString();
+  <script define:vars={{ tabs }}>
+    const VALID = new Set(tabs);
+
+    function activeFromUrl() {
+      const t = new URL(window.location.href).searchParams.get('tab') || 'ringkasan';
+      return VALID.has(t) ? t : 'ringkasan';
     }
 
-    document.querySelectorAll<HTMLButtonElement>('.ops-nav-btn').forEach((btn) => {
-      const tab = btn.dataset.tab;
-      const enabled = btn.dataset.enabled !== 'false';
-      if (tab && enabled) {
-        btn.addEventListener('click', () => switchTab(tab));
-      }
-    });
-
-    document.querySelectorAll<HTMLAnchorElement>('[data-go-tab]').forEach((a) => {
-      a.addEventListener('click', (e) => {
-        e.preventDefault();
-        const tab = a.dataset.goTab;
-        if (tab) switchTab(tab);
+    function paintNav(tab) {
+      document.querySelectorAll('.ops-nav-btn').forEach((btn) => {
+        const on = btn.dataset.tab === tab;
+        btn.style.background = on ? '#F4E3DE' : 'transparent';
+        btn.style.fontWeight = on ? '600' : '400';
+        btn.style.color = on ? '#5C2430' : btn.dataset.enabled === 'false' ? '#8A7670' : '#D9C4BB';
+        const spans = btn.querySelectorAll('span');
+        if (spans[0]) {
+          spans[0].style.background = on
+            ? '#7A3341'
+            : btn.dataset.enabled === 'false'
+              ? 'rgba(217,196,187,.12)'
+              : 'rgba(217,196,187,.35)';
+        }
       });
-    });
+    }
+
+    function showTab(tab, push) {
+      if (!VALID.has(tab)) tab = 'ringkasan';
+      document.querySelectorAll('[data-tab-panel]').forEach((panel) => {
+        const on = panel.getAttribute('data-tab-panel') === tab;
+        if (on) panel.removeAttribute('hidden');
+        else panel.setAttribute('hidden', '');
+      });
+      paintNav(tab);
+      const url = new URL(window.location.href);
+      if (url.searchParams.get('tab') !== tab) {
+        url.searchParams.set('tab', tab);
+        if (push) history.pushState({ tab }, '', url.toString());
+        else history.replaceState({ tab }, '', url.toString());
+      }
+    }
+
+    function bind() {
+      document.querySelectorAll('.ops-nav-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          if (btn.dataset.enabled === 'false') return;
+          const tab = btn.dataset.tab;
+          if (tab) showTab(tab, true);
+        });
+      });
+
+      document.querySelectorAll('[data-go-tab], [data-go-rilis], a[href*="tab="]').forEach((el) => {
+        el.addEventListener('click', (e) => {
+          let tab = el.dataset?.goTab;
+          if (el.dataset?.goRilis !== undefined && !tab) tab = 'rilis';
+          if (!tab && el.getAttribute) {
+            const href = el.getAttribute('href') || '';
+            const m = href.match(/[?&]tab=([a-z]+)/i);
+            if (m) tab = m[1];
+          }
+          if (tab && VALID.has(tab)) {
+            e.preventDefault();
+            showTab(tab, true);
+          }
+        });
+      });
+
+      window.addEventListener('popstate', () => showTab(activeFromUrl(), false));
+      showTab(activeFromUrl(), false);
+    }
+
+    bind();
   </script>
 </OpsLayout>
