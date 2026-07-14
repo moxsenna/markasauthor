@@ -1,0 +1,290 @@
+---
+import type { Work, LatestChapter } from '../../lib/types';
+
+export interface Props {
+  works: Work[];
+  fallbackChapters: LatestChapter[];
+}
+
+const { works, fallbackChapters } = Astro.props;
+---
+
+<div>
+  <h1
+    style="margin:0 0 6px;font-family:'Playfair Display',serif;font-size:32px;font-weight:600;color:#3B2A28"
+  >
+    Kabar Rilis
+  </h1>
+  <p style="margin:0 0 26px;max-width:620px;font-size:14px;line-height:1.6;color:#7A5A50">
+    Tulis pengumuman bab baru — kartu "Baru Terbit" di Beranda ikut diperbarui, dan pesan siap tempel untuk Saluran WhatsApp dibuat otomatis. Tanpa isi cerita, hanya kabar.
+  </p>
+
+  <div
+    style="display:grid;grid-template-columns:1fr 420px;gap:24px;align-items:start"
+  >
+    <!-- Form Card -->
+    <div
+      style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:18px;padding:26px 28px;display:flex;flex-direction:column;gap:16px"
+    >
+      <div>
+        <label
+          style="display:block;font-size:13px;font-weight:600;color:#5A453F;margin-bottom:6px"
+        >
+          Karya
+        </label>
+        <select
+          id="rilis-karya"
+          style="width:100%;height:48px;padding:0 14px;border-radius:11px;border:1px solid rgba(122,51,65,.25);background:#FFFDF9;color:#3B2A28;font-family:Lora,serif;font-size:15px;box-sizing:border-box"
+        >
+          {works.map((w) => (
+            <option value={w.slug} data-kbm-url={w.kbmUrl}>
+              {w.title}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label
+          style="display:block;font-size:13px;font-weight:600;color:#5A453F;margin-bottom:6px"
+        >
+          Judul bab
+        </label>
+        <input
+          type="text"
+          id="rilis-judul"
+          placeholder="Bab 48 — …"
+          style="width:100%;height:48px;padding:0 14px;border-radius:11px;border:1px solid rgba(122,51,65,.25);background:#FFFDF9;color:#3B2A28;font-family:Lora,serif;font-size:15px;box-sizing:border-box"
+        />
+      </div>
+
+      <div>
+        <label
+          style="display:block;font-size:13px;font-weight:600;color:#5A453F;margin-bottom:6px"
+        >
+          Teaser satu kalimat{' '}
+          <span style="font-weight:400;color:#9A8078">— tanpa isi cerita, max 140 karakter</span>
+        </label>
+        <textarea
+          id="rilis-teaser"
+          rows="3"
+          placeholder="Satu kalimat penggoda, tanpa bocoran…"
+          style="width:100%;padding:12px 14px;border-radius:11px;border:1px solid rgba(122,51,65,.25);background:#FFFDF9;color:#3B2A28;font-family:Lora,serif;font-size:15px;line-height:1.6;box-sizing:border-box;resize:vertical"
+        ></textarea>
+        <p id="teaser-count" style="margin:6px 0 0;font-size:12px;color:#9A8078">
+          0/140 karakter
+        </p>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center">
+        <button
+          id="btn-terbitkan"
+          style="height:50px;padding:0 24px;background:#7A3341;color:#FBF6EF;border:none;border-radius:12px;font-family:Lora,serif;font-size:15px;font-weight:600;cursor:pointer"
+        >
+          Publikasikan (simulasi)
+        </button>
+        <span
+          id="rilis-sukses"
+          style="display:none;font-size:13px;color:#1E7A57"
+        >
+          &#10003; Bab disimpan ke penyimpanan lokal
+        </span>
+        <span
+          id="rilis-error"
+          style="display:none;font-size:13px;color:#B0483C"
+        >
+          Judul bab wajib diisi.
+        </span>
+      </div>
+    </div>
+
+    <!-- WA Message Preview -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div
+        style="background:#E7F0E6;border:1px solid rgba(30,122,87,.2);border-radius:18px;padding:20px 22px"
+      >
+        <p
+          style="margin:0 0 10px;font-size:11px;letter-spacing:.14em;color:#1E7A57;font-weight:600"
+        >
+          PESAN SIAP TEMPEL — SALURAN WA
+        </p>
+        <div
+          id="wa-draft"
+          style="background:#FFFDF9;border-radius:12px;padding:14px 16px;border:1px solid rgba(30,122,87,.15)"
+        >
+          <p
+            id="wa-text"
+            style="margin:0;font-size:13.5px;line-height:1.7;color:#3B2A28;white-space:pre-wrap"
+          >
+            Isi judul bab dan teaser di samping. Pesan WA akan muncul di sini.
+          </p>
+        </div>
+        <button
+          id="btn-salin"
+          style="margin-top:12px;width:100%;height:46px;background:#1E7A57;color:#FBF6EF;border:none;border-radius:11px;font-family:Lora,serif;font-size:14px;font-weight:600;cursor:pointer"
+        >
+          Salin Pesan
+        </button>
+        <p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:#5F7A64">
+          Tempel di Saluran WhatsApp-mu — 3 ketukan dari HP, semua pengikut langsung tahu.
+        </p>
+      </div>
+
+      <!-- Riwayat Rilis (from localStorage) -->
+      <div
+        style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:18px;padding:18px 22px"
+      >
+        <p
+          style="margin:0 0 10px;font-size:11px;letter-spacing:.14em;color:#8A6A5E;font-weight:600"
+        >
+          RIWAYAT RILIS
+        </p>
+        <div id="riwayat-list">
+          <p style="margin:0;font-size:13px;color:#9A8078;font-style:italic">
+            Belum ada rilis dari dashboard ini.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Fallback chapters embedded as JSON -->
+<script type="application/json" id="fallback-chapters">
+  {JSON.stringify(fallbackChapters)}
+</script>
+<script type="application/json" id="works-data">
+  {JSON.stringify(works)}
+</script>
+
+<script>
+  import { publishChapter, buildWaMessage, loadDemoState } from '../../lib/demo-store';
+  import type { LatestChapter, Work } from '../../lib/types';
+
+  const fallbackEl = document.getElementById('fallback-chapters');
+  const worksEl = document.getElementById('works-data');
+  const fallbackChapters: LatestChapter[] = fallbackEl ? JSON.parse(fallbackEl.textContent || '[]') : [];
+  const works: Work[] = worksEl ? JSON.parse(worksEl.textContent || '[]') : [];
+
+  const selectKarya = document.getElementById('rilis-karya') as HTMLSelectElement;
+  const inputJudul = document.getElementById('rilis-judul') as HTMLInputElement;
+  const textareaTeaser = document.getElementById('rilis-teaser') as HTMLTextAreaElement;
+  const teaserCount = document.getElementById('teaser-count')!;
+  const waText = document.getElementById('wa-text')!;
+  const btnTerbitkan = document.getElementById('btn-terbitkan')!;
+  const btnSalin = document.getElementById('btn-salin')!;
+  const rilisSukses = document.getElementById('rilis-sukses')!;
+  const rilisError = document.getElementById('rilis-error')!;
+  const riwayatList = document.getElementById('riwayat-list')!;
+
+  const MAX_TEASER = 140;
+
+  function getSelectedWork(): Work | undefined {
+    const slug = selectKarya.value;
+    return works.find((w) => w.slug === slug);
+  }
+
+  function buildCurrentWa(): string {
+    const w = getSelectedWork();
+    const chap: LatestChapter = {
+      workSlug: w?.slug ?? '',
+      workTitle: w?.title ?? '',
+      title: inputJudul.value || '[judul bab]',
+      date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }),
+      kbmUrl: w?.kbmUrl ?? '#',
+      teaser: textareaTeaser.value || undefined,
+    };
+    return buildWaMessage(chap);
+  }
+
+  function updateWaPreview() {
+    waText.textContent = buildCurrentWa();
+  }
+
+  function updateTeaserCount() {
+    const len = textareaTeaser.value.length;
+    teaserCount.textContent = `${len}/${MAX_TEASER} karakter`;
+    teaserCount.style.color = len > MAX_TEASER ? '#B0483C' : '#9A8078';
+  }
+
+  function renderRiwayat() {
+    const state = loadDemoState('hero', fallbackChapters);
+    const history = state.history.filter((c) => c.workSlug && c.title).slice(0, 10);
+    if (history.length === 0) {
+      riwayatList.innerHTML =
+        '<p style="margin:0;font-size:13px;color:#9A8078;font-style:italic">Belum ada rilis dari dashboard ini.</p>';
+      return;
+    }
+    riwayatList.innerHTML = history
+      .map(
+        (r) =>
+          `<div style="display:flex;align-items:baseline;gap:10px;border-bottom:1px solid rgba(122,51,65,.1);padding:9px 0">
+            <span style="flex:1;font-size:13px;color:#3B2A28">${r.workTitle} — ${r.title}</span>
+            <span style="flex:none;font-size:11px;color:#9A8078">${r.date}</span>
+          </div>`,
+      )
+      .join('');
+  }
+
+  // Bind events
+  selectKarya.addEventListener('change', updateWaPreview);
+  inputJudul.addEventListener('input', updateWaPreview);
+  textareaTeaser.addEventListener('input', () => {
+    updateTeaserCount();
+    updateWaPreview();
+  });
+
+  btnTerbitkan.addEventListener('click', () => {
+    const title = inputJudul.value.trim();
+    if (!title) {
+      rilisSukses.style.display = 'none';
+      rilisError.style.display = 'inline';
+      return;
+    }
+
+    const w = getSelectedWork();
+    if (!w) return;
+
+    const chapter: LatestChapter = {
+      workSlug: w.slug,
+      workTitle: w.title,
+      title,
+      date: new Date().toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      }),
+      kbmUrl: w.kbmUrl,
+      teaser: textareaTeaser.value.trim() || undefined,
+    };
+
+    publishChapter('hero', chapter, fallbackChapters);
+
+    rilisError.style.display = 'none';
+    rilisSukses.style.display = 'inline';
+    setTimeout(() => {
+      rilisSukses.style.display = 'none';
+    }, 4000);
+
+    renderRiwayat();
+    updateWaPreview();
+  });
+
+  btnSalin.addEventListener('click', () => {
+    const msg = buildCurrentWa();
+    try {
+      navigator.clipboard.writeText(msg);
+    } catch (_) { /* ignore */ }
+    btnSalin.textContent = '\u2713 Tersalin';
+    btnSalin.style.background = '#3E8A60';
+    setTimeout(() => {
+      btnSalin.textContent = 'Salin Pesan';
+      btnSalin.style.background = '#1E7A57';
+    }, 2000);
+  });
+
+  // Init
+  updateTeaserCount();
+  updateWaPreview();
+  renderRiwayat();
+</script>

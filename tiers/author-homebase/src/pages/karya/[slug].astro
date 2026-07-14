@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHeader from '../../components/public/SiteHeader.astro';
+import SiteFooter from '../../components/public/SiteFooter.astro';
+import authorData from '../../data/author.json';
+import type { AuthorData } from '../../lib/types';
+
+const author = authorData as AuthorData;
+
+export async function getStaticPaths() {
+  const authorData = (await import('../../data/author.json')).default as AuthorData;
+  return authorData.works.map((work) => ({
+    params: { slug: work.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const work = author.works.find((w) => w.slug === slug);
+
+if (!work) {
+  return Astro.redirect('/karya');
+}
+---
+
+<BaseLayout
+  title={`${work.title} — ${author.penName}`}
+  description={work.hook}
+>
+  <SiteHeader penName={author.penName} currentPath="/karya" />
+
+  <main class="flex flex-col flex-1">
+    <section class="pt-9 pb-10 px-5 bg-gradient-to-b from-blush to-paper text-center">
+      <!-- Cover -->
+      <div
+        class="mx-auto mb-5 aspect-[2/3] w-[140px] rounded-[8px] shadow-[0_6px_16px_rgba(92,36,48,.25)] flex flex-col items-center justify-center p-[14px_12px] overflow-hidden relative"
+        style={{ background: work.coverBg }}
+      >
+        <div class="absolute inset-[7px] border border-paper/35 rounded-[4px] pointer-events-none"></div>
+        <span class="text-[9px] tracking-[.16em] text-paper/75 text-center mb-auto">{work.tag}</span>
+        <h3
+          class="my-auto font-serif font-semibold leading-[1.25] text-paper text-center"
+          style={{ fontSize: work.coverSize }}
+        >
+          {work.title}
+        </h3>
+        <span class="text-[9px] tracking-[.14em] text-paper/75 text-center mt-auto">RATNA MAHARANI</span>
+      </div>
+
+      <span class="inline-flex text-[10px] tracking-[.14em] font-semibold text-faint border border-rose/25 rounded-full py-[5px] px-[10px] mb-[8px]">
+        {work.genre}
+      </span>
+      <h1 class="m-0 mb-[10px] font-serif text-[32px] font-semibold leading-[1.2] text-ink">
+        {work.title}
+      </h1>
+      <p class="m-0 mb-2 text-[16px] italic leading-[1.5] text-muted">
+        &ldquo;{work.hook}&rdquo;
+      </p>
+      <p class="m-0 mb-6 text-[13px] text-faint">
+        {work.readers} &middot; {work.status}
+        {work.series ? ` &middot; ${work.series}` : ''}
+      </p>
+
+      <a
+        href={work.kbmUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex items-center justify-center min-h-[54px] bg-rose text-paper rounded-[14px] text-[16px] font-semibold no-underline max-w-[320px] mx-auto"
+      >
+        Baca di KBM &rarr;
+      </a>
+    </section>
+  </main>
+
+  <SiteFooter author={author} />
+</BaseLayout>

@@ -1,0 +1,238 @@
+{
+  "tier": "hero",
+  "penName": "Ratna Maharani",
+  "tagline": "Penulis romance keluarga & rumah tangga",
+  "bioShort": "Menulis kisah rumah tangga yang dekat dengan hidup kita \u2014 tentang cinta, luka, dan perempuan yang memilih bertahan atau pergi. Lebih dari 32 juta kali dibaca di KBM App.",
+  "bioLong": "Ratna Maharani menulis romance keluarga yang akrab di telinga perempuan Indonesia. Karyanya terbit di KBM App dan telah dibaca puluhan juta kali.",
+  "kbmProfileUrl": "https://kbm.id/ratna-maharani?ref=homebase",
+  "waChannelUrl": "https://whatsapp.com/channel/ratnamaharani",
+  "managementWa": "https://wa.me/6281200000000",
+  "socials": [
+    { "label": "KBM", "url": "https://kbm.id/ratna-maharani?ref=homebase" },
+    { "label": "Instagram", "url": "https://instagram.com/ratnamaharani" }
+  ],
+  "works": [
+    {
+      "slug": "istri-kedua",
+      "title": "Istri Kedua",
+      "genre": "Romance",
+      "hook": "Ketika rumah tangga yang dibangun dengan sabar mulai retak dari dalam.",
+      "readers": "18 juta pembaca",
+      "tag": "SERI UTAMA",
+      "coverBg": "linear-gradient(160deg,#5C2430,#7A3341)",
+      "coverSize": "20px",
+      "kbmUrl": "https://kbm.id/ratna-maharani/istri-kedua?ref=homebase",
+      "status": "TAMAT",
+      "series": "Istri Kedua"
+    },
+    {
+      "slug": "istri-kedua-musim-2",
+      "title": "Istri Kedua: Musim 2",
+      "genre": "Romance",
+      "hook": "Lanjutan dari sudut yang belum pernah diceritakan.",
+      "readers": "Spin-off \u00b7 sedang tayang",
+      "tag": "SPIN-OFF \u00b7 BARU",
+      "coverBg": "linear-gradient(160deg,#7A3341,#A05055)",
+      "coverSize": "17px",
+      "kbmUrl": "https://kbm.id/ratna-maharani/istri-kedua-musim-2?ref=homebase",
+      "status": "TAYANG",
+      "series": "Istri Kedua"
+    },
+    {
+      "slug": "menantu-pilihan-ibu",
+      "title": "Menantu Pilihan Ibu",
+      "genre": "Romance",
+      "hook": "Ibu memilih menantu. Hati memilih yang lain.",
+      "readers": "9 juta pembaca",
+      "tag": "NOVEL LEPAS",
+      "coverBg": "linear-gradient(160deg,#6E3B33,#94574C)",
+      "coverSize": "18px",
+      "kbmUrl": "https://kbm.id/ratna-maharani/menantu-pilihan-ibu?ref=homebase",
+      "status": "TAMAT"
+    },
+    {
+      "slug": "jodoh-untuk-laras",
+      "title": "Jodoh untuk Laras",
+      "genre": "Romance",
+      "hook": "Laras menulis surat yang tak pernah ia kirim.",
+      "readers": "5 juta pembaca",
+      "tag": "NOVEL LEPAS",
+      "coverBg": "linear-gradient(160deg,#8A5A52,#B07E71)",
+      "coverSize": "18px",
+      "kbmUrl": "https://kbm.id/ratna-maharani/jodoh-untuk-laras?ref=homebase",
+      "status": "TAMAT"
+    }
+  ],
+  "timeline": [
+    {
+      "year": "2021",
+      "title": "Bab pertama ditulis",
+      "detail": "Mulai menulis \u201cIstri Kedua\u201d di sela mengurus rumah, diunggah diam-diam ke KBM App.",
+      "dot": "#B98A7C"
+    },
+    {
+      "year": "2022",
+      "title": "Viral pertama",
+      "detail": "\u201cIstri Kedua\u201d menembus 1 juta pembaca dalam 3 bulan dan masuk jajaran trending KBM.",
+      "dot": "#A05055"
+    },
+    {
+      "year": "2024",
+      "title": "Penulis Terlaris KBM App",
+      "detail": "18 juta pembaca \u201cIstri Kedua\u201d \u2014 dinobatkan sebagai penulis terlaris KBM App.",
+      "dot": "#7A3341"
+    },
+    {
+      "year": "2025",
+      "title": "\u201cMusim 2\u201d dimulai",
+      "detail": "Spin-off \u201cIstri Kedua: Musim 2\u201d tayang \u2014 melanjutkan kisah dari sudut yang baru.",
+      "dot": "#5C2430"
+    }
+  ],
+  "latestChapters": [
+    {
+      "workSlug": "istri-kedua-musim-2",
+      "workTitle": "Istri Kedua: Musim 2",
+      "title": "Bab 47 \u2014 Pintu yang Tak Pernah Dikunci",
+      "date": "3 Juli 2026",
+      "kbmUrl": "https://kbm.id/ratna-maharani/istri-kedua-musim-2?ref=homebase",
+      "teaser": "Ada yang mengetuk dari sisi rumah yang seharusnya kosong."
+    }
+  ],
+  "bonuses": [
+    {
+      "id": "b1",
+      "jenis": "DELETED SCENE",
+      "title": "Malam Sebelum Akad",
+      "karya": "Istri Kedua",
+      "teaser": "Adegan yang dipotong dari Bab 12: percakapan terakhir Arini dengan ibunya.",
+      "excerpt": "Ibu tidak menyalakan lampu. \u201cKamu masih bisa pulang,\u201d katanya pelan.",
+      "published": true,
+      "opens": "3.412"
+    },
+    {
+      "id": "b2",
+      "jenis": "POV EKSTRA",
+      "title": "POV Mas Bram",
+      "karya": "Istri Kedua",
+      "teaser": "Bab 23 diceritakan ulang dari mata Bram.",
+      "excerpt": "Aku bukan tidak melihat. Aku melihat semuanya.",
+      "published": true,
+      "opens": "2.871"
+    },
+    {
+      "id": "b3",
+      "jenis": "SURAT",
+      "title": "Surat Laras yang Tak Pernah Dikirim",
+      "karya": "Jodoh untuk Laras",
+      "teaser": "Ditulis Laras di halaman belakang buku resepnya.",
+      "excerpt": "Kalau surat ini sampai padamu, berarti aku sudah cukup berani.",
+      "published": false,
+      "opens": "\u2014"
+    }
+  ],
+  "readingMain": [
+    {
+      "workSlug": "istri-kedua",
+      "title": "Istri Kedua",
+      "badge": "1 \u00b7 MULAI DI SINI",
+      "badgeBg": "#5C2430",
+      "badgeColor": "#F4E3DE",
+      "border": "#7A3341",
+      "coverBg": "linear-gradient(160deg,#5C2430,#7A3341)",
+      "desc": "Kisah utama Arini \u2014 200 bab, tamat. Fondasi seluruh semesta.",
+      "kbmUrl": "https://kbm.id/ratna-maharani/istri-kedua?ref=homebase",
+      "showArrow": true
+    },
+    {
+      "workSlug": "istri-kedua-musim-2",
+      "title": "Istri Kedua: Musim 2",
+      "badge": "2 \u00b7 SPIN-OFF",
+      "badgeBg": "#F4E3DE",
+      "badgeColor": "#7A3341",
+      "border": "rgba(122,51,65,.2)",
+      "coverBg": "linear-gradient(160deg,#7A3341,#A05055)",
+      "desc": "Lanjutan dari sudut baru \u2014 baca setelah kisah utama.",
+      "kbmUrl": "https://kbm.id/ratna-maharani/istri-kedua-musim-2?ref=homebase",
+      "showArrow": false
+    }
+  ],
+  "readingSide": [
+    {
+      "title": "Menantu Pilihan Ibu",
+      "desc": "9 juta pembaca \u00b7 tamat",
+      "coverBg": "linear-gradient(160deg,#6E3B33,#94574C)",
+      "kbmUrl": "https://kbm.id/ratna-maharani/menantu-pilihan-ibu?ref=homebase"
+    },
+    {
+      "title": "Jodoh untuk Laras",
+      "desc": "5 juta pembaca \u00b7 tamat",
+      "coverBg": "linear-gradient(160deg,#8A5A52,#B07E71)",
+      "kbmUrl": "https://kbm.id/ratna-maharani/jodoh-untuk-laras?ref=homebase"
+    }
+  ],
+  "collab": {
+    "stats": [
+      { "value": "32 jt+", "label": "total dibaca di KBM" },
+      { "value": "4", "label": "karya \u00b7 1 seri semesta" },
+      { "value": "#1", "label": "Penulis Terlaris KBM 2024" }
+    ],
+    "openTo": [
+      "Penerbitan cetak & digital",
+      "Adaptasi film / series",
+      "Kolaborasi brand & endorsement",
+      "Wawancara media & podcast"
+    ],
+    "kitNote": "PDF 2 halaman \u00b7 bio, statistik, katalog karya \u00b7 1,4 MB"
+  },
+  "demoReaders": [
+    { "name": "Dewi Anggraini", "wa": "0812-3456-7801", "source": "Beranda", "date": "7 Jul 2026", "when": "2 jam lalu", "initials": "DA" },
+    { "name": "Siti Rahmawati", "wa": "0857-2210-4432", "source": "Beranda", "date": "7 Jul 2026", "when": "5 jam lalu", "initials": "SR" },
+    { "name": "Fitri Handayani", "wa": "0813-9987-2210", "source": "Beranda", "date": "6 Jul 2026", "when": "kemarin", "initials": "FH" },
+    { "name": "Maya Kusuma", "wa": "0821-5567-8890", "source": "Beranda", "date": "6 Jul 2026", "when": "kemarin", "initials": "MK" }
+  ],
+  "universe": {
+    "name": "Istri Kedua",
+    "blurb": "Semesta rumah tangga Arini \u2014 tentang pilihan, diam, dan pintu yang tak pernah benar-benar tertutup.",
+    "characters": [
+      {
+        "slug": "arini",
+        "name": "Arini",
+        "role": "Protagonis",
+        "quote": "Aku tidak pergi karena lemah. Aku pergi karena masih ingin utuh.",
+        "bio": "Istri yang belajar membedakan sabar dan menyerah.",
+        "relations": ["Bram", "Ibu"]
+      },
+      {
+        "slug": "bram",
+        "name": "Bram",
+        "role": "Suami",
+        "quote": "Aku melihat semuanya. Justru karena itu aku diam.",
+        "bio": "Lelaki yang menunda kata sampai terlambat.",
+        "relations": ["Arini"]
+      },
+      {
+        "slug": "laras",
+        "name": "Laras",
+        "role": "Tokoh silang karya",
+        "quote": "Surat ini hanya berani sampai di halaman resep.",
+        "bio": "Perempuan yang menulis lebih berani daripada ia berbicara.",
+        "relations": []
+      }
+    ],
+    "storyTimeline": [
+      { "id": "st1", "title": "Akad yang terburu", "spoiler": false, "body": "Arini menikah dengan janji rumah yang tenang." },
+      { "id": "st2", "title": "Meja makan yang sunyi", "spoiler": true, "body": "Diam Bram di Bab 23 mengubah segalanya." },
+      { "id": "st3", "title": "Pintu belakang", "spoiler": true, "body": "Musim 2 membuka sisi rumah yang dulu dikunci." }
+    ],
+    "locations": [
+      { "id": "loc1", "name": "Rumah di Gang Melati", "blurb": "Rumah kecil tempat seluruh retakan dimulai." },
+      { "id": "loc2", "name": "Dapur Ibu", "blurb": "Tempat nasehat dan tekanan datang bersamaan." }
+    ],
+    "trivia": [
+      { "q": "Kenapa judulnya Istri Kedua?", "a": "Bukan soal poligami semata \u2014 soal urutan prioritas di hati." },
+      { "q": "Apakah Musim 2 wajib setelah tamat?", "a": "Ya, agar spoiler kisah utama tidak bocor." }
+    ],
+    "playlistUrl": "https://open.spotify.com/"
+  }
+}
