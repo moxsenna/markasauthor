@@ -1,0 +1,70 @@
+---
+import UpgradeLock from './UpgradeLock.astro';
+
+export interface NavItem {
+  key: string;
+  label: string;
+  enabled: boolean;
+}
+
+export interface Props {
+  activeTab?: string;
+}
+
+const { activeTab } = Astro.props;
+
+const navItems: NavItem[] = [
+  { key: 'ringkasan', label: 'Ringkasan', enabled: true },
+  { key: 'rilis', label: 'Kabar Rilis', enabled: true },
+  { key: 'database', label: 'Database', enabled: true },
+  { key: 'tema', label: 'Tema', enabled: true },
+  { key: 'bonus', label: 'Ruang Bonus', enabled: false },
+  { key: 'peta', label: 'Peta Baca', enabled: false },
+];
+---
+
+<nav style="display:flex;flex-direction:column;gap:4px;padding-top:16px">
+  {
+    navItems.map((item) => {
+      const isActive = activeTab === item.key;
+      return (
+        <button
+          data-tab={item.key}
+          class="ops-nav-btn"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            textAlign: 'left',
+            background: isActive ? '#F4E3DE' : 'transparent',
+            border: 'none',
+            borderRadius: '10px',
+            padding: '12px 14px',
+            cursor: item.enabled ? 'pointer' : 'default',
+            fontFamily: 'Lora, serif',
+            fontSize: '14px',
+            fontWeight: isActive ? 600 : 400,
+            color: isActive ? '#5C2430' : item.enabled ? '#D9C4BB' : '#8A7670',
+            opacity: item.enabled ? 1 : 0.55,
+          }}
+        >
+          <span
+            style={{
+              width: '6px',
+              height: '6px',
+              borderRadius: '50%',
+              background: isActive
+                ? '#7A3341'
+                : item.enabled
+                  ? 'rgba(217,196,187,.35)'
+                  : 'rgba(217,196,187,.12)',
+              flex: 'none',
+            }}
+          ></span>
+          <span>{item.label}</span>
+          {!item.enabled && <UpgradeLock />}
+        </button>
+      );
+    })
+  }
+</nav>
