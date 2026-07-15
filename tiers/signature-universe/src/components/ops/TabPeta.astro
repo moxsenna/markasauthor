@@ -4,87 +4,175 @@ import type { ReadingNode } from '../../lib/types';
 export interface Props {
   readingMain: ReadingNode[];
   readingSide: { title: string; desc: string; coverBg: string; kbmUrl: string }[];
+  tier: string;
 }
 
-const { readingMain, readingSide } = Astro.props;
-const allNodes = [
-  ...readingMain.map((n) => ({ ...n, kind: 'main' as const })),
-  ...readingSide.map((n) => ({ ...n, kind: 'side' as const })),
-];
+const { readingMain, readingSide, tier } = Astro.props;
+const seedMain = JSON.stringify(readingMain);
+const seedSide = JSON.stringify(readingSide);
 ---
 
-<div>
-  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:22px">
+<div data-ops-peta data-tier={tier}>
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap">
     <div>
-      <h1 style="margin:0 0 6px;font-family:'Playfair Display',serif;font-size:32px;font-weight:600;color:#3B2A28">
-        Peta Baca
-      </h1>
-      <p style="margin:0;font-size:14px;color:#7A5A50">
-        Urutan baca yang ditampilkan di halaman publik /peta-baca.
-      </p>
+      <h1 style="margin:0 0 6px;font-family:'Playfair Display',serif;font-size:32px;font-weight:600;color:#3B2A28">Peta Baca</h1>
+      <p style="margin:0;font-size:14px;color:#7A5A50">Urutkan jalur baca utama & lepas. Toggle tampil di publik.</p>
+    </div>
+    <button type="button" id="peta-add" style="height:48px;padding:0 20px;background:#7A3341;color:#FBF6EF;border:none;border-radius:12px;font-family:Lora,serif;font-size:14px;font-weight:600;cursor:pointer">+ Node</button>
+  </div>
+
+  <h2 style="margin:0 0 10px;font-family:'Playfair Display',serif;font-size:18px;color:#3B2A28">Jalur utama</h2>
+  <div id="peta-main" style="display:flex;flex-direction:column;gap:8px;margin-bottom:22px"></div>
+  <h2 style="margin:0 0 10px;font-family:'Playfair Display',serif;font-size:18px;color:#3B2A28">Novel lepas</h2>
+  <div id="peta-side" style="display:flex;flex-direction:column;gap:8px"></div>
+
+  <div id="peta-form" hidden style="margin-top:18px;background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:12px">
+    <h2 style="margin:0;font-family:'Playfair Display',serif;font-size:20px">Node peta</h2>
+    <label style="font-size:13px;font-weight:600">Jenis
+      <select id="peta-kind" style="display:block;width:100%;margin-top:6px;height:46px;padding:0 12px;border-radius:10px;border:1px solid rgba(122,51,65,.25);background:#FFFDF9;font-family:Lora,serif">
+        <option value="main">Jalur utama</option>
+        <option value="side">Lepas</option>
+      </select>
+    </label>
+    <label style="font-size:13px;font-weight:600">Judul<input id="peta-title" style="display:block;width:100%;margin-top:6px;height:46px;padding:0 12px;border-radius:10px;border:1px solid rgba(122,51,65,.25);background:#FFFDF9;font-family:Lora,serif;box-sizing:border-box" /></label>
+    <label style="font-size:13px;font-weight:600">Deskripsi<textarea id="peta-desc" rows="2" style="display:block;width:100%;margin-top:6px;padding:10px 12px;border-radius:10px;border:1px solid rgba(122,51,65,.25);background:#FFFDF9;font-family:Lora,serif;box-sizing:border-box"></textarea></label>
+    <label style="font-size:13px;font-weight:600">URL KBM<input id="peta-url" style="display:block;width:100%;margin-top:6px;height:46px;padding:0 12px;border-radius:10px;border:1px solid rgba(122,51,65,.25);background:#FFFDF9;font-family:Lora,serif;box-sizing:border-box" /></label>
+    <div style="display:flex;gap:10px">
+      <button type="button" id="peta-save" style="height:46px;padding:0 20px;background:#7A3341;color:#FBF6EF;border:none;border-radius:11px;font-family:Lora,serif;font-weight:600;cursor:pointer">Simpan</button>
+      <button type="button" id="peta-cancel" style="height:46px;padding:0 20px;background:none;border:1.5px solid #7A3341;color:#7A3341;border-radius:11px;font-family:Lora,serif;font-weight:600;cursor:pointer">Batal</button>
     </div>
   </div>
-
-  <div style="display:flex;flex-direction:column;gap:8px">
-    {allNodes.map((node, i) => (
-      <div
-        style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:14px;padding:16px 20px;display:flex;align-items:center;gap:14px"
-      >
-        <div
-          class="peta-cover-thumb"
-          style={`flex:none;width:40px;aspect-ratio:2/3;border-radius:3px;display:flex;align-items:center;justify-content:center;padding:4px;background:${node.coverBg}`}
-        >
-          <span style="font-family:'Playfair Display',serif;font-size:7px;font-weight:600;line-height:1.3;color:#FBF6EF;text-align:center">
-            {node.title}
-          </span>
-        </div>
-        <div style="flex:1;min-width:0">
-          <div style="display:flex;align-items:center;gap:8px">
-            <span style="font-size:12px;letter-spacing:.06em;color:#8A6A5E;font-weight:600">
-              {node.kind === 'main' ? 'SEMESTA' : 'LEPAS'}
-            </span>
-            <span style="font-size:10px;color:#8A6A5E">#{i + 1}</span>
-          </div>
-          <h3 style="margin:3px 0 0;font-family:'Playfair Display',serif;font-size:17px;font-weight:600;color:#3B2A28;line-height:1.3">
-            {node.title}
-          </h3>
-          <p style="margin:3px 0 0;font-size:12px;color:#9A8078">{node.desc}</p>
-        </div>
-        <span
-          class="peta-toggle-published"
-          style="flex:none;width:36px;height:22px;border-radius:11px;background:#7A3341;position:relative;cursor:pointer"
-          data-published="true"
-        >
-          <span
-            style="position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;background:#FBF6EF;transition:all .2s"
-          ></span>
-        </span>
-      </div>
-    ))}
-  </div>
-
-  <p style="margin:16px 2px 0;font-size:12px;color:#9A8078">
-    Toggle tampil/sembunyi bersifat lokal &mdash; simulasi.
-  </p>
+  <p style="margin:16px 2px 0;font-size:12px;color:#9A8078">Urutan & toggle disimpan lokal.</p>
 </div>
 
-<script>
-  document.querySelectorAll<HTMLElement>('.peta-toggle-published').forEach((toggle) => {
-    toggle.addEventListener('click', () => {
-      const isPublished = toggle.dataset.published === 'true';
-      const newPublished = !isPublished;
-      toggle.dataset.published = String(newPublished);
+<script type="application/json" id="peta-main-seed" set:html={seedMain} />
+<script type="application/json" id="peta-side-seed" set:html={seedSide} />
 
-      const knob = toggle.querySelector('span') as HTMLElement;
-      if (newPublished) {
-        toggle.style.background = '#7A3341';
-        knob.style.right = '2px';
-        knob.style.left = 'auto';
-      } else {
-        toggle.style.background = '#C4A9A0';
-        knob.style.right = 'auto';
-        knob.style.left = '2px';
-      }
+<script>
+  import type { ReadingNode } from '../../lib/types';
+  import { loadContent, saveContent, moveItem, toast } from '../../lib/demo-store';
+  import author from '../../data/author.json';
+
+  type Side = { title: string; desc: string; coverBg: string; kbmUrl: string; visible?: boolean };
+  type Main = ReadingNode & { visible?: boolean };
+
+  const root = document.querySelector('[data-ops-peta]') as HTMLElement;
+  const tier = root?.dataset.tier || 'signature';
+  const seedMain = JSON.parse(document.getElementById('peta-main-seed')!.textContent || '[]') as Main[];
+  const seedSide = JSON.parse(document.getElementById('peta-side-seed')!.textContent || '[]') as Side[];
+
+  function get() {
+    const c = loadContent(tier, author as any);
+    return {
+      main: (c.readingMain?.length ? c.readingMain : seedMain).map((n) => ({ visible: true, ...n })),
+      side: (c.readingSide?.length ? c.readingSide : seedSide).map((n) => ({ visible: true, ...n })),
+    };
+  }
+  function persist(main: Main[], side: Side[]) {
+    saveContent(tier, { readingMain: main, readingSide: side }, author as any);
+    toast('Peta baca disimpan');
+    render();
+  }
+  function esc(s: string) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function rowHtml(kind: 'main' | 'side', n: Main | Side, i: number) {
+    const vis = n.visible !== false;
+    return `<div data-kind="${kind}" data-i="${i}" style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;opacity:${vis ? 1 : 0.55}">
+      <div style="flex:none;width:36px;aspect-ratio:2/3;border-radius:3px;background:${n.coverBg};display:flex;align-items:center;justify-content:center;padding:3px">
+        <span style="font-family:'Playfair Display',serif;font-size:7px;font-weight:600;color:#FBF6EF;text-align:center">${esc(n.title)}</span>
+      </div>
+      <div style="flex:1;min-width:140px">
+        <span style="font-size:11px;color:#8A6A5E;font-weight:600">#${i + 1} · ${kind === 'main' ? 'SEMESTA' : 'LEPAS'}</span>
+        <h3 style="margin:2px 0 0;font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:#3B2A28">${esc(n.title)}</h3>
+        <p style="margin:2px 0 0;font-size:12px;color:#9A8078">${esc(n.desc)}</p>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button type="button" data-act="up" style="min-height:34px;padding:0 10px;border-radius:8px;border:1px solid rgba(122,51,65,.25);background:#FFFDF9;cursor:pointer;font-size:12px">↑</button>
+        <button type="button" data-act="down" style="min-height:34px;padding:0 10px;border-radius:8px;border:1px solid rgba(122,51,65,.25);background:#FFFDF9;cursor:pointer;font-size:12px">↓</button>
+        <button type="button" data-act="vis" style="min-height:34px;padding:0 10px;border-radius:8px;border:none;background:${vis ? '#1E7A57' : '#C4A9A0'};color:#FBF6EF;cursor:pointer;font-size:12px;font-weight:600">${vis ? 'Tampil' : 'Sembunyi'}</button>
+        <button type="button" data-act="del" style="min-height:34px;padding:0 10px;border-radius:8px;border:1.5px solid #B0483C;background:none;color:#B0483C;cursor:pointer;font-size:12px;font-weight:600">Hapus</button>
+      </div>
+    </div>`;
+  }
+
+  function bindList(el: HTMLElement, kind: 'main' | 'side') {
+    el.querySelectorAll('[data-i]').forEach((row) => {
+      const i = Number((row as HTMLElement).dataset.i);
+      row.querySelector('[data-act="up"]')?.addEventListener('click', () => {
+        const { main, side } = get();
+        if (kind === 'main') persist(moveItem(main, i, -1), side);
+        else persist(main, moveItem(side, i, -1));
+      });
+      row.querySelector('[data-act="down"]')?.addEventListener('click', () => {
+        const { main, side } = get();
+        if (kind === 'main') persist(moveItem(main, i, 1), side);
+        else persist(main, moveItem(side, i, 1));
+      });
+      row.querySelector('[data-act="vis"]')?.addEventListener('click', () => {
+        const { main, side } = get();
+        if (kind === 'main') {
+          main[i] = { ...main[i], visible: main[i].visible === false };
+          persist(main, side);
+        } else {
+          side[i] = { ...side[i], visible: side[i].visible === false };
+          persist(main, side);
+        }
+      });
+      row.querySelector('[data-act="del"]')?.addEventListener('click', () => {
+        if (!confirm('Hapus node?')) return;
+        const { main, side } = get();
+        if (kind === 'main') persist(main.filter((_, idx) => idx !== i), side);
+        else persist(main, side.filter((_, idx) => idx !== i));
+      });
     });
+  }
+
+  function render() {
+    const { main, side } = get();
+    const m = document.getElementById('peta-main')!;
+    const s = document.getElementById('peta-side')!;
+    m.innerHTML = main.map((n, i) => rowHtml('main', n, i)).join('') || '<p style="color:#9A8078;font-size:13px">Belum ada node utama.</p>';
+    s.innerHTML = side.map((n, i) => rowHtml('side', n, i)).join('') || '<p style="color:#9A8078;font-size:13px">Belum ada novel lepas.</p>';
+    bindList(m, 'main');
+    bindList(s, 'side');
+  }
+
+  document.getElementById('peta-add')?.addEventListener('click', () => {
+    document.getElementById('peta-form')!.hidden = false;
   });
+  document.getElementById('peta-cancel')?.addEventListener('click', () => {
+    document.getElementById('peta-form')!.hidden = true;
+  });
+  document.getElementById('peta-save')?.addEventListener('click', () => {
+    const title = (document.getElementById('peta-title') as HTMLInputElement).value.trim();
+    if (!title) return toast('Judul wajib');
+    const kind = (document.getElementById('peta-kind') as HTMLSelectElement).value as 'main' | 'side';
+    const desc = (document.getElementById('peta-desc') as HTMLTextAreaElement).value.trim() || '—';
+    const kbmUrl = (document.getElementById('peta-url') as HTMLInputElement).value.trim() || 'https://kbm.id/?ref=homebase';
+    const { main, side } = get();
+    if (kind === 'main') {
+      main.push({
+        workSlug: title.toLowerCase().replace(/\s+/g, '-'),
+        title,
+        badge: `${main.length + 1} · NODE`,
+        badgeBg: '#5C2430',
+        badgeColor: '#F4E3DE',
+        border: '#7A3341',
+        coverBg: 'linear-gradient(160deg,#5C2430,#7A3341)',
+        desc,
+        kbmUrl,
+        showArrow: true,
+        visible: true,
+      });
+    } else {
+      side.push({ title, desc, coverBg: 'linear-gradient(160deg,#6E3B33,#94574C)', kbmUrl, visible: true });
+    }
+    document.getElementById('peta-form')!.hidden = true;
+    (document.getElementById('peta-title') as HTMLInputElement).value = '';
+    persist(main, side);
+  });
+
+  render();
 </script>

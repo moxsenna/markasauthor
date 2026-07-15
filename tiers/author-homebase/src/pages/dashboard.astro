@@ -27,16 +27,16 @@ const tabs = ['ringkasan', 'rilis', 'karya', 'bonus', 'peta', 'database', 'tema'
       <TabRilis works={author.works} fallbackChapters={author.latestChapters} />
     </div>
     <div class="ops-tab-panel" data-tab-panel="karya" hidden>
-      <TabKarya works={author.works} />
+      <TabKarya works={author.works} tier="hero" />
     </div>
     <div class="ops-tab-panel" data-tab-panel="bonus" hidden>
-      <TabBonus bonuses={author.bonuses} />
+      <TabBonus bonuses={author.bonuses} tier="hero" />
     </div>
     <div class="ops-tab-panel" data-tab-panel="peta" hidden>
-      <TabPeta readingMain={author.readingMain} readingSide={author.readingSide} />
+      <TabPeta readingMain={author.readingMain} readingSide={author.readingSide} tier="hero" />
     </div>
     <div class="ops-tab-panel" data-tab-panel="database" hidden>
-      <TabDatabase readers={author.demoReaders} />
+      <TabDatabase readers={author.demoReaders} tier="hero" />
     </div>
     <div class="ops-tab-panel" data-tab-panel="tema" hidden>
       <TabTema />

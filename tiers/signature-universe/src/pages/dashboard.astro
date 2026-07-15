@@ -38,22 +38,22 @@ const tabs = [
       <TabRilis works={author.works} fallbackChapters={author.latestChapters} />
     </div>
     <div class="ops-tab-panel" data-tab-panel="karya" hidden>
-      <TabKarya works={author.works} />
+      <TabKarya works={author.works} tier="signature" />
     </div>
     <div class="ops-tab-panel" data-tab-panel="bonus" hidden>
-      <TabBonus bonuses={author.bonuses} />
+      <TabBonus bonuses={author.bonuses} tier="signature" />
     </div>
     <div class="ops-tab-panel" data-tab-panel="peta" hidden>
-      <TabPeta readingMain={author.readingMain} readingSide={author.readingSide} />
+      <TabPeta readingMain={author.readingMain} readingSide={author.readingSide} tier="signature" />
     </div>
     <div class="ops-tab-panel" data-tab-panel="database" hidden>
-      <TabDatabase readers={author.demoReaders} />
+      <TabDatabase readers={author.demoReaders} tier="signature" />
     </div>
     <div class="ops-tab-panel" data-tab-panel="tema" hidden>
       <TabTema />
     </div>
     <div class="ops-tab-panel" data-tab-panel="universe" hidden>
-      <TabUniverse />
+      <TabUniverse tier="signature" />
     </div>
   </div>
 

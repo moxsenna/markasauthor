@@ -84,6 +84,7 @@ const active = themes[0];
       {active.nama}
     </span>
   </div>
+  <p id="tema-save-note" style="margin:0 0 14px;font-size:12px;color:#9A8078">Klik palet untuk menerapkan &amp; menyimpan pilihan (simulasi).</p>
 
   <!-- Theme Swatches -->
   <div
@@ -92,7 +93,9 @@ const active = themes[0];
   >
     {themes.map((t) => (
       <button
+        class="theme-swatch"
         data-theme={t.key}
+        data-theme-nama={t.nama}
         data-theme-primary={t.primary}
         data-theme-deep={t.deep}
         data-theme-ink={t.ink}
@@ -267,9 +270,34 @@ const active = themes[0];
     root.style.setProperty('--color-ink', ink);
     root.style.setProperty('--color-blush', data.themeSoft!);
     root.style.setProperty('--color-paper', bg);
+
+    // Persist theme key for presentation
+    try {
+      const key = 'ma-demo-starter';
+      const raw = localStorage.getItem(key);
+      const state = raw ? JSON.parse(raw) : {};
+      state.theme = data.theme || nama;
+      localStorage.setItem(key, JSON.stringify(state));
+      const note = document.getElementById('tema-save-note');
+      if (note) note.textContent = `Tema “${nama}” tersimpan di perangkat (simulasi).`;
+    } catch (_) {}
   }
 
   swatches.forEach((btn) => {
     btn.addEventListener('click', () => selectTheme(btn));
   });
+
+  // hydrate saved theme if any
+  try {
+    const raw = localStorage.getItem('ma-demo-starter');
+    if (raw) {
+      const state = JSON.parse(raw);
+      if (state.theme) {
+        const match = Array.from(swatches).find(
+          (s) => s.dataset.theme === state.theme || s.dataset.themeNama === state.theme,
+        );
+        if (match) selectTheme(match as HTMLElement);
+      }
+    }
+  } catch (_) {}
 </script>

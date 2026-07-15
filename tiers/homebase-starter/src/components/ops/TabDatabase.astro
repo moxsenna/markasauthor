@@ -3,154 +3,142 @@ import type { DemoReader } from '../../lib/types';
 
 export interface Props {
   readers: DemoReader[];
+  tier: string;
 }
 
-const { readers } = Astro.props;
+const { readers, tier } = Astro.props;
+const seed = JSON.stringify(readers);
 ---
 
-<div>
-  <div
-    style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:22px"
-  >
+<div data-ops-db data-tier={tier}>
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap">
     <div>
-      <h1
-        style="margin:0 0 6px;font-family:'Playfair Display',serif;font-size:32px;font-weight:600;color:#3B2A28"
-      >
-        Database Pembaca
-      </h1>
-      <p style="margin:0;font-size:14px;color:#7A5A50">
-        {readers.length} kontak demo — simulasi, bukan data asli.
-      </p>
+      <h1 style="margin:0 0 6px;font-family:'Playfair Display',serif;font-size:32px;font-weight:600;color:#3B2A28">Database Pembaca</h1>
+      <p style="margin:0;font-size:14px;color:#7A5A50"><span id="db-total">{readers.length}</span> kontak · simulasi Sheet milikmu.</p>
     </div>
-    <div style="display:flex;gap:10px;flex:none">
-      <a
-        href="#"
-        style="display:flex;align-items:center;justify-content:center;height:48px;padding:0 20px;background:none;border:1.5px solid #7A3341;color:#7A3341;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none"
-      >
-        Buka Google Sheet &rarr;
-      </a>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button type="button" id="db-add" style="height:48px;padding:0 18px;background:#7A3341;color:#FBF6EF;border:none;border-radius:12px;font-family:Lora,serif;font-size:14px;font-weight:600;cursor:pointer">+ Kontak</button>
+      <button type="button" id="db-export" style="height:48px;padding:0 18px;background:none;border:1.5px solid #7A3341;color:#7A3341;border-radius:12px;font-family:Lora,serif;font-size:14px;font-weight:600;cursor:pointer">Export CSV</button>
     </div>
   </div>
 
-  <!-- Quick Stats -->
-  <div
-    style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px"
-  >
-    <div
-      style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:14px;padding:16px 20px"
-    >
-      <p style="margin:0;font-size:12px;color:#8A6A5E">Total kontak</p>
-      <p
-        style="margin:6px 0 0;font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#5C2430"
-      >
-        {readers.length}
-      </p>
+  <div style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:18px;overflow:hidden">
+    <div style="display:flex;align-items:center;gap:14px;padding:16px 22px;border-bottom:1px solid rgba(122,51,65,.12);flex-wrap:wrap">
+      <input type="text" id="db-cari" placeholder="Cari nama atau nomor…" style="flex:1;min-width:180px;height:44px;padding:0 14px;border-radius:10px;border:1px solid rgba(122,51,65,.2);background:#FFFDF9;font-family:Lora,serif;font-size:14px;box-sizing:border-box" />
+      <span id="db-count" style="font-size:13px;color:#9A8078">0 kontak</span>
     </div>
-    <div
-      style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:14px;padding:16px 20px"
-    >
-      <p style="margin:0;font-size:12px;color:#8A6A5E">Sumber terbesar</p>
-      <p
-        style="margin:6px 0 0;font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#5C2430"
-      >
-        Beranda
-      </p>
-    </div>
-    <div
-      style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:14px;padding:16px 20px"
-    >
-      <p style="margin:0;font-size:12px;color:#8A6A5E">Data tersimpan</p>
-      <p
-        style="margin:6px 0 0;font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#5C2430"
-      >
-        Google Sheet
-      </p>
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+      <div style="display:grid;grid-template-columns:2fr 1.6fr 1.2fr 1fr 90px;gap:0;padding:10px 22px;font-size:11px;letter-spacing:.1em;color:#8A6A5E;font-weight:600;border-bottom:1px solid rgba(122,51,65,.12);min-width:640px">
+        <span>NAMA</span><span>WA</span><span>SUMBER</span><span>TANGGAL</span><span></span>
+      </div>
+      <div id="db-rows" style="min-width:640px"></div>
     </div>
   </div>
 
-  <!-- Table -->
-  <div
-    style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:18px;overflow:hidden"
-  >
-    <div class="ops-scroll-x" style="overflow-x:auto;-webkit-overflow-scrolling:touch">
-    <div
-      style="display:flex;align-items:center;gap:14px;padding:16px 22px;border-bottom:1px solid rgba(122,51,65,.12)"
-    >
-      <input
-        type="text"
-        id="db-cari"
-        placeholder="Cari nama atau nomor…"
-        style="flex:1;height:44px;padding:0 14px;border-radius:10px;border:1px solid rgba(122,51,65,.2);background:#FFFDF9;color:#3B2A28;font-family:Lora,serif;font-size:14px;box-sizing:border-box"
-      />
-      <span id="db-count" style="flex:none;font-size:13px;color:#9A8078">
-        {readers.length} kontak
-      </span>
-    </div>
-    <div
-      style="display:grid;grid-template-columns:2fr 1.6fr 1.2fr 1fr;gap:0;padding:10px 22px;font-size:11px;letter-spacing:.1em;color:#8A6A5E;font-weight:600;border-bottom:1px solid rgba(122,51,65,.12)"
-    >
-      <span>NAMA</span><span>NOMOR WA</span><span>SUMBER</span><span>TANGGAL</span>
-    </div>
-    <div id="db-rows">
-      {readers.map((r) => (
-        <div
-          style="display:grid;grid-template-columns:2fr 1.6fr 1.2fr 1fr;gap:0;padding:13px 22px;border-bottom:1px solid rgba(122,51,65,.08);font-size:14px;color:#3B2A28;align-items:center"
-        >
-          <span style="font-weight:600">{r.name}</span>
-          <span style="color:#6A5248">{r.wa}</span>
-          <span>
-            <span
-              style="font-size:11px;font-weight:600;color:#7A3341;background:#F4E3DE;border-radius:999px;padding:4px 10px"
-            >
-              {r.source}
-            </span>
-          </span>
-          <span style="color:#9A8078;font-size:13px">{r.date}</span>
-        </div>
-      ))}
-    </div>
+  <div id="db-form" hidden style="margin-top:18px;background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:12px">
+    <h2 style="margin:0;font-family:'Playfair Display',serif;font-size:20px">Kontak baru</h2>
+    <label style="font-size:13px;font-weight:600">Nama<input id="db-name" style="display:block;width:100%;margin-top:6px;height:46px;padding:0 12px;border-radius:10px;border:1px solid rgba(122,51,65,.25);background:#FFFDF9;font-family:Lora,serif;box-sizing:border-box" /></label>
+    <label style="font-size:13px;font-weight:600">WhatsApp<input id="db-wa" placeholder="08…" style="display:block;width:100%;margin-top:6px;height:46px;padding:0 12px;border-radius:10px;border:1px solid rgba(122,51,65,.25);background:#FFFDF9;font-family:Lora,serif;box-sizing:border-box" /></label>
+    <label style="font-size:13px;font-weight:600">Sumber
+      <select id="db-source" style="display:block;width:100%;margin-top:6px;height:46px;padding:0 12px;border-radius:10px;border:1px solid rgba(122,51,65,.25);background:#FFFDF9;font-family:Lora,serif">
+        <option>Beranda</option><option>Ruang Bonus</option><option>Manual</option>
+      </select>
+    </label>
+    <div style="display:flex;gap:10px">
+      <button type="button" id="db-save" style="height:46px;padding:0 20px;background:#7A3341;color:#FBF6EF;border:none;border-radius:11px;font-family:Lora,serif;font-weight:600;cursor:pointer">Simpan</button>
+      <button type="button" id="db-cancel" style="height:46px;padding:0 20px;background:none;border:1.5px solid #7A3341;color:#7A3341;border-radius:11px;font-family:Lora,serif;font-weight:600;cursor:pointer">Batal</button>
     </div>
   </div>
 </div>
 
-<script type="application/json" id="readers-json">
-  {JSON.stringify(readers)}
-</script>
+<script type="application/json" id="db-seed" set:html={seed} />
 
 <script>
   import type { DemoReader } from '../../lib/types';
+  import { loadContent, saveContent, toast } from '../../lib/demo-store';
+  import author from '../../data/author.json';
 
-  const readersEl = document.getElementById('readers-json');
-  const allReaders: DemoReader[] = readersEl
-    ? JSON.parse(readersEl.textContent || '[]')
-    : [];
+  const root = document.querySelector('[data-ops-db]') as HTMLElement;
+  const tier = root?.dataset.tier || 'signature';
+  const seed = JSON.parse(document.getElementById('db-seed')!.textContent || '[]') as DemoReader[];
 
-  const inputCari = document.getElementById('db-cari') as HTMLInputElement;
-  const dbCount = document.getElementById('db-count')!;
-  const dbRows = document.getElementById('db-rows')!;
-
-  function renderRows(q: string) {
-    const filtered = q
-      ? allReaders.filter(
-          (r) =>
-            r.name.toLowerCase().includes(q) || r.wa.includes(q),
-        )
-      : allReaders;
-    dbCount.textContent = `${filtered.length} kontak`;
-    dbRows.innerHTML = filtered
-      .map(
-        (r) =>
-          `<div style="display:grid;grid-template-columns:2fr 1.6fr 1.2fr 1fr;gap:0;padding:13px 22px;border-bottom:1px solid rgba(122,51,65,.08);font-size:14px;color:#3B2A28;align-items:center">
-            <span style="font-weight:600">${r.name}</span>
-            <span style="color:#6A5248">${r.wa}</span>
-            <span><span style="font-size:11px;font-weight:600;color:#7A3341;background:#F4E3DE;border-radius:999px;padding:4px 10px">${r.source}</span></span>
-            <span style="color:#9A8078;font-size:13px">${r.date}</span>
-          </div>`,
-      )
-      .join('');
+  function getList(): DemoReader[] {
+    const c = loadContent(tier, author as any);
+    return c.demoReaders?.length ? c.demoReaders : seed;
+  }
+  function persist(list: DemoReader[]) {
+    saveContent(tier, { demoReaders: list }, author as any);
+    toast('Database disimpan');
+    render();
+  }
+  function esc(s: string) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function initials(name: string) {
+    return name.split(/\s+/).map((p) => p[0]).join('').slice(0, 2).toUpperCase();
   }
 
-  inputCari.addEventListener('input', () => {
-    renderRows(inputCari.value.trim().toLowerCase());
+  function render(q = '') {
+    const all = getList();
+    const list = all.filter((r) => !q || (r.name + r.wa).toLowerCase().includes(q));
+    document.getElementById('db-count')!.textContent = `${list.length} kontak`;
+    document.getElementById('db-total')!.textContent = String(all.length);
+    const rows = document.getElementById('db-rows')!;
+    rows.innerHTML =
+      list
+        .map(
+          (r) => `<div data-name="${esc(r.name)}" style="display:grid;grid-template-columns:2fr 1.6fr 1.2fr 1fr 90px;gap:0;padding:13px 22px;border-bottom:1px solid rgba(122,51,65,.08);font-size:14px;align-items:center">
+        <span style="font-weight:600">${esc(r.name)}</span>
+        <span style="color:#6A5248">${esc(r.wa)}</span>
+        <span style="font-size:11px;font-weight:600;color:#7A3341;background:#F4E3DE;border-radius:999px;padding:4px 10px;justify-self:start">${esc(r.source)}</span>
+        <span style="color:#9A8078;font-size:13px">${esc(r.date)}</span>
+        <button type="button" data-act="del" style="justify-self:end;min-height:32px;padding:0 10px;border-radius:8px;border:1px solid #B0483C;background:none;color:#B0483C;cursor:pointer;font-size:12px;font-weight:600">Hapus</button>
+      </div>`,
+        )
+        .join('') || `<p style="padding:20px;color:#9A8078;font-size:13px">Tidak ada kontak.</p>`;
+    rows.querySelectorAll('[data-act="del"]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const name = (btn.closest('[data-name]') as HTMLElement)?.dataset.name;
+        if (!name || !confirm(`Hapus ${name}?`)) return;
+        persist(getList().filter((r) => r.name !== name));
+      });
+    });
+  }
+
+  document.getElementById('db-cari')?.addEventListener('input', (e) =>
+    render((e.target as HTMLInputElement).value.trim().toLowerCase()),
+  );
+  document.getElementById('db-add')?.addEventListener('click', () => {
+    document.getElementById('db-form')!.hidden = false;
   });
+  document.getElementById('db-cancel')?.addEventListener('click', () => {
+    document.getElementById('db-form')!.hidden = true;
+  });
+  document.getElementById('db-save')?.addEventListener('click', () => {
+    const name = (document.getElementById('db-name') as HTMLInputElement).value.trim();
+    const wa = (document.getElementById('db-wa') as HTMLInputElement).value.trim();
+    if (!name || wa.replace(/\D/g, '').length < 9) return toast('Nama & WA valid wajib');
+    const item: DemoReader = {
+      name,
+      wa,
+      source: (document.getElementById('db-source') as HTMLSelectElement).value,
+      date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }),
+      when: 'baru saja',
+      initials: initials(name),
+    };
+    document.getElementById('db-form')!.hidden = true;
+    (document.getElementById('db-name') as HTMLInputElement).value = '';
+    (document.getElementById('db-wa') as HTMLInputElement).value = '';
+    persist([item, ...getList()]);
+  });
+  document.getElementById('db-export')?.addEventListener('click', () => {
+    const list = getList();
+    const csv = ['nama,wa,sumber,tanggal', ...list.map((r) => `"${r.name}","${r.wa}","${r.source}","${r.date}"`)].join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.download = 'database-pembaca.csv';
+    a.click();
+    toast('CSV diunduh');
+  });
+  render();
 </script>

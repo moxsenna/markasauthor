@@ -3,83 +3,179 @@ import type { BonusItem } from '../../lib/types';
 
 export interface Props {
   bonuses: BonusItem[];
+  tier: string;
 }
 
-const { bonuses } = Astro.props;
+const { bonuses, tier } = Astro.props;
+const seed = JSON.stringify(bonuses);
 ---
 
-<div>
-  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:22px">
+<div data-ops-bonus data-tier={tier}>
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap">
     <div>
       <h1 style="margin:0 0 6px;font-family:'Playfair Display',serif;font-size:32px;font-weight:600;color:#3B2A28">
         Ruang Bonus
       </h1>
       <p style="margin:0;font-size:14px;color:#7A5A50">
-        {bonuses.length} konten bonus &middot; kelola visibilitas publik.
+        Tambah, edit, tampilkan/sembunyikan bonus — disimpan di perangkat (simulasi).
       </p>
+    </div>
+    <button
+      type="button"
+      id="bonus-add"
+      style="height:48px;padding:0 20px;background:#7A3341;color:#FBF6EF;border:none;border-radius:12px;font-family:Lora,serif;font-size:14px;font-weight:600;cursor:pointer"
+    >
+      + Tambah Bonus
+    </button>
+  </div>
+
+  <div id="bonus-list" style="display:flex;flex-direction:column;gap:12px"></div>
+
+  <div
+    id="bonus-form"
+    hidden
+    style="margin-top:18px;background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:12px"
+  >
+    <h2 style="margin:0;font-family:'Playfair Display',serif;font-size:20px;color:#3B2A28" id="bonus-form-title">
+      Bonus baru
+    </h2>
+    <input type="hidden" id="bonus-id" />
+    <label style="font-size:13px;font-weight:600;color:#5A453F">Jenis
+      <select id="bonus-jenis" style="display:block;width:100%;margin-top:6px;height:46px;padding:0 12px;border-radius:10px;border:1px solid rgba(122,51,65,.25);background:#FFFDF9;font-family:Lora,serif">
+        <option>DELETED SCENE</option>
+        <option>POV EKSTRA</option>
+        <option>SURAT</option>
+        <option>TRIVIA</option>
+        <option>CATATAN PENULIS</option>
+      </select>
+    </label>
+    <label style="font-size:13px;font-weight:600;color:#5A453F">Judul
+      <input id="bonus-title" style="display:block;width:100%;margin-top:6px;height:46px;padding:0 12px;border-radius:10px;border:1px solid rgba(122,51,65,.25);background:#FFFDF9;font-family:Lora,serif;box-sizing:border-box" />
+    </label>
+    <label style="font-size:13px;font-weight:600;color:#5A453F">Dari karya
+      <input id="bonus-karya" style="display:block;width:100%;margin-top:6px;height:46px;padding:0 12px;border-radius:10px;border:1px solid rgba(122,51,65,.25);background:#FFFDF9;font-family:Lora,serif;box-sizing:border-box" />
+    </label>
+    <label style="font-size:13px;font-weight:600;color:#5A453F">Teaser
+      <textarea id="bonus-teaser" rows="2" style="display:block;width:100%;margin-top:6px;padding:10px 12px;border-radius:10px;border:1px solid rgba(122,51,65,.25);background:#FFFDF9;font-family:Lora,serif;box-sizing:border-box"></textarea>
+    </label>
+    <label style="font-size:13px;font-weight:600;color:#5A453F">Cuplikan (bukan isi chapter)
+      <textarea id="bonus-excerpt" rows="3" style="display:block;width:100%;margin-top:6px;padding:10px 12px;border-radius:10px;border:1px solid rgba(122,51,65,.25);background:#FFFDF9;font-family:Lora,serif;box-sizing:border-box"></textarea>
+    </label>
+    <label style="display:flex;align-items:center;gap:8px;font-size:14px;color:#5A453F">
+      <input type="checkbox" id="bonus-published" /> Publik (tampil di situs)
+    </label>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button type="button" id="bonus-save" style="height:46px;padding:0 20px;background:#7A3341;color:#FBF6EF;border:none;border-radius:11px;font-family:Lora,serif;font-weight:600;cursor:pointer">Simpan</button>
+      <button type="button" id="bonus-cancel" style="height:46px;padding:0 20px;background:none;border:1.5px solid #7A3341;color:#7A3341;border-radius:11px;font-family:Lora,serif;font-weight:600;cursor:pointer">Batal</button>
     </div>
   </div>
 
-  <div style="display:flex;flex-direction:column;gap:12px">
-    {bonuses.map((b) => (
-      <div
-        style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:16px;padding:18px 22px;display:flex;align-items:center;gap:14px"
-      >
-        <div style="flex:1;min-width:0">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-            <span style="font-size:10px;letter-spacing:.14em;color:#B98A7C;font-weight:600">{b.jenis}</span>
-            <span
-              style={`font-size:10px;letter-spacing:.1em;font-weight:600;color:${b.published ? '#1E7A57' : '#8A6A5E'};border:1px solid ${b.published ? 'rgba(30,122,87,.4)' : 'rgba(122,51,65,.25)'};border-radius:999px;padding:3px 8px`}
-            >
-              {b.published ? 'PUBLIK' : 'DRAFT'}
-            </span>
-          </div>
-          <h3 style="margin:0 0 3px;font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:#3B2A28;line-height:1.3">
-            {b.title}
-          </h3>
-          <p style="margin:0;font-size:12px;color:#9A8078;font-style:italic">
-            dari &ldquo;{b.karya}&rdquo; &middot; {b.opens} buka
-          </p>
-          <p style="margin:6px 0 0;font-size:13px;line-height:1.5;color:#6A5248">
-            {b.teaser}
-          </p>
-        </div>
-        <button
-          class="bonus-toggle-publish"
-          data-bonus-id={b.id}
-          data-published={String(b.published)}
-          style={`flex:none;min-height:42px;padding:0 18px;border-radius:10px;font-family:Lora,Georgia,serif;font-size:13px;font-weight:600;cursor:pointer;background:${b.published ? '#F4E3DE' : '#7A3341'};color:${b.published ? '#7A3341' : '#FBF6EF'};border:${b.published ? '1.5px solid #7A3341' : 'none'}`}
-        >
-          {b.published ? 'Sembunyikan' : 'Tampilkan'}
-        </button>
-      </div>
-    ))}
-  </div>
-
-  <p style="margin:16px 2px 0;font-size:12px;color:#9A8078">
-    Ubah status tampil/sembunyi bersifat lokal &mdash; simulasi dashboard.
-  </p>
+  <p style="margin:16px 2px 0;font-size:12px;color:#9A8078">Perubahan lokal (localStorage) — tidak ke server.</p>
 </div>
 
-<script>
-  document.querySelectorAll<HTMLElement>('.bonus-toggle-publish').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const published = btn.dataset.published === 'true';
-      const newPublished = !published;
-      btn.dataset.published = String(newPublished);
-      btn.textContent = newPublished ? 'Sembunyikan' : 'Tampilkan';
-      btn.style.background = newPublished ? '#F4E3DE' : '#7A3341';
-      btn.style.color = newPublished ? '#7A3341' : '#FBF6EF';
-      btn.style.border = newPublished ? '1.5px solid #7A3341' : 'none';
+<script type="application/json" id="bonus-seed" set:html={seed} />
 
-      // Update status badge
-      const card = btn.closest('div')?.parentElement;
-      const badge = card?.querySelector('span:nth-child(1) > span:nth-child(2)') as HTMLElement | null;
-      if (badge) {
-        badge.textContent = newPublished ? 'PUBLIK' : 'DRAFT';
-        badge.style.color = newPublished ? '#1E7A57' : '#8A6A5E';
-        badge.style.borderColor = newPublished ? 'rgba(30,122,87,.4)' : 'rgba(122,51,65,.25)';
-      }
+<script>
+  import type { BonusItem } from '../../lib/types';
+  import { loadContent, saveContent, toast } from '../../lib/demo-store';
+  import author from '../../data/author.json';
+
+  const root = document.querySelector('[data-ops-bonus]') as HTMLElement;
+  const tier = root?.dataset.tier || 'signature';
+  const seed = JSON.parse(document.getElementById('bonus-seed')!.textContent || '[]') as BonusItem[];
+
+  function getList(): BonusItem[] {
+    const c = loadContent(tier, author as any);
+    return c.bonuses?.length ? c.bonuses : seed;
+  }
+
+  function persist(list: BonusItem[]) {
+    saveContent(tier, { bonuses: list }, author as any);
+    toast('Bonus disimpan');
+    render();
+  }
+
+  function render() {
+    const list = getList();
+    const el = document.getElementById('bonus-list')!;
+    el.innerHTML = list
+      .map(
+        (b) => `
+      <div style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:16px;padding:18px 22px;display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap" data-id="${b.id}">
+        <div style="flex:1;min-width:200px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
+            <span style="font-size:10px;letter-spacing:.14em;color:#B98A7C;font-weight:600">${b.jenis}</span>
+            <span style="font-size:10px;letter-spacing:.1em;font-weight:600;color:${b.published ? '#1E7A57' : '#8A6A5E'};border:1px solid ${b.published ? 'rgba(30,122,87,.4)' : 'rgba(122,51,65,.25)'};border-radius:999px;padding:3px 8px">${b.published ? 'PUBLIK' : 'DRAFT'}</span>
+          </div>
+          <h3 style="margin:0 0 3px;font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:#3B2A28">${escapeHtml(b.title)}</h3>
+          <p style="margin:0;font-size:12px;color:#9A8078;font-style:italic">dari “${escapeHtml(b.karya)}”</p>
+          <p style="margin:6px 0 0;font-size:13px;line-height:1.5;color:#6A5248">${escapeHtml(b.teaser)}</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;flex:none">
+          <button type="button" data-act="toggle" style="min-height:38px;padding:0 14px;border-radius:10px;font-family:Lora,serif;font-size:13px;font-weight:600;cursor:pointer;background:${b.published ? '#F4E3DE' : '#7A3341'};color:${b.published ? '#7A3341' : '#FBF6EF'};border:${b.published ? '1.5px solid #7A3341' : 'none'}">${b.published ? 'Sembunyikan' : 'Tampilkan'}</button>
+          <button type="button" data-act="edit" style="min-height:38px;padding:0 14px;border-radius:10px;font-family:Lora,serif;font-size:13px;font-weight:600;cursor:pointer;background:none;border:1.5px solid #7A3341;color:#7A3341">Edit</button>
+          <button type="button" data-act="del" style="min-height:38px;padding:0 14px;border-radius:10px;font-family:Lora,serif;font-size:13px;font-weight:600;cursor:pointer;background:none;border:1.5px solid #B0483C;color:#B0483C">Hapus</button>
+        </div>
+      </div>`,
+      )
+      .join('');
+
+    el.querySelectorAll('[data-id]').forEach((card) => {
+      const id = (card as HTMLElement).dataset.id!;
+      card.querySelector('[data-act="toggle"]')?.addEventListener('click', () => {
+        const list = getList().map((b) => (b.id === id ? { ...b, published: !b.published } : b));
+        persist(list);
+      });
+      card.querySelector('[data-act="edit"]')?.addEventListener('click', () => openForm(getList().find((b) => b.id === id)));
+      card.querySelector('[data-act="del"]')?.addEventListener('click', () => {
+        if (!confirm('Hapus bonus ini?')) return;
+        persist(getList().filter((b) => b.id !== id));
+      });
     });
+  }
+
+  function escapeHtml(s: string) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function openForm(item?: BonusItem) {
+    const form = document.getElementById('bonus-form')!;
+    form.hidden = false;
+    (document.getElementById('bonus-form-title') as HTMLElement).textContent = item ? 'Edit bonus' : 'Bonus baru';
+    (document.getElementById('bonus-id') as HTMLInputElement).value = item?.id || '';
+    (document.getElementById('bonus-jenis') as HTMLSelectElement).value = item?.jenis || 'DELETED SCENE';
+    (document.getElementById('bonus-title') as HTMLInputElement).value = item?.title || '';
+    (document.getElementById('bonus-karya') as HTMLInputElement).value = item?.karya || '';
+    (document.getElementById('bonus-teaser') as HTMLTextAreaElement).value = item?.teaser || '';
+    (document.getElementById('bonus-excerpt') as HTMLTextAreaElement).value = item?.excerpt || '';
+    (document.getElementById('bonus-published') as HTMLInputElement).checked = item?.published ?? false;
+    form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  document.getElementById('bonus-add')?.addEventListener('click', () => openForm());
+  document.getElementById('bonus-cancel')?.addEventListener('click', () => {
+    document.getElementById('bonus-form')!.hidden = true;
   });
+  document.getElementById('bonus-save')?.addEventListener('click', () => {
+    const id = (document.getElementById('bonus-id') as HTMLInputElement).value || `b${Date.now()}`;
+    const item: BonusItem = {
+      id,
+      jenis: (document.getElementById('bonus-jenis') as HTMLSelectElement).value,
+      title: (document.getElementById('bonus-title') as HTMLInputElement).value.trim(),
+      karya: (document.getElementById('bonus-karya') as HTMLInputElement).value.trim(),
+      teaser: (document.getElementById('bonus-teaser') as HTMLTextAreaElement).value.trim(),
+      excerpt: (document.getElementById('bonus-excerpt') as HTMLTextAreaElement).value.trim(),
+      published: (document.getElementById('bonus-published') as HTMLInputElement).checked,
+      opens: '—',
+    };
+    if (!item.title) return toast('Judul wajib');
+    const list = getList();
+    const i = list.findIndex((b) => b.id === id);
+    if (i >= 0) list[i] = { ...list[i], ...item, opens: list[i].opens };
+    else list.unshift(item);
+    document.getElementById('bonus-form')!.hidden = true;
+    persist(list);
+  });
+
+  render();
 </script>

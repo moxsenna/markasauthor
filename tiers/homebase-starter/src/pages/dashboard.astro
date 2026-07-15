@@ -25,7 +25,7 @@ const locked = new Set(['karya', 'bonus', 'peta']);
       <TabRilis works={author.works} fallbackChapters={author.latestChapters} />
     </div>
     <div class="ops-tab-panel" data-tab-panel="database" hidden>
-      <TabDatabase readers={author.demoReaders} />
+      <TabDatabase readers={author.demoReaders} tier="starter" />
     </div>
     <div class="ops-tab-panel" data-tab-panel="tema" hidden>
       <TabTema />
