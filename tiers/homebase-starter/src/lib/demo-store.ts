@@ -150,6 +150,54 @@ export function publishChapter(tier: string, chapter: LatestChapter, previous: L
   return next;
 }
 
+
+export function toggleBonusPublished(
+  tier: string,
+  bonusId: string,
+  author: AuthorData,
+): ContentState {
+  const current = loadContent(tier, author);
+  const bonuses = (current.bonuses || []).map((b) =>
+    b.id === bonusId ? { ...b, published: !b.published } : b,
+  );
+  return saveContent(tier, { bonuses }, author);
+}
+
+export function setWorkStatus(
+  tier: string,
+  workSlug: string,
+  status: Work['status'],
+  author: AuthorData,
+): ContentState {
+  const current = loadContent(tier, author);
+  const works = (current.works || []).map((w) =>
+    w.slug === workSlug ? { ...w, status } : w,
+  );
+  return saveContent(tier, { works }, author);
+}
+
+export function addUniverseTrivia(
+  tier: string,
+  item: { q: string; a: string },
+  author: AuthorData,
+): ContentState {
+  const current = loadContent(tier, author);
+  const base = current.universe ||
+    author.universe || {
+      name: '',
+      blurb: '',
+      characters: [],
+      storyTimeline: [],
+      locations: [],
+      trivia: [],
+    };
+  const universe = {
+    ...base,
+    trivia: [...(base.trivia || []), { q: item.q, a: item.a }],
+  };
+  return saveContent(tier, { universe }, author);
+}
+
 export function buildWaMessage(chapter: LatestChapter) {
   return (
     `📖 BAB BARU TERBIT\n` +
