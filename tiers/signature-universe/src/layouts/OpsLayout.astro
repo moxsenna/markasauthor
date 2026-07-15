@@ -223,57 +223,86 @@ const { penName, packageLabel = 'Paket Signature' } = Astro.props;
           width: 100%;
         }
 
-        /* Stack common dashboard headers */
-        .ops-main > #tab-content > * > div[style*='align-items:flex-end'] {
+        /* Generic flexible children */
+        .ops-main h1 {
+          font-size: clamp(24px, 6vw, 32px) !important;
+          line-height: 1.2 !important;
+          word-break: normal !important;
+          overflow-wrap: anywhere;
+        }
+
+        .ops-main img,
+        .ops-main video {
+          max-width: 100%;
+        }
+
+        /* Stack flex headers that use space-between */
+        .ops-main #tab-content > div > div > div[style*='justify-content:space-between'],
+        .ops-main #tab-content > * > div[style*='justify-content:space-between'] {
           flex-direction: column !important;
           align-items: stretch !important;
         }
 
         .ops-main a[style*='height:48px'],
+        .ops-main button[style*='height:48px'],
         .ops-main a[style*='height: 48px'] {
           width: 100%;
           justify-content: center !important;
           box-sizing: border-box;
         }
 
-        /* 4-col stats → 2 */
-        .ops-main div[style*='grid-template-columns:repeat(4'] {
-          grid-template-columns: repeat(2, 1fr) !important;
+        /* Common multi-col grids from inline styles */
+        .ops-main div[style*='grid-template-columns:repeat(4'],
+        .ops-main div[style*='grid-template-columns: repeat(4'] {
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         }
 
-        /* 3-col → 1 or 2 */
-        .ops-main div[style*='grid-template-columns:repeat(3'] {
-          grid-template-columns: 1fr !important;
+        .ops-main div[style*='grid-template-columns:repeat(3'],
+        .ops-main div[style*='grid-template-columns: repeat(3'],
+        .ops-main div[style*='grid-template-columns:1fr 420px'],
+        .ops-main div[style*='grid-template-columns: 1fr 420px'] {
+          grid-template-columns: minmax(0, 1fr) !important;
         }
 
-        /* Rilis two-column form */
-        .ops-main div[style*='grid-template-columns:1fr 420px'] {
-          grid-template-columns: 1fr !important;
-        }
-
-        /* Database table header/rows: allow horizontal scroll */
-        .ops-main div[style*='grid-template-columns:2fr 1.6fr'] {
+        .ops-main div[style*='grid-template-columns:2fr 1.6fr'],
+        .ops-main div[style*='grid-template-columns: 2fr'] {
           min-width: 560px;
-        }
-
-        .ops-main div[style*='overflow'] {
-          max-width: 100%;
         }
       }
 
       @media (max-width: 560px) {
-        .ops-main h1[style*='font-size:32px'] {
-          font-size: 26px !important;
+        .ops-main h1 {
+          font-size: 24px !important;
         }
 
-        .ops-main div[style*='grid-template-columns:repeat(4'] {
-          grid-template-columns: 1fr 1fr !important;
+        .ops-main div[style*='grid-template-columns:repeat(4'],
+        .ops-main div[style*='grid-template-columns: repeat(4'] {
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
           gap: 10px !important;
         }
 
+        .ops-main p[style*='font-size:30px'],
         .ops-main div[style*='font-size:30px'] {
-          font-size: 24px !important;
+          font-size: 22px !important;
         }
+
+        /* Theme swatches: 1 col on phone */
+        .ops-main #swatches {
+          grid-template-columns: 1fr !important;
+        }
+      }
+
+      /* Prevent horizontal page scroll from wide children */
+      .ops-main,
+      .ops-main #tab-content,
+      .ops-tab-panel {
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      .ops-tab-panel > * {
+        min-width: 0;
+        max-width: 100%;
       }
 
       /* Horizontal scroll wrapper for wide tables */

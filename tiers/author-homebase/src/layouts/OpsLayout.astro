@@ -23,6 +23,7 @@ const { penName, packageLabel = 'Paket Homebase' } = Astro.props;
       rel="stylesheet"
     />
     <style is:global>
+      /* ---- Ops shell responsive ---- */
       .ops-banner {
         background: #fff3cd;
         color: #7a5a50;
@@ -34,11 +35,13 @@ const { penName, packageLabel = 'Paket Homebase' } = Astro.props;
         top: 0;
         z-index: 60;
       }
+
       .ops-shell {
         display: flex;
         min-height: calc(100vh - 41px);
         position: relative;
       }
+
       .ops-topbar {
         display: none;
         align-items: center;
@@ -51,6 +54,7 @@ const { penName, packageLabel = 'Paket Homebase' } = Astro.props;
         z-index: 55;
         border-bottom: 1px solid rgba(217, 196, 187, 0.18);
       }
+
       .ops-menu-btn {
         width: 44px;
         height: 44px;
@@ -66,6 +70,7 @@ const { penName, packageLabel = 'Paket Homebase' } = Astro.props;
         gap: 5px;
         flex: none;
       }
+
       .ops-menu-btn span {
         display: block;
         width: 18px;
@@ -73,6 +78,7 @@ const { penName, packageLabel = 'Paket Homebase' } = Astro.props;
         background: #fbf6ef;
         border-radius: 2px;
       }
+
       .ops-topbar-title {
         font-family: 'Playfair Display', Georgia, serif;
         font-size: 17px;
@@ -80,12 +86,14 @@ const { penName, packageLabel = 'Paket Homebase' } = Astro.props;
         margin: 0;
         line-height: 1.2;
       }
+
       .ops-topbar-sub {
         margin: 2px 0 0;
         font-size: 11px;
         color: #b99a8e;
         font-style: italic;
       }
+
       .ops-aside {
         width: 248px;
         flex: none;
@@ -100,10 +108,12 @@ const { penName, packageLabel = 'Paket Homebase' } = Astro.props;
         padding: 24px 16px;
         z-index: 50;
       }
+
       .ops-aside-brand {
         padding: 0 10px 20px;
         border-bottom: 1px solid rgba(217, 196, 187, 0.18);
       }
+
       .ops-aside-brand h1 {
         margin: 0;
         font-family: 'Playfair Display', serif;
@@ -111,36 +121,14 @@ const { penName, packageLabel = 'Paket Homebase' } = Astro.props;
         font-weight: 600;
         color: #fbf6ef;
       }
+
       .ops-aside-brand p {
         margin: 4px 0 0;
         font-size: 12px;
         font-style: italic;
         color: #b99a8e;
       }
-      .ops-aside-foot {
-        margin-top: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        padding: 0 4px;
-      }
-      .ops-main {
-        flex: 1;
-        min-width: 0;
-        padding: 36px 44px 56px;
-        box-sizing: border-box;
-        background: #f3ebe0;
-      }
-      .ops-overlay {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(59, 42, 40, 0.45);
-        z-index: 45;
-        border: none;
-        padding: 0;
-        cursor: pointer;
-      }
+
       .ops-menu-close {
         display: none;
         width: 40px;
@@ -154,22 +142,56 @@ const { penName, packageLabel = 'Paket Homebase' } = Astro.props;
         flex: none;
         line-height: 1;
       }
+
+      .ops-aside-foot {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 0 4px;
+      }
+
+      .ops-main {
+        flex: 1;
+        min-width: 0;
+        padding: 36px 44px 56px;
+        box-sizing: border-box;
+        background: #f3ebe0;
+      }
+
+      .ops-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(59, 42, 40, 0.45);
+        z-index: 45;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+      }
+
+      /* Tablet */
       @media (max-width: 1024px) {
         .ops-main {
           padding: 28px 24px 48px;
         }
       }
+
+      /* Mobile + small tablet: drawer sidebar */
       @media (max-width: 900px) {
         .ops-topbar {
           display: flex;
         }
+
         .ops-menu-close {
           display: block;
         }
+
         .ops-shell {
           flex-direction: column;
           min-height: calc(100vh - 41px - 68px);
         }
+
         .ops-aside {
           position: fixed;
           top: 0;
@@ -183,49 +205,112 @@ const { penName, packageLabel = 'Paket Homebase' } = Astro.props;
           padding-top: 20px;
           z-index: 70;
         }
+
         body.ops-nav-open .ops-aside {
           transform: translateX(0);
         }
+
         body.ops-nav-open .ops-overlay {
           display: block;
         }
+
         body.ops-nav-open {
           overflow: hidden;
         }
+
         .ops-main {
           padding: 20px 16px 40px;
           width: 100%;
         }
-        .ops-main > #tab-content > * > div[style*='align-items:flex-end'] {
+
+        /* Generic flexible children */
+        .ops-main h1 {
+          font-size: clamp(24px, 6vw, 32px) !important;
+          line-height: 1.2 !important;
+          word-break: normal !important;
+          overflow-wrap: anywhere;
+        }
+
+        .ops-main img,
+        .ops-main video {
+          max-width: 100%;
+        }
+
+        /* Stack flex headers that use space-between */
+        .ops-main #tab-content > div > div > div[style*='justify-content:space-between'],
+        .ops-main #tab-content > * > div[style*='justify-content:space-between'] {
           flex-direction: column !important;
           align-items: stretch !important;
         }
-        .ops-main a[style*='height:48px'] {
+
+        .ops-main a[style*='height:48px'],
+        .ops-main button[style*='height:48px'],
+        .ops-main a[style*='height: 48px'] {
           width: 100%;
           justify-content: center !important;
           box-sizing: border-box;
         }
-        .ops-main div[style*='grid-template-columns:repeat(4'] {
-          grid-template-columns: repeat(2, 1fr) !important;
+
+        /* Common multi-col grids from inline styles */
+        .ops-main div[style*='grid-template-columns:repeat(4'],
+        .ops-main div[style*='grid-template-columns: repeat(4'] {
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         }
-        .ops-main div[style*='grid-template-columns:repeat(3'] {
-          grid-template-columns: 1fr !important;
+
+        .ops-main div[style*='grid-template-columns:repeat(3'],
+        .ops-main div[style*='grid-template-columns: repeat(3'],
+        .ops-main div[style*='grid-template-columns:1fr 420px'],
+        .ops-main div[style*='grid-template-columns: 1fr 420px'] {
+          grid-template-columns: minmax(0, 1fr) !important;
         }
-        .ops-main div[style*='grid-template-columns:1fr 420px'] {
-          grid-template-columns: 1fr !important;
-        }
-        .ops-main div[style*='grid-template-columns:2fr 1.6fr'] {
+
+        .ops-main div[style*='grid-template-columns:2fr 1.6fr'],
+        .ops-main div[style*='grid-template-columns: 2fr'] {
           min-width: 560px;
         }
       }
+
       @media (max-width: 560px) {
-        .ops-main h1[style*='font-size:32px'] {
-          font-size: 26px !important;
+        .ops-main h1 {
+          font-size: 24px !important;
         }
-        .ops-main div[style*='grid-template-columns:repeat(4'] {
-          grid-template-columns: 1fr 1fr !important;
+
+        .ops-main div[style*='grid-template-columns:repeat(4'],
+        .ops-main div[style*='grid-template-columns: repeat(4'] {
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
           gap: 10px !important;
         }
+
+        .ops-main p[style*='font-size:30px'],
+        .ops-main div[style*='font-size:30px'] {
+          font-size: 22px !important;
+        }
+
+        /* Theme swatches: 1 col on phone */
+        .ops-main #swatches {
+          grid-template-columns: 1fr !important;
+        }
+      }
+
+      /* Prevent horizontal page scroll from wide children */
+      .ops-main,
+      .ops-main #tab-content,
+      .ops-tab-panel {
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      .ops-tab-panel > * {
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      /* Horizontal scroll wrapper for wide tables */
+      .ops-scroll-x {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 0 -4px;
+        padding: 0 4px;
       }
     </style>
   </head>
@@ -281,9 +366,7 @@ const { penName, packageLabel = 'Paket Homebase' } = Astro.props;
             >
             </div>
             <div style="min-width:0">
-              <p
-                style="margin:0;font-size:13px;font-weight:600;color:#FBF6EF;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
-              >
+              <p style="margin:0;font-size:13px;font-weight:600;color:#FBF6EF;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
                 {penName}
               </p>
               <p style="margin:0;font-size:11px;color:#B99A8E">{packageLabel}</p>

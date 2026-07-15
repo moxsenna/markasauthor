@@ -24,7 +24,7 @@ const tabs = ['ringkasan', 'rilis', 'karya', 'bonus', 'peta', 'database', 'tema'
       <TabRingkasan penName={author.penName} tagline={author.tagline} />
     </div>
     <div class="ops-tab-panel" data-tab-panel="rilis" hidden>
-      <TabRilis works={author.works} fallbackChapters={author.latestChapters} />
+      <TabRilis works={author.works} fallbackChapters={author.latestChapters} tier="hero" />
     </div>
     <div class="ops-tab-panel" data-tab-panel="karya" hidden>
       <TabKarya works={author.works} tier="hero" />
