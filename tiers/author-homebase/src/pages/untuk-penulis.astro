@@ -16,13 +16,13 @@ const author = authorData as AuthorData;
       href="/dashboard"
       style="font-size:13px;color:#7A5A50;text-decoration:none;display:inline-flex;align-items:center;gap:4px"
     >
-      &larr; Dashboard
+      ← Dashboard
     </a>
     <a
       href="/"
       style="font-size:13px;color:#7A5A50;text-decoration:none;display:inline-flex;align-items:center;gap:4px"
     >
-      &larr; Beranda
+      ← Beranda
     </a>
   </div>
 
@@ -31,9 +31,36 @@ const author = authorData as AuthorData;
   >
     Simulasi Telegram
   </h1>
-  <p style="margin:0 0 20px;max-width:620px;font-size:14px;line-height:1.6;color:#7A5A50">
-    Notifikasi &amp; aksi cepat dari HP &mdash; simulasi frontend, bukan bot asli. Data disimpan di <em>localStorage</em>.
+  <p style="margin:0 0 16px;max-width:620px;font-size:14px;line-height:1.6;color:#7A5A50">
+    Coba aksi ops penulis seperti di HP: update bab, cek status, toggle bonus, ubah status karya,
+    tambah trivia semesta. Bukan bot asli — data di <em>localStorage</em>, sinkron dengan Dashboard.
   </p>
+
+  <div
+    id="tg-guide-strip"
+    style="background:#F4E3DE;border:1px solid rgba(122,51,65,.2);border-radius:14px;padding:14px 18px;margin-bottom:8px;max-width:520px"
+  >
+    <div
+      style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#7A3341;font-weight:700;margin-bottom:6px"
+    >
+      Panduan coba
+    </div>
+    <p style="margin:0 0 10px;font-size:13px;color:#3B2A28;line-height:1.5">
+      Alur demo utama: <strong>Update Bab</strong> → pilih karya → judul → teaser → publikasi →
+      salin pesan WA.
+    </p>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <button type="button" data-tg-guide="update" class="tg-guide-chip" style="background:#7A3341;color:#fff;border:none;border-radius:999px;padding:6px 12px;font-size:12px;font-family:Lora,serif;cursor:pointer">
+        1. Update Bab
+      </button>
+      <button type="button" data-tg-guide="status" class="tg-guide-chip" style="background:#fff;border:1px solid rgba(122,51,65,.25);color:#7A3341;border-radius:999px;padding:6px 12px;font-size:12px;font-family:Lora,serif;cursor:pointer">
+        2. Status
+      </button>
+      <button type="button" data-tg-guide="bonus" class="tg-guide-chip" style="background:#fff;border:1px solid rgba(122,51,65,.25);color:#7A3341;border-radius:999px;padding:6px 12px;font-size:12px;font-family:Lora,serif;cursor:pointer">
+        3. Bonus
+      </button>
+    </div>
+  </div>
 
   <TelegramMock />
 </OpsLayout>
