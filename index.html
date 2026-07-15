@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MarkasAuthor — Rumah Digital yang Sepenuhnya Milik Penulis</title>
+<meta name="description" content="Amankan pembaca setia Anda di luar platform. MarkasAuthor membangun homebase digital yang sepenuhnya Anda miliki — database pembaca, kabar rilis, dan peta baca dalam satu rumah.">
+<meta property="og:title" content="MarkasAuthor — Rumah Digital Milik Penulis">
+<meta property="og:description" content="Follower 50 ribu. Akun hilang besok pagi. Berapa pembaca yang masih bisa Anda hubungi?">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1a1712;
+    --ink-soft:#4a443a;
+    --paper:#faf7f0;
+    --paper-warm:#f3eee2;
+    --cream:#efe8d8;
+    --gold:#b8862d;
+    --gold-deep:#96691a;
+    --accent:#7a2e2e;
+    --line:#e0d8c6;
+    --white:#fffdf8;
+    --radius:14px;
+    --serif:'Lora',Georgia,serif;
+    --sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.7;font-size:17px}
+  h1,h2,h3,.serif{font-family:var(--serif)}
+  img{max-width:100%}
+  a{color:inherit}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  .narrow{max-width:720px;margin:0 auto}
+  section{padding:88px 0}
+  .eyebrow{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:16px}
+  h2{font-size:clamp(28px,4vw,40px);line-height:1.25;font-weight:600;margin-bottom:20px}
+  .lead{font-size:19px;color:var(--ink-soft)}
+  .btn{display:inline-block;padding:16px 32px;border-radius:999px;font-weight:700;font-size:16px;text-decoration:none;transition:transform .15s ease,box-shadow .15s ease;cursor:pointer;border:none}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-primary{background:var(--ink);color:var(--white);box-shadow:0 6px 24px rgba(26,23,18,.25)}
+  .btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:var(--white);box-shadow:0 6px 24px rgba(150,105,26,.35)}
+  .btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+
+  /* ---------- NAV ---------- */
+  nav{position:sticky;top:0;z-index:50;background:rgba(250,247,240,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;max-width:1080px;margin:0 auto}
+  .logo{font-family:var(--serif);font-weight:700;font-size:20px;text-decoration:none}
+  .logo span{color:var(--gold-deep)}
+  .nav-links{display:flex;gap:28px;align-items:center;font-size:15px;font-weight:600}
+  .nav-links a{text-decoration:none;color:var(--ink-soft)}
+  .nav-links a:hover{color:var(--ink)}
+  .nav-cta{background:var(--ink);color:var(--white)!important;padding:10px 20px;border-radius:999px}
+  @media(max-width:720px){.nav-links a:not(.nav-cta){display:none}}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:110px 0 90px;background:
+    radial-gradient(1200px 500px at 80% -10%,rgba(184,134,45,.10),transparent),
+    var(--paper)}
+  .hero h1{font-size:clamp(34px,5.5vw,58px);line-height:1.18;font-weight:600;letter-spacing:-.01em;margin-bottom:26px}
+  .hero h1 em{font-style:italic;color:var(--accent)}
+  .hero .lead{max-width:640px;margin-bottom:36px}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  .hero-note{font-size:14px;color:var(--ink-soft);margin-top:18px}
+  .stat-strip{display:flex;gap:0;margin-top:64px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--white)}
+  .stat{flex:1;padding:22px 20px;text-align:center;border-right:1px solid var(--line)}
+  .stat:last-child{border-right:none}
+  .stat b{display:block;font-family:var(--serif);font-size:26px;color:var(--ink)}
+  .stat span{font-size:13.5px;color:var(--ink-soft)}
+  @media(max-width:720px){.stat-strip{flex-direction:column}.stat{border-right:none;border-bottom:1px solid var(--line)}.stat:last-child{border-bottom:none}}
+
+  /* ---------- DARK TRUTH ---------- */
+  .dark{background:var(--ink);color:var(--cream);padding:96px 0}
+  .dark h2{color:var(--white)}
+  .dark .lead{color:#c9c0ad}
+  .dark blockquote{font-family:var(--serif);font-size:clamp(22px,3vw,30px);font-style:italic;line-height:1.5;border-left:3px solid var(--gold);padding-left:28px;margin:40px 0;color:var(--white)}
+  .dark .kicker{color:var(--gold)}
+
+  /* ---------- PAIN CARDS ---------- */
+  .pain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px;margin-top:48px}
+  .pain-card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:30px;display:flex;flex-direction:column;gap:16px}
+  .pain-quote{font-family:var(--serif);font-style:italic;font-size:17.5px;line-height:1.6;color:var(--accent)}
+  .pain-divider{height:1px;background:var(--line)}
+  .pain-solution b{display:block;font-size:15px;letter-spacing:.05em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:6px}
+  .pain-solution p{font-size:15.5px;color:var(--ink-soft)}
+
+  /* ---------- READERS ---------- */
+  .readers{background:var(--paper-warm)}
+  .reader-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;margin-top:44px}
+  .reader-card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+  .reader-card .num{font-family:var(--serif);font-size:30px;color:var(--gold);font-weight:700}
+  .reader-card h3{font-size:19px;margin:10px 0 8px}
+  .reader-card p{font-size:15.5px;color:var(--ink-soft)}
+
+  /* ---------- KBM NOTE ---------- */
+  .kbm-note{border:1.5px solid var(--gold);background:linear-gradient(135deg,rgba(184,134,45,.06),rgba(184,134,45,.02));border-radius:var(--radius);padding:36px 40px;margin-top:56px}
+  .kbm-note h3{font-size:21px;margin-bottom:10px}
+  .kbm-note p{color:var(--ink-soft);font-size:16px}
+
+  /* ---------- PRICING ---------- */
+  .pricing{background:var(--paper)}
+  .price-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:52px;align-items:stretch}
+  .price-card{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:36px 32px;display:flex;flex-direction:column;position:relative}
+  .price-card.hero-plan{border:2px solid var(--gold);box-shadow:0 16px 48px rgba(150,105,26,.16);transform:scale(1.02)}
+  .plan-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:var(--white);font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:6px 18px;border-radius:999px;white-space:nowrap}
+  .plan-name{font-family:var(--serif);font-size:23px;font-weight:600}
+  .plan-tag{font-size:14px;color:var(--ink-soft);margin:4px 0 20px}
+  .plan-price{font-family:var(--serif);font-size:38px;font-weight:700;line-height:1}
+  .plan-price small{font-family:var(--sans);font-size:14px;font-weight:500;color:var(--ink-soft)}
+  .plan-once{font-size:13.5px;color:var(--gold-deep);font-weight:600;margin-top:6px}
+  .plan-list{list-style:none;margin:26px 0;flex:1}
+  .plan-list li{padding:9px 0 9px 30px;position:relative;font-size:15.5px;border-bottom:1px dashed var(--line)}
+  .plan-list li:last-child{border-bottom:none}
+  .plan-list li::before{content:"✦";position:absolute;left:2px;color:var(--gold);font-size:14px}
+  .plan-list li.muted{color:#a09880}
+  .plan-list li.muted::before{content:"—";color:#c9c0ad}
+  .price-card .btn{text-align:center}
+  .invite-only{font-size:13.5px;text-align:center;color:var(--ink-soft);margin-top:10px}
+  .price-note{text-align:center;margin-top:36px;font-size:15px;color:var(--ink-soft)}
+  @media(max-width:900px){.price-card.hero-plan{transform:none}}
+
+  /* ---------- GUARANTEE ---------- */
+  .guarantee{background:var(--paper-warm)}
+  .g-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;margin-top:44px}
+  .g-card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:30px;text-align:center}
+  .g-card .icon{font-size:34px;margin-bottom:14px}
+  .g-card h3{font-size:19px;margin-bottom:8px}
+  .g-card p{font-size:15px;color:var(--ink-soft)}
+
+  /* ---------- FOUNDING ---------- */
+  .founding{background:var(--ink);color:var(--cream)}
+  .founding h2{color:var(--white)}
+  .founding .lead{color:#c9c0ad}
+  .founding-box{background:rgba(255,253,248,.05);border:1px solid rgba(184,134,45,.4);border-radius:18px;padding:44px;margin-top:44px;text-align:center}
+  .founding-price{display:flex;justify-content:center;align-items:baseline;gap:18px;margin:22px 0 8px;flex-wrap:wrap}
+  .price-strike{font-family:var(--serif);font-size:26px;color:#8d8471;text-decoration:line-through}
+  .price-now{font-family:var(--serif);font-size:52px;font-weight:700;color:var(--gold)}
+  .slot-bar{max-width:380px;margin:28px auto 10px;background:rgba(255,253,248,.12);border-radius:999px;height:12px;overflow:hidden}
+  .slot-fill{height:100%;width:30%;background:linear-gradient(90deg,var(--gold),var(--gold-deep));border-radius:999px}
+  .slot-text{font-size:14.5px;color:#c9c0ad}
+  .founding-reason{max-width:560px;margin:26px auto 34px;font-size:15.5px;color:#c9c0ad}
+
+  /* ---------- FAQ ---------- */
+  .faq details{border-bottom:1px solid var(--line);padding:6px 0}
+  .faq summary{font-weight:700;font-size:17px;padding:18px 36px 18px 0;cursor:pointer;list-style:none;position:relative}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";position:absolute;right:4px;top:14px;font-size:26px;font-weight:400;color:var(--gold-deep);transition:transform .2s}
+  .faq details[open] summary::after{transform:rotate(45deg)}
+  .faq p{padding:0 0 20px;color:var(--ink-soft);font-size:16px}
+
+  /* ---------- FINAL CTA ---------- */
+  .final{text-align:center;padding:100px 0}
+  .final h2{font-size:clamp(30px,4.5vw,44px)}
+
+  footer{border-top:1px solid var(--line);padding:36px 0;font-size:14px;color:var(--ink-soft)}
+  .foot-inner{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;max-width:1080px;margin:0 auto;padding:0 24px}
+
+  .center{text-align:center}
+  .mt-40{margin-top:40px}
+
+  /* ---------- HOW IT WORKS ---------- */
+  .how{background:var(--paper-warm)}
+  .how-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:48px;counter-reset:step}
+  .how-step{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:24px 18px;position:relative}
+  .how-step .num{font-family:var(--serif);font-size:28px;color:var(--gold);font-weight:700;margin-bottom:10px}
+  .how-step h3{font-size:17px;margin-bottom:8px}
+  .how-step p{font-size:14.5px;color:var(--ink-soft);line-height:1.55}
+  @media(max-width:900px){.how-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.how-grid{grid-template-columns:1fr}}
+
+  /* ---------- ASSISTANT ---------- */
+  .assistant{background:var(--paper)}
+  .assistant-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;margin-top:48px}
+  .assistant-card{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:30px 26px;display:flex;flex-direction:column}
+  .assistant-card.featured{border:2px solid var(--gold);box-shadow:0 12px 36px rgba(150,105,26,.12)}
+  .assistant-card .plan-name{font-size:22px}
+  .assistant-card .plan-price{font-size:32px;margin:12px 0 4px}
+  .assistant-note{text-align:center;margin-top:28px;font-size:15px;color:var(--ink-soft);max-width:640px;margin-left:auto;margin-right:auto}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="#">Markas<span>Author</span></a>
+    <div class="nav-links">
+      <a href="#masalah">Kenapa Ini Penting</a>
+      <a href="#pembaca">Untuk Pembaca</a>
+      <a href="#investasi">Investasi</a>
+      <a href="#faq">FAQ</a>
+      <a class="nav-cta" href="#founding">Amankan Slot</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Untuk Penulis KBM App yang Serius dengan Kariernya</span>
+    <h1>Follower 50 ribu.<br>Akun hilang besok pagi.<br><em>Berapa pembaca yang masih bisa Anda hubungi?</em></h1>
+    <p class="lead">Kalau jawabannya <strong>nol</strong> — Anda tidak sendirian. Ribuan penulis membangun karier di atas tanah pinjaman: algoritma, platform, dan akun yang bisa berubah kapan saja. MarkasAuthor membangun satu hal yang tidak bisa diambil siapa pun dari Anda: <strong>rumah digital yang sepenuhnya Anda miliki.</strong></p>
+    <div class="hero-cta">
+      <a class="btn btn-gold" href="#founding">Amankan Rumah Anda →</a>
+      <a class="btn btn-ghost" href="#masalah">Baca dulu, saya masih ragu</a>
+    </div>
+    <p class="hero-note">Bukan langganan. Bukan sewa. Dibayar sekali, milik Anda selamanya — domain, akun, dan seluruh isinya atas nama Anda.</p>
+
+    <div class="stat-strip">
+      <div class="stat"><b>100%</b><span>kepemilikan — domain &amp; hosting atas nama Anda</span></div>
+      <div class="stat"><b>Rp0</b><span>biaya bulanan hosting, selamanya</span></div>
+      <div class="stat"><b>7 hari</b><span>live, atau uang kembali 100%</span></div>
+      <div class="stat"><b>30 menit</b><span>waktu Anda — sisanya kami yang kerjakan</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ THE TRUTH ============ -->
+<section class="dark" id="masalah">
+  <div class="wrap narrow">
+    <span class="eyebrow kicker">Kebenaran yang jarang dibicarakan</span>
+    <h2>Semua pembaca Anda saat ini... dipinjamkan.</h2>
+    <p class="lead">Follower di KBM, di Instagram, di TikTok — mereka bukan milik Anda. Mereka milik platform. Anda hanya diberi izin menyapa mereka, selama algoritma berkenan. Izin itu bisa dicabut tanpa peringatan: akun kena suspend, aplikasi ganti kebijakan, jangkauan dipotong.</p>
+    <blockquote>Hari ini pembaca mengenal Anda lewat KBM. Besok mungkin dari TikTok. Lusa mungkin dari adaptasi film. Apa pun pintunya, mereka butuh satu alamat yang tidak pernah pindah: rumah milik Anda sendiri.</blockquote>
+    <p class="lead">Penulis papan atas tidak menunggu musibah untuk sadar. Mereka mengamankan asetnya <em>sebelum</em> dibutuhkan — seperti asuransi: paling murah dibeli saat belum terjadi apa-apa.</p>
+  </div>
+</section>
+
+<!-- ============ PAINS & SOLUTIONS ============ -->
+<section>
+  <div class="wrap">
+    <div class="center narrow">
+      <span class="eyebrow">Mungkin Anda pernah merasakan ini</span>
+      <h2>Enam masalah yang diam-diam menggerogoti karier penulis</h2>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <p class="pain-quote">"Tiap rilis chapter aku spam story IG dan grup WA. Capek — dan yang lihat itu-itu saja."</p>
+        <div class="pain-divider"></div>
+        <div class="pain-solution"><b>Sistem Kabar Rilis</b>
+        <p>Pembaca daftar sekali. Setiap chapter baru terbit, mereka dapat kabar langsung — klik, langsung baca di KBM. Views chapter pertama naik, tanpa spam.</p></div>
+      </div>
+      <div class="pain-card">
+        <p class="pain-quote">"Follower 50 ribu, tapi kalau akunku hilang besok... aku nggak bisa menghubungi satu pun dari mereka."</p>
+        <div class="pain-divider"></div>
+        <div class="pain-solution"><b>Database Pembaca Milik Sendiri</b>
+        <p>Nama dan kontak pembaca setia tersimpan di tangan Anda — bukan di algoritma. Aset yang ikut ke mana pun karier Anda pergi.</p></div>
+      </div>
+      <div class="pain-card">
+        <p class="pain-quote">"Seriku ada 4, spin-off 2. Tiap hari ada yang DM: 'Kak, bacanya mulai dari mana?'"</p>
+        <div class="pain-divider"></div>
+        <div class="pain-solution"><b>Peta Baca</b>
+        <p>Satu link, pembaca langsung paham urutan bacanya. Pertanyaan berulang itu hilang — diganti pembaca yang langsung menyelam ke semesta Anda.</p></div>
+      </div>
+      <div class="pain-card">
+        <p class="pain-quote">"Ada penerbit yang minta profil dan portofolio... dan aku kirim link Linktree."</p>
+        <div class="pain-divider"></div>
+        <div class="pain-solution"><b>Collaboration Kit</b>
+        <p>Satu halaman profesional: bio, foto HD, statistik pembaca, daftar karya, kontak kerja sama. Anda tampil selevel dengan tawaran yang datang.</p></div>
+      </div>
+      <div class="pain-card">
+        <p class="pain-quote">"Aku pengen kasih bonus ke pembaca setia — deleted scene, POV ekstra. Tapi naruhnya di mana? Link Google Drive berantakan."</p>
+        <div class="pain-divider"></div>
+        <div class="pain-solution"><b>Ruang Bonus Pembaca</b>
+        <p>Konten eksklusif tersimpan rapi di satu tempat. Dan untuk membukanya, pembaca meninggalkan kontak — database Anda tumbuh dengan sendirinya.</p></div>
+      </div>
+      <div class="pain-card">
+        <p class="pain-quote">"Coba googling nama penaku... yang muncul malah akun fanbase dan penulis lain."</p>
+        <div class="pain-divider"></div>
+        <div class="pain-solution"><b>Halaman yang Ditemukan Google</b>
+        <p>Nama pena Anda jadi milik Anda di hasil pencarian. Pembaca baru menemukan Anda — dan semua jalan mengarah ke karya Anda di KBM.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOR READERS ============ -->
+<section class="readers" id="pembaca">
+  <div class="wrap">
+    <div class="center narrow">
+      <span class="eyebrow">"Tapi... emang pembacaku mau buka?"</span>
+      <h2>Pembaca Anda datang bukan untuk situsnya.<br>Mereka datang untuk tiga hal yang tidak ada di dalam aplikasi.</h2>
+    </div>
+    <div class="reader-grid">
+      <div class="reader-card">
+        <div class="num">01</div>
+        <h3>Tidak pernah ketinggalan update</h3>
+        <p>Notifikasi aplikasi sering lolos atau ke-mute. Lewat Saluran WhatsApp penulis, pembaca setia tahu chapter baru terbit — detik itu juga, di aplikasi yang mereka buka tiap hari.</p>
+      </div>
+      <div class="reader-card">
+        <div class="num">02</div>
+        <h3>Bonus yang tidak ada di KBM</h3>
+        <p>Deleted scene, POV tokoh favorit, trivia di balik cerita, profil karakter. Hadiah kecil yang membuat pembaca merasa jadi orang dalam.</p>
+      </div>
+      <div class="reader-card">
+        <div class="num">03</div>
+        <h3>Tahu urutan baca yang benar</h3>
+        <p>Tidak perlu DM penulisnya. Peta baca menunjukkan harus mulai dari mana — lalu satu klik langsung membaca di KBM.</p>
+      </div>
+    </div>
+
+    <div class="kbm-note">
+      <h3>🤝 Dan satu hal yang penting: semua jalan tetap berujung ke KBM.</h3>
+      <p>MarkasAuthor tidak meng-host cerita Anda dan tidak punya sistem baca sendiri. Setiap tombol "Baca Sekarang" mengarah langsung ke karya Anda di KBM App. Rumah ini <strong>memperbesar</strong> pembaca Anda di sana — bukan memindahkannya. Anda tetap tumbuh bersama KBM, sambil memiliki fondasi sendiri.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section class="pricing" id="investasi">
+  <div class="wrap">
+    <div class="center narrow">
+      <span class="eyebrow">Investasi</span>
+      <h2>Bukan biaya. Premi asuransi untuk aset yang sudah Anda bangun bertahun-tahun.</h2>
+      <p class="lead">Dibayar sekali. Tanpa langganan. Domain <strong>.my.id / .web.id gratis</strong> dari kami, hosting <strong>Rp0/bulan selamanya</strong> di akun Cloudflare milik Anda sendiri.</p>
+    </div>
+
+    <div class="price-grid">
+      <!-- SIGNATURE (anchor, shown first) -->
+      <div class="price-card">
+        <div class="plan-name">Signature Universe</div>
+        <p class="plan-tag">Untuk penulis yang membangun IP &amp; semesta cerita</p>
+        <div class="plan-price">Rp7,5 jt<small> — mulai dari</small></div>
+        <div class="plan-once">Melalui undangan &amp; konsultasi</div>
+        <ul class="plan-list">
+          <li>Semua yang ada di Author Homebase</li>
+          <li>Author Universe: halaman semesta cerita lengkap</li>
+          <li>Ensiklopedia tokoh &amp; dunia (Character Wiki)</li>
+          <li>Timeline semesta, peta lokasi, playlist, trivia</li>
+          <li>Rangkaian sambutan pembaca baru — berbasis WhatsApp</li>
+          <li>Desain custom penuh sesuai nuansa karya Anda</li>
+        </ul>
+        <a class="btn btn-ghost" href="https://wa.me/6200000000000?text=Halo%2C%20saya%20tertarik%20konsultasi%20Signature%20Universe" target="_blank" rel="noopener">Ajukan Konsultasi</a>
+        <p class="invite-only">Karya Anda layak diperlakukan sebagai IP.</p>
+      </div>
+
+      <!-- HERO -->
+      <div class="price-card hero-plan">
+        <div class="plan-badge">Pilihan Para Penulis</div>
+        <div class="plan-name">Author Homebase</div>
+        <p class="plan-tag">Rumah digital lengkap — siap menampung seluruh pembaca Anda</p>
+        <div class="plan-price">Rp3,5 jt</div>
+        <div class="plan-once">Sekali bayar · milik Anda selamanya · bisa dicicil 2×</div>
+        <ul class="plan-list">
+          <li><strong>Sistem Kabar Rilis via WhatsApp</strong> — pembaca tahu chapter baru, tanpa Anda spam</li>
+          <li><strong>Database Pembaca</strong> milik sendiri — nama &amp; nomor WA pembaca setia Anda</li>
+          <li><strong>Ruang Bonus Pembaca</strong> — konten eksklusif penumbuh database</li>
+          <li><strong>Peta Baca</strong> semua seri &amp; spin-off Anda</li>
+          <li><strong>Collaboration Kit</strong> lengkap untuk penerbit &amp; brand</li>
+          <li>Rak Buku visual + Author Timeline perjalanan karier</li>
+          <li>Domain .my.id / .web.id <strong>gratis</strong> (senilai Rp250rb+)</li>
+          <li>SEO dasar — nama pena Anda ditemukan di Google</li>
+        </ul>
+        <a class="btn btn-gold" href="#founding">Amankan Slot Founding Author →</a>
+      </div>
+
+      <!-- STARTER -->
+      <div class="price-card">
+        <div class="plan-name">Homebase Starter</div>
+        <p class="plan-tag">Cukup untuk mulai. Mengamankan yang paling penting dulu.</p>
+        <div class="plan-price">Rp1,5 jt</div>
+        <div class="plan-once">Sekali bayar · bisa upgrade kapan pun (bayar selisihnya saja)</div>
+        <ul class="plan-list">
+          <li>Rak Buku visual + Author Timeline</li>
+          <li>Bio, kontak &amp; semua link karya di KBM</li>
+          <li><strong>Database Pembaca versi dasar</strong> — mulai amankan nomor WA pembaca</li>
+          <li>Collaboration Kit ringkas</li>
+          <li>Domain .my.id / .web.id <strong>gratis</strong></li>
+          <li class="muted">Sistem Kabar Rilis — hanya di Author Homebase</li>
+          <li class="muted">Ruang Bonus Pembaca — hanya di Author Homebase</li>
+          <li class="muted">Peta Baca — hanya di Author Homebase</li>
+        </ul>
+        <a class="btn btn-ghost" href="https://wa.me/6200000000000?text=Halo%2C%20saya%20tertarik%20paket%20Homebase%20Starter" target="_blank" rel="noopener">Mulai dari Starter</a>
+      </div>
+    </div>
+
+    <p class="price-note">Semua paket: dikerjakan tangan satu per satu, DP 50% — <strong>pelunasan setelah rumah Anda berdiri dan Anda melihatnya sendiri.</strong></p>
+  </div>
+</section>
+
+<!-- ============ GUARANTEE ============ -->
+<section class="guarantee">
+  <div class="wrap">
+    <div class="center narrow">
+      <span class="eyebrow">Tanpa risiko di pihak Anda</span>
+      <h2>Tiga janji yang kami tulis hitam di atas putih</h2>
+    </div>
+    <div class="g-grid">
+      <div class="g-card">
+        <div class="icon">⏱️</div>
+        <h3>Live 7 Hari, atau Kembali 100%</h3>
+        <p>Homebase Anda tayang maksimal 7 hari kerja setelah materi lengkap. Lewat dari itu, seluruh DP kami kembalikan penuh.</p>
+      </div>
+      <div class="g-card">
+        <div class="icon">📜</div>
+        <h3>Surat Kepemilikan Aset</h3>
+        <p>Dokumen serah terima resmi: domain, akun Cloudflare, dan seluruh file dinyatakan 100% milik Anda. Kami tidak memegang apa pun sebagai sandera.</p>
+      </div>
+      <div class="g-card">
+        <div class="icon">🪶</div>
+        <h3>Waktu Anda Hanya 30 Menit</h3>
+        <p>Anda cukup mengisi satu formulir: link karya, bio, foto. Sisanya urusan kami. Anda tetap fokus pada satu-satunya hal yang penting — menulis.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOUNDING AUTHORS ============ -->
+<section class="founding" id="founding">
+  <div class="wrap narrow center">
+    <span class="eyebrow kicker">Kesempatan perdana — tidak akan diulang</span>
+    <h2>Program Founding Authors</h2>
+    <p class="lead">Kami baru memulai, dan kami butuh 10 penulis pertama sebagai studi kasus. Sebagai gantinya, Anda mendapat harga yang tidak akan pernah ada lagi.</p>
+
+    <div class="founding-box">
+      <div class="plan-name" style="color:var(--white)">Author Homebase — Harga Perdana</div>
+      <div class="founding-price">
+        <span class="price-strike">Rp3,5 jt</span>
+        <span class="price-now">Rp2 jt</span>
+      </div>
+      <p class="founding-reason">Kenapa lebih murah? Sederhana dan jujur: kami butuh portofolio dan testimoni dari penulis sungguhan. Sebagai Founding Author, Anda mengizinkan homebase Anda kami tampilkan sebagai studi kasus. Setelah 10 slot terisi, harga kembali normal — <strong>dan tidak akan turun lagi.</strong></p>
+      <div class="slot-bar"><div class="slot-fill"></div></div>
+      <p class="slot-text"><strong>3 dari 10 slot terisi</strong> · slot ke-11 membayar harga penuh</p>
+      <div class="mt-40">
+        <a class="btn btn-gold" href="https://wa.me/6200000000000?text=Halo%2C%20saya%20ingin%20mengamankan%20slot%20Founding%20Author" target="_blank" rel="noopener">Amankan Slot Founding Author →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="faq" id="faq">
+  <div class="wrap narrow">
+    <span class="eyebrow">Pertanyaan yang sering muncul</span>
+    <h2>Sebelum Anda memutuskan</h2>
+
+    <details>
+      <summary>Apa bedanya ini dengan Linktree atau Lynk yang gratis?</summary>
+      <p>Linktree adalah kamar kos: cepat, gratis, tapi bukan milik Anda dan tampilannya sama dengan jutaan orang lain. Homebase adalah rumah atas nama Anda sendiri — domain Anda, akun Anda, desain khas karya Anda, plus mesin yang Linktree tidak punya: database pembaca, kabar rilis, dan ruang bonus. Dan tidak ada logo platform lain yang menumpang di identitas Anda.</p>
+    </details>
+    <details>
+      <summary>Apakah ini menyaingi atau melanggar aturan KBM?</summary>
+      <p>Tidak — justru sebaliknya. Homebase Anda tidak meng-host satu chapter pun dan tidak punya sistem baca berbayar. Semua tombol "Baca" mengarah langsung ke karya Anda di KBM App. Fungsinya seperti etalase dan corong: menangkap pembaca baru dari Google dan media sosial, lalu mengantarkan mereka ke KBM. Pembaca Anda di KBM bertambah, bukan berkurang.</p>
+    </details>
+    <details>
+      <summary>Saya gaptek. Apa saya sanggup mengurusnya?</summary>
+      <p>Anda tidak perlu sanggup — itu tugas kami. Waktu Anda hanya ±30 menit untuk mengisi formulir materi. Setelah live, homebase berjalan sendiri tanpa perlu diutak-atik. Kalau nanti ingin ada yang memegang update rutin (chapter baru, banner, bonus konten), tersedia layanan Penjaga Rumah mulai Rp150rb/bulan — sepenuhnya opsional.</p>
+    </details>
+    <details>
+      <summary>Benar tidak ada biaya bulanan sama sekali?</summary>
+      <p>Benar. Homebase di-deploy ke Cloudflare Pages di akun milik Anda — layanan kelas dunia yang gratis untuk kebutuhan seperti ini, dipakai jutaan situs besar. Domain .my.id/.web.id kami gratiskan. Satu-satunya biaya berulang yang mungkin ada: perpanjangan domain (±Rp10–25rb/tahun) jika Anda memilih ekstensi lain seperti .com.</p>
+    </details>
+    <details>
+      <summary>Kalau suatu saat MarkasAuthor tutup, bagaimana nasib rumah saya?</summary>
+      <p>Tidak terjadi apa-apa. Itulah inti dari kepemilikan: domain atas nama Anda, hosting di akun Anda, seluruh file diserahkan ke Anda dengan surat serah terima. Homebase Anda tetap berdiri walau kami hilang dari muka bumi. Coba tanyakan hal yang sama ke platform langganan mana pun.</p>
+    </details>
+    <details>
+      <summary>Jadi sebenarnya... ini website, kan?</summary>
+      <p>Secara teknis, ya. Tapi menyebutnya "website" seperti menyebut rumah sebagai "tumpukan batu bata". Yang Anda dapatkan adalah sistem: database pembaca yang tumbuh sendiri, jalur kabar rilis, peta baca, etalase profesional untuk kolaborasi — dirangkai menjadi satu markas yang bekerja untuk karier Anda selama bertahun-tahun.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="final">
+  <div class="wrap narrow">
+    <h2 class="serif">Platform datang dan pergi.<br><em style="color:var(--accent)">Pembaca yang bisa Anda hubungi — itu selamanya.</em></h2>
+    <p class="lead" style="margin:22px 0 36px">Suatu hari nanti, entah karena algoritma, adaptasi film, atau babak baru karier Anda — Anda akan bersyukur rumah ini sudah berdiri dari sekarang.</p>
+    <a class="btn btn-gold" href="https://wa.me/6200000000000?text=Halo%2C%20saya%20penulis%20di%20KBM%20dan%20ingin%20tanya%20soal%20Author%20Homebase" target="_blank" rel="noopener">Ngobrol Dulu via WhatsApp →</a>
+    <p class="hero-note">Tanya-tanya dulu boleh banget. Tidak ada tim sales yang mengejar Anda — yang balas chat adalah orang yang akan membangun rumah Anda.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-inner">
+    <div><strong class="serif">Markas<span style="color:var(--gold-deep)">Author</span></strong> — Rumah digital milik penulis, selamanya.</div>
+    <div>Berjalan berdampingan dengan KBM App 🤝 · © 2026 MarkasAuthor</div>
+  </div>
+</footer>
+
+</body>
+</html>
