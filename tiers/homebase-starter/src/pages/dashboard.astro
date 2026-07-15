@@ -5,12 +5,13 @@ import TabRingkasan from '../components/ops/TabRingkasan.astro';
 import TabRilis from '../components/ops/TabRilis.astro';
 import TabDatabase from '../components/ops/TabDatabase.astro';
 import TabTema from '../components/ops/TabTema.astro';
+import TabTelegram from '../components/ops/TabTelegram.astro';
 import authorData from '../data/author.json';
 import type { AuthorData } from '../lib/types';
 
 const author = authorData as AuthorData;
 const initialTab = 'ringkasan';
-const tabs = ['ringkasan', 'rilis', 'karya', 'bonus', 'peta', 'database', 'tema'] as const;
+const tabs = ['ringkasan', 'rilis', 'karya', 'bonus', 'peta', 'database', 'telegram', 'tema'] as const;
 const locked = new Set(['karya', 'bonus', 'peta']);
 ---
 
@@ -26,6 +27,9 @@ const locked = new Set(['karya', 'bonus', 'peta']);
     </div>
     <div class="ops-tab-panel" data-tab-panel="database" hidden>
       <TabDatabase readers={author.demoReaders} tier="starter" />
+    </div>
+    <div class="ops-tab-panel" data-tab-panel="telegram" hidden>
+      <TabTelegram tier="starter" penName={author.penName} />
     </div>
     <div class="ops-tab-panel" data-tab-panel="tema" hidden>
       <TabTema />

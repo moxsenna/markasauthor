@@ -9,6 +9,7 @@ import TabBonus from '../components/ops/TabBonus.astro';
 import TabPeta from '../components/ops/TabPeta.astro';
 import TabKarya from '../components/ops/TabKarya.astro';
 import TabUniverse from '../components/ops/TabUniverse.astro';
+import TabTelegram from '../components/ops/TabTelegram.astro';
 import authorData from '../data/author.json';
 import type { AuthorData } from '../lib/types';
 
@@ -22,6 +23,7 @@ const tabs = [
   'bonus',
   'peta',
   'database',
+  'telegram',
   'tema',
   'universe',
 ] as const;
@@ -48,6 +50,9 @@ const tabs = [
     </div>
     <div class="ops-tab-panel" data-tab-panel="database" hidden>
       <TabDatabase readers={author.demoReaders} tier="signature" />
+    </div>
+    <div class="ops-tab-panel" data-tab-panel="telegram" hidden>
+      <TabTelegram tier="signature" penName={author.penName} />
     </div>
     <div class="ops-tab-panel" data-tab-panel="tema" hidden>
       <TabTema />

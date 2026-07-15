@@ -1,0 +1,659 @@
+---
+export interface Props {
+  tier: string;
+  penName: string;
+}
+
+const { tier, penName } = Astro.props;
+---
+
+<div class="tg-panel" data-ops-telegram data-tier={tier} data-pen={penName}>
+  <header class="tg-head">
+    <div>
+      <h1>Koneksi Telegram</h1>
+      <p>
+        MarkasAuthor Assistant — remote control update bab lewat chat. Simulasi presentasi; di production
+        memakai Bot API resmi + kode aktivasi sekali pakai.
+      </p>
+    </div>
+    <a class="tg-link-sim" href="/untuk-penulis">Buka simulasi chat →</a>
+  </header>
+
+  <!-- Status -->
+  <section class="tg-status" id="tg-status-card" data-state="disconnected">
+    <div class="tg-status-left">
+      <span class="tg-dot" id="tg-dot"></span>
+      <div>
+        <p class="tg-status-label" id="tg-status-label">Belum terhubung</p>
+        <p class="tg-status-sub" id="tg-status-sub">
+          Hubungkan akun Telegram penulis agar command Update Bab aktif.
+        </p>
+      </div>
+    </div>
+    <div class="tg-status-right" id="tg-status-meta" hidden>
+      <p><span>User ID</span> <strong id="tg-uid">—</strong></p>
+      <p><span>Username</span> <strong id="tg-uname">—</strong></p>
+      <p><span>Terhubung</span> <strong id="tg-when">—</strong></p>
+    </div>
+  </section>
+
+  <div class="tg-grid">
+    <!-- Activation -->
+    <section class="tg-card" id="tg-card-activate">
+      <p class="tg-eyebrow">AKTIVASI</p>
+      <h2>Hubungkan lewat kode sekali pakai</h2>
+      <ol class="tg-steps">
+        <li>Generate kode di bawah (berlaku 15 menit di production).</li>
+        <li>Buka bot Telegram MarkasAuthor Assistant.</li>
+        <li>Kirim / mulai deep link — sistem mengikat <code>telegram_user_id</code> ke author.</li>
+        <li>Konfirmasi di chat; dashboard menampilkan status terhubung.</li>
+      </ol>
+
+      <div class="tg-code-box">
+        <div>
+          <p class="tg-code-label">Kode aktivasi (demo)</p>
+          <p class="tg-code" id="tg-code">————</p>
+          <p class="tg-code-meta" id="tg-code-meta">Belum digenerate</p>
+        </div>
+        <div class="tg-code-actions">
+          <button type="button" class="tg-btn-primary" id="tg-gen">Generate kode</button>
+          <button type="button" class="tg-btn-ghost" id="tg-copy" disabled>Salin kode</button>
+        </div>
+      </div>
+
+      <a
+        class="tg-deep"
+        id="tg-deep"
+        href="https://t.me/MarkasAuthorBot"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Buka bot di Telegram →
+      </a>
+
+      <button type="button" class="tg-btn-primary tg-btn-block" id="tg-sim-connect">
+        Simulasikan “sudah terhubung”
+      </button>
+      <p class="tg-note">
+        Tombol simulasi meniru callback sukses setelah penulis menekan Start di bot. Production: webhook +
+        secret token.
+      </p>
+    </section>
+
+    <!-- Connected controls / package -->
+    <section class="tg-card">
+      <p class="tg-eyebrow">PAKET &amp; ANGGOTA</p>
+      <h2>MarkasAuthor Assistant</h2>
+
+      <label class="tg-field">
+        Paket bulanan
+        <select id="tg-package">
+          <option value="care">Care — Rp149.000/bln · 30 update</option>
+          <option value="active" selected>Active — Rp299.000/bln · 100 update</option>
+          <option value="managed">Managed — Rp499–750rb/bln</option>
+        </select>
+      </label>
+
+      <label class="tg-field">
+        Nama penanggung jawab di bot
+        <input id="tg-display" type="text" placeholder={penName} value={penName} />
+      </label>
+
+      <div class="tg-quota">
+        <div>
+          <p class="tg-quota-n" id="tg-quota-used">0</p>
+          <p class="tg-quota-l">update bulan ini</p>
+        </div>
+        <div>
+          <p class="tg-quota-n" id="tg-quota-max">100</p>
+          <p class="tg-quota-l">batas paket</p>
+        </div>
+      </div>
+
+      <button type="button" class="tg-btn-primary tg-btn-block" id="tg-save-pkg">Simpan pengaturan</button>
+
+      <hr class="tg-hr" />
+
+      <h3>Anggota tim (opsional)</h3>
+      <p class="tg-note">Active/Managed: beberapa Telegram ID bisa diundang. Demo: 1 slot utama.</p>
+      <div id="tg-members" class="tg-members"></div>
+      <button type="button" class="tg-btn-ghost tg-btn-block" id="tg-invite" disabled>
+        + Undang anggota (Active+)
+      </button>
+
+      <hr class="tg-hr" />
+
+      <button type="button" class="tg-btn-danger tg-btn-block" id="tg-disconnect" hidden>
+        Putuskan koneksi Telegram
+      </button>
+    </section>
+  </div>
+
+  <section class="tg-card tg-security">
+    <p class="tg-eyebrow">KEAMANAN (PRD)</p>
+    <ul>
+      <li>Identitas utama = <code>telegram_user_id</code>, bukan username (bisa berubah).</li>
+      <li>Webhook HTTPS + header <code>X-Telegram-Bot-Api-Secret-Token</code>.</li>
+      <li>Publish hanya setelah preview + konfirmasi manusia.</li>
+      <li>AI tidak menulis HTML / deploy; hanya isi schema command allowlist.</li>
+      <li>Kode aktivasi di-hash, sekali pakai, kedaluwarsa singkat.</li>
+    </ul>
+  </section>
+</div>
+
+<style>
+  .tg-panel {
+    max-width: 1100px;
+  }
+  .tg-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+  .tg-head h1 {
+    margin: 0 0 6px;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 4vw, 32px);
+    font-weight: 600;
+    color: #3b2a28;
+  }
+  .tg-head p {
+    margin: 0;
+    max-width: 560px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #7a5a50;
+  }
+  .tg-link-sim {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    height: 44px;
+    padding: 0 18px;
+    border: 1.5px solid #7a3341;
+    color: #7a3341;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .tg-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    background: #fbf6ef;
+    border: 1px solid rgba(122, 51, 65, 0.14);
+    border-radius: 18px;
+    padding: 20px 22px;
+    margin-bottom: 20px;
+  }
+  .tg-status[data-state='connected'] {
+    border-color: rgba(30, 122, 87, 0.35);
+    background: linear-gradient(135deg, #eaf3ec 0%, #fbf6ef 55%);
+  }
+  .tg-status-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    min-width: 0;
+  }
+  .tg-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #c4a9a0;
+    flex: none;
+    margin-top: 4px;
+    box-shadow: 0 0 0 4px rgba(196, 169, 160, 0.25);
+  }
+  .tg-status[data-state='connected'] .tg-dot {
+    background: #1e7a57;
+    box-shadow: 0 0 0 4px rgba(30, 122, 87, 0.2);
+  }
+  .tg-status-label {
+    margin: 0;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #3b2a28;
+  }
+  .tg-status-sub {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: #7a5a50;
+    line-height: 1.5;
+  }
+  .tg-status-right {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    color: #5a453f;
+  }
+  .tg-status-right span {
+    color: #9a8078;
+    margin-right: 6px;
+  }
+  .tg-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+  .tg-card {
+    background: #fbf6ef;
+    border: 1px solid rgba(122, 51, 65, 0.14);
+    border-radius: 18px;
+    padding: 22px 24px;
+    min-width: 0;
+  }
+  .tg-eyebrow {
+    margin: 0 0 8px;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+    color: #8a6a5e;
+  }
+  .tg-card h2 {
+    margin: 0 0 14px;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #3b2a28;
+  }
+  .tg-card h3 {
+    margin: 0 0 6px;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: #3b2a28;
+  }
+  .tg-steps {
+    margin: 0 0 18px;
+    padding-left: 18px;
+    font-size: 14px;
+    line-height: 1.65;
+    color: #5a453f;
+  }
+  .tg-steps code {
+    font-size: 12px;
+    background: #f4e3de;
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+  .tg-code-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+    justify-content: space-between;
+    background: #5c2430;
+    color: #f4e3de;
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .tg-code-label {
+    margin: 0;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: #d8a7a4;
+    font-weight: 600;
+  }
+  .tg-code {
+    margin: 6px 0 4px;
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: clamp(18px, 4vw, 22px);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #fbf6ef;
+  }
+  .tg-code-meta {
+    margin: 0;
+    font-size: 12px;
+    color: #c99b94;
+  }
+  .tg-code-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: none;
+  }
+  .tg-btn-primary {
+    height: 44px;
+    padding: 0 18px;
+    background: #7a3341;
+    color: #fbf6ef;
+    border: none;
+    border-radius: 11px;
+    font-family: Lora, serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .tg-btn-ghost {
+    height: 44px;
+    padding: 0 18px;
+    background: none;
+    border: 1.5px solid #7a3341;
+    color: #7a3341;
+    border-radius: 11px;
+    font-family: Lora, serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .tg-code-actions .tg-btn-ghost {
+    border-color: rgba(251, 246, 239, 0.45);
+    color: #fbf6ef;
+  }
+  .tg-btn-danger {
+    height: 44px;
+    padding: 0 18px;
+    background: none;
+    border: 1.5px solid #b0483c;
+    color: #b0483c;
+    border-radius: 11px;
+    font-family: Lora, serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .tg-btn-block {
+    width: 100%;
+    margin-top: 10px;
+  }
+  .tg-btn-primary:disabled,
+  .tg-btn-ghost:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .tg-deep {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 46px;
+    border-radius: 12px;
+    background: #229ed9;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    margin-bottom: 10px;
+  }
+  .tg-note {
+    margin: 10px 0 0;
+    font-size: 12px;
+    line-height: 1.55;
+    color: #9a8078;
+  }
+  .tg-field {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #5a453f;
+    margin-bottom: 12px;
+  }
+  .tg-field input,
+  .tg-field select {
+    display: block;
+    width: 100%;
+    margin-top: 6px;
+    height: 46px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(122, 51, 65, 0.25);
+    background: #fffdf9;
+    font-family: Lora, serif;
+    font-size: 14px;
+    box-sizing: border-box;
+    color: #3b2a28;
+  }
+  .tg-quota {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 8px 0 14px;
+  }
+  .tg-quota > div {
+    background: #f4e3de;
+    border-radius: 12px;
+    padding: 12px 14px;
+  }
+  .tg-quota-n {
+    margin: 0;
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #5c2430;
+  }
+  .tg-quota-l {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: #8a6a5e;
+  }
+  .tg-hr {
+    border: none;
+    border-top: 1px solid rgba(122, 51, 65, 0.12);
+    margin: 18px 0;
+  }
+  .tg-members {
+    min-height: 40px;
+    margin: 8px 0;
+    font-size: 13px;
+    color: #7a5a50;
+  }
+  .tg-security ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 13px;
+    line-height: 1.65;
+    color: #5a453f;
+  }
+  .tg-security code {
+    font-size: 11px;
+    background: #f4e3de;
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 900px) {
+    .tg-grid {
+      grid-template-columns: 1fr;
+    }
+    .tg-link-sim {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<script>
+  import { toast } from '../../lib/demo-store';
+
+  type TgState = {
+    connected: boolean;
+    code?: string;
+    codeAt?: number;
+    userId?: string;
+    username?: string;
+    connectedAt?: string;
+    package?: 'care' | 'active' | 'managed';
+    displayName?: string;
+    updatesUsed?: number;
+  };
+
+  const root = document.querySelector('[data-ops-telegram]') as HTMLElement | null;
+  if (root) {
+    const tier = root.dataset.tier || 'signature';
+    const pen = root.dataset.pen || 'Penulis';
+    const key = `ma-telegram-${tier}`;
+
+    const limits = { care: 30, active: 100, managed: 200 } as const;
+
+    function load(): TgState {
+      try {
+        return JSON.parse(localStorage.getItem(key) || '{}') as TgState;
+      } catch {
+        return { connected: false };
+      }
+    }
+    function save(s: TgState) {
+      localStorage.setItem(key, JSON.stringify(s));
+    }
+
+    function genCode() {
+      const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let out = 'MA-';
+      for (let i = 0; i < 6; i++) out += alphabet[Math.floor(Math.random() * alphabet.length)];
+      return out;
+    }
+
+    function render() {
+      const s = load();
+      const card = document.getElementById('tg-status-card')!;
+      const label = document.getElementById('tg-status-label')!;
+      const sub = document.getElementById('tg-status-sub')!;
+      const meta = document.getElementById('tg-status-meta')!;
+      const disc = document.getElementById('tg-disconnect') as HTMLButtonElement;
+      const invite = document.getElementById('tg-invite') as HTMLButtonElement;
+      const codeEl = document.getElementById('tg-code')!;
+      const codeMeta = document.getElementById('tg-code-meta')!;
+      const deep = document.getElementById('tg-deep') as HTMLAnchorElement;
+      const copyBtn = document.getElementById('tg-copy') as HTMLButtonElement;
+      const pkg = document.getElementById('tg-package') as HTMLSelectElement;
+      const display = document.getElementById('tg-display') as HTMLInputElement;
+      const used = document.getElementById('tg-quota-used')!;
+      const max = document.getElementById('tg-quota-max')!;
+      const members = document.getElementById('tg-members')!;
+
+      const pack = s.package || 'active';
+      pkg.value = pack;
+      display.value = s.displayName || pen;
+      used.textContent = String(s.updatesUsed ?? 0);
+      max.textContent = String(limits[pack]);
+      invite.disabled = pack === 'care';
+
+      if (s.connected) {
+        card.dataset.state = 'connected';
+        label.textContent = 'Terhubung ke Telegram';
+        sub.textContent = `${s.displayName || pen} bisa menjalankan command Assistant dari chat pribadi bot.`;
+        meta.hidden = false;
+        document.getElementById('tg-uid')!.textContent = s.userId || '—';
+        document.getElementById('tg-uname')!.textContent = s.username ? `@${s.username}` : '—';
+        document.getElementById('tg-when')!.textContent = s.connectedAt || '—';
+        disc.hidden = false;
+        members.innerHTML = `<p style="margin:0;padding:10px 12px;background:#F4E3DE;border-radius:10px"><strong>${s.displayName || pen}</strong> · ${s.username ? '@' + s.username : s.userId} · utama</p>`;
+      } else {
+        card.dataset.state = 'disconnected';
+        label.textContent = 'Belum terhubung';
+        sub.textContent = 'Hubungkan akun Telegram penulis agar command Update Bab aktif.';
+        meta.hidden = true;
+        disc.hidden = true;
+        members.innerHTML = '<p style="margin:0;color:#9A8078">Belum ada anggota terikat.</p>';
+      }
+
+      if (s.code) {
+        codeEl.textContent = s.code;
+        const age = s.codeAt ? Math.max(0, Math.round((Date.now() - s.codeAt) / 60000)) : 0;
+        codeMeta.textContent = s.connected
+          ? 'Kode sudah dipakai (simulasi).'
+          : `Digenerate ${age} mnt lalu · demo tidak kedaluwarsa otomatis`;
+        copyBtn.disabled = false;
+        deep.href = `https://t.me/MarkasAuthorBot?start=${encodeURIComponent(s.code)}`;
+      } else {
+        codeEl.textContent = '————';
+        codeMeta.textContent = 'Belum digenerate';
+        copyBtn.disabled = true;
+        deep.href = 'https://t.me/MarkasAuthorBot';
+      }
+    }
+
+    document.getElementById('tg-gen')?.addEventListener('click', () => {
+      const s = load();
+      s.code = genCode();
+      s.codeAt = Date.now();
+      save(s);
+      toast('Kode aktivasi digenerate');
+      render();
+    });
+
+    document.getElementById('tg-copy')?.addEventListener('click', async () => {
+      const s = load();
+      if (!s.code) return;
+      try {
+        await navigator.clipboard.writeText(s.code);
+        toast('Kode disalin');
+      } catch {
+        toast('Gagal salin — salin manual');
+      }
+    });
+
+    document.getElementById('tg-sim-connect')?.addEventListener('click', () => {
+      const s = load();
+      if (!s.code) {
+        s.code = genCode();
+        s.codeAt = Date.now();
+      }
+      s.connected = true;
+      s.userId = String(700000000 + Math.floor(Math.random() * 9999999));
+      s.username = (s.displayName || pen).toLowerCase().replace(/[^a-z0-9]/g, '') + '_tg';
+      s.connectedAt = new Date().toLocaleString('id-ID', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      s.package = s.package || 'active';
+      s.displayName = s.displayName || pen;
+      s.updatesUsed = s.updatesUsed ?? 0;
+      save(s);
+      toast('Telegram terhubung (simulasi)');
+      render();
+    });
+
+    document.getElementById('tg-disconnect')?.addEventListener('click', () => {
+      if (!confirm('Putuskan koneksi Telegram untuk author ini?')) return;
+      const s = load();
+      s.connected = false;
+      s.userId = undefined;
+      s.username = undefined;
+      s.connectedAt = undefined;
+      s.code = undefined;
+      s.codeAt = undefined;
+      save(s);
+      toast('Koneksi diputus');
+      render();
+    });
+
+    document.getElementById('tg-save-pkg')?.addEventListener('click', () => {
+      const s = load();
+      s.package = (document.getElementById('tg-package') as HTMLSelectElement).value as TgState['package'];
+      s.displayName =
+        (document.getElementById('tg-display') as HTMLInputElement).value.trim() || pen;
+      save(s);
+      toast('Pengaturan Assistant disimpan');
+      render();
+    });
+
+    document.getElementById('tg-package')?.addEventListener('change', () => {
+      const pack = (document.getElementById('tg-package') as HTMLSelectElement).value as
+        | 'care'
+        | 'active'
+        | 'managed';
+      document.getElementById('tg-quota-max')!.textContent = String(limits[pack]);
+      (document.getElementById('tg-invite') as HTMLButtonElement).disabled = pack === 'care';
+    });
+
+    document.getElementById('tg-invite')?.addEventListener('click', () => {
+      toast('Undang anggota: tersedia di paket Active/Managed (demo)');
+    });
+
+    render();
+  }
+</script>
