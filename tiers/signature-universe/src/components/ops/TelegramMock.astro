@@ -3,8 +3,6 @@ import authorData from '../../data/author.json';
 import type { AuthorData } from '../../lib/types';
 
 const author = authorData as AuthorData;
-const works = author.works;
-const fallbackChapters = author.latestChapters;
 ---
 
 <div
@@ -15,6 +13,13 @@ const fallbackChapters = author.latestChapters;
   <div
     style="width:100%;max-width:420px;background:#0F1A1C;border-radius:28px;overflow:hidden;box-shadow:0 12px 48px rgba(0,0,0,.28);border:2px solid #1C2E32"
   >
+    <!-- Status strip -->
+    <div
+      style="text-align:center;padding:6px 12px;background:#0A1517;border-bottom:1px solid rgba(255,255,255,.05);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#8AA0A4;font-family:Lora,Georgia,serif"
+    >
+      Simulasi
+    </div>
+
     <!-- Header Bar -->
     <div
       style="display:flex;align-items:center;gap:10px;padding:14px 18px;background:#1C2E32;border-bottom:1px solid rgba(255,255,255,.06)"
@@ -31,9 +36,17 @@ const fallbackChapters = author.latestChapters;
           MarkasAuthor Assistant
         </p>
         <p style="margin:0;font-size:11px;color:#8AA0A4;font-style:italic">
-          Simulasi &mdash; bukan bot asli
+          online · simulasi
         </p>
       </div>
+    </div>
+
+    <!-- Step hint -->
+    <div
+      id="tg-step-hint"
+      style="padding:8px 16px;background:#0F1A1C;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px;color:#8AA0A4;font-family:Lora,Georgia,serif"
+    >
+      Menu utama · pilih aksi di bawah
     </div>
 
     <!-- Chat Area -->
@@ -47,262 +60,274 @@ const fallbackChapters = author.latestChapters;
           style="background:#1C2E32;color:#DDE4E6;border-radius:16px 16px 16px 4px;padding:12px 16px;font-family:Lora,Georgia,serif;font-size:14px;line-height:1.7"
         >
           Halo, <strong style="color:#E8C4C8">{author.penName}</strong>! &#128075;<br />
-          Ini simulasi notifikasi Telegram untuk Homebase Studio. Apa yang ingin dicoba?
+          Ini simulasi notifikasi Telegram untuk Homebase Studio. Pilih menu di bawah atau ketik
+          <code style="color:#E8C4C8">/start</code>.
         </div>
       </div>
+    </div>
 
-      <!-- Menu buttons -->
-      <div
-        id="tg-menu"
-        style="display:flex;flex-direction:column;gap:6px;padding-left:6px;max-width:85%;align-self:flex-start"
+    <!-- Composer -->
+    <div
+      id="tg-composer"
+      style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#1C2E32;border-top:1px solid rgba(255,255,255,.06)"
+    >
+      <input
+        id="tg-composer-input"
+        type="text"
+        placeholder="Ketik /start atau pilih menu…"
+        autocomplete="off"
+        style="flex:1;height:40px;padding:0 14px;border-radius:20px;border:1px solid rgba(255,255,255,.1);background:#0A1517;color:#FBF6EF;font-family:Lora,Georgia,serif;font-size:13px;outline:none;box-sizing:border-box"
+      />
+      <button
+        id="tg-composer-send"
+        type="button"
+        aria-label="Kirim"
+        style="width:40px;height:40px;border-radius:50%;border:none;background:#7A3341;color:#FBF6EF;font-size:16px;cursor:pointer;flex:none;display:flex;align-items:center;justify-content:center"
       >
-        <button
-          class="tg-menu-btn"
-          data-tg-action="update"
-          style="background:rgba(122,51,65,.18);border:1px solid rgba(122,51,65,.3);border-radius:14px;padding:10px 18px;color:#E8C4C8;font-family:Lora,Georgia,serif;font-size:14px;cursor:pointer;text-align:left;transition:background .15s"
-          onmouseenter="this.style.background='rgba(122,51,65,.30)'"
-          onmouseleave="this.style.background='rgba(122,51,65,.18)'"
-        >
-          &#9997; Update Bab
-        </button>
-        <button
-          class="tg-menu-btn"
-          data-tg-action="riwayat"
-          style="background:rgba(122,51,65,.18);border:1px solid rgba(122,51,65,.3);border-radius:14px;padding:10px 18px;color:#E8C4C8;font-family:Lora,Georgia,serif;font-size:14px;cursor:pointer;text-align:left;transition:background .15s"
-          onmouseenter="this.style.background='rgba(122,51,65,.30)'"
-          onmouseleave="this.style.background='rgba(122,51,65,.18)'"
-        >
-          &#128196; Riwayat
-        </button>
-        <button
-          class="tg-menu-btn"
-          data-tg-action="bantuan"
-          style="background:rgba(122,51,65,.18);border:1px solid rgba(122,51,65,.3);border-radius:14px;padding:10px 18px;color:#E8C4C8;font-family:Lora,Georgia,serif;font-size:14px;cursor:pointer;text-align:left;transition:background .15s"
-          onmouseenter="this.style.background='rgba(122,51,65,.30)'"
-          onmouseleave="this.style.background='rgba(122,51,65,.18)'"
-        >
-          &#10067; Bantuan
-        </button>
-      </div>
+        &#10148;
+      </button>
     </div>
   </div>
 </div>
 
-<script type="application/json" id="tg-works-data">
-  {JSON.stringify(works)}
-</script>
-<script type="application/json" id="tg-fallback-data">
-  {JSON.stringify(fallbackChapters)}
-</script>
+<script type="application/json" id="tg-author-data" set:html={JSON.stringify(author)} />
 
 <script>
-  import { publishChapter, buildWaMessage, loadDemoState } from '../../lib/demo-store';
-  import type { LatestChapter, Work } from '../../lib/types';
+  import {
+    createContext,
+    clearActiveControls,
+    setStepHint,
+    appendUserBubble,
+    botReply,
+    appendKeyboard,
+    appendTextControls,
+    parseCommand,
+  } from '../../lib/telegram-sim';
+  import { publishChapter, buildWaMessage, loadContent } from '../../lib/demo-store';
+  import type { AuthorData, LatestChapter, Work } from '../../lib/types';
 
-  const worksEl = document.getElementById('tg-works-data');
-  const fallbackEl = document.getElementById('tg-fallback-data');
-  const works: Work[] = worksEl ? JSON.parse(worksEl.textContent || '[]') : [];
-  const fallbackChapters: LatestChapter[] = fallbackEl ? JSON.parse(fallbackEl.textContent || '[]') : [];
+  const author = JSON.parse(
+    document.getElementById('tg-author-data')!.textContent || '{}',
+  ) as AuthorData;
+  const chat = document.getElementById('tg-chat')!;
+  const stepHint = document.getElementById('tg-step-hint');
+  const composer = document.getElementById('tg-composer-input') as HTMLInputElement;
+  const sendBtn = document.getElementById('tg-composer-send');
 
-  const chatContainer = document.getElementById('tg-chat')!;
-  const menuEl = document.getElementById('tg-menu')!;
+  let ctx = createContext();
+  const TIER = 'signature';
 
-  let selectedWork: Work | null = null;
-  let chapterTitle = '';
-  let chapterTeaser = '';
-
-  function scrollToBottom() {
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+  function resetIdle(showMenu = true) {
+    clearActiveControls(chat);
+    ctx = createContext();
+    setStepHint(stepHint, 'Menu utama · pilih aksi di bawah');
+    if (showMenu) renderMainMenu();
   }
 
-  function clearDynamic() {
-    const dynamic = chatContainer.querySelectorAll('.tg-dynamic');
-    dynamic.forEach((el) => el.remove());
+  function renderMainMenu() {
+    clearActiveControls(chat);
+    appendKeyboard(
+      chat,
+      [
+        { label: '✎ Update Bab', value: 'update' },
+        { label: '📊 Status', value: 'status' },
+        { label: '🎁 Bonus', value: 'bonus' },
+        { label: '📚 Karya', value: 'karya' },
+        { label: '🌌 Semesta', value: 'semesta' },
+        { label: '☰ Lainnya', value: 'lainnya' },
+      ],
+      (value, label) => {
+        appendUserBubble(chat, label);
+        startFlow(value);
+      },
+      2,
+    );
   }
 
-  function botBubble(html: string): HTMLDivElement {
-    const wrap = document.createElement('div');
-    wrap.className = 'tg-dynamic';
-    wrap.style.cssText = 'align-self:flex-start;max-width:85%';
-    const bubble = document.createElement('div');
-    bubble.style.cssText =
-      'background:#1C2E32;color:#DDE4E6;border-radius:16px 16px 16px 4px;padding:12px 16px;font-family:Lora,Georgia,serif;font-size:14px;line-height:1.7';
-    bubble.innerHTML = html;
-    wrap.appendChild(bubble);
-    return wrap;
+  async function startFlow(flow: string) {
+    clearActiveControls(chat);
+    ctx = { phase: 'flow', flow, step: 0, draft: {} };
+    if (flow === 'update') return flowUpdate();
+    if (flow === 'status') return flowStatus();
+    if (flow === 'bonus') return flowStub('Bonus');
+    if (flow === 'karya') return flowStub('Karya');
+    if (flow === 'semesta') return flowStub('Semesta');
+    if (flow === 'riwayat') return flowRiwayat();
+    if (flow === 'bantuan') return flowBantuan();
+    if (flow === 'lainnya') return flowLainnya();
+    await botReply(chat, 'Aksi belum tersedia.');
+    resetIdle();
   }
 
-  function userBubble(text: string): HTMLDivElement {
-    const wrap = document.createElement('div');
-    wrap.className = 'tg-dynamic';
-    wrap.style.cssText = 'align-self:flex-end;max-width:80%';
-    const bubble = document.createElement('div');
-    bubble.style.cssText =
-      'background:#7A3341;color:#FBF6EF;border-radius:16px 16px 4px 16px;padding:10px 16px;font-family:Lora,Georgia,serif;font-size:14px;line-height:1.5';
-    bubble.textContent = text;
-    wrap.appendChild(bubble);
-    return wrap;
+  async function flowStub(name: string) {
+    setStepHint(stepHint, `${name} · segera`);
+    await botReply(
+      chat,
+      `Segera — alur <strong style="color:#E8C4C8">${name}</strong> di langkah berikutnya demo.`,
+    );
+    appendKeyboard(
+      chat,
+      [{ label: 'Kembali ke Menu', value: 'menu' }],
+      () => {
+        appendUserBubble(chat, 'Kembali ke Menu');
+        resetIdle(true);
+      },
+      1,
+    );
   }
 
-  function workButtons(callback: (w: Work) => void): HTMLDivElement {
-    const wrap = document.createElement('div');
-    wrap.className = 'tg-dynamic';
-    wrap.style.cssText =
-      'display:flex;flex-direction:column;gap:6px;padding-left:6px;max-width:85%;align-self:flex-start';
+  async function flowUpdate() {
+    setStepHint(stepHint, 'Update bab · 1/4 Karya');
+    const state = loadContent(TIER, author);
+    const works: Work[] = state.works?.length ? state.works : author.works || [];
 
-    works.forEach((w) => {
-      const btn = document.createElement('button');
-      btn.textContent = `${w.title} (${w.status})`;
-      btn.style.cssText =
-        'background:rgba(122,51,65,.15);border:1px solid rgba(122,51,65,.25);border-radius:12px;padding:9px 16px;color:#E8C4C8;font-family:Lora,Georgia,serif;font-size:13px;cursor:pointer;text-align:left';
-      btn.addEventListener('mouseenter', () => {
-        btn.style.background = 'rgba(122,51,65,.28)';
-      });
-      btn.addEventListener('mouseleave', () => {
-        btn.style.background = 'rgba(122,51,65,.15)';
-      });
-      btn.addEventListener('click', () => callback(w));
-      wrap.appendChild(btn);
-    });
-
-    return wrap;
-  }
-
-  function textInput(
-    placeholder: string,
-    onSubmit: (value: string) => void,
-    showSkip = false,
-    onSkip?: () => void,
-  ): HTMLDivElement {
-    const wrap = document.createElement('div');
-    wrap.className = 'tg-dynamic';
-    wrap.style.cssText =
-      'display:flex;flex-direction:column;gap:8px;align-self:stretch;padding-left:6px';
-
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.placeholder = placeholder;
-    input.style.cssText =
-      'width:100%;height:44px;padding:0 14px;border-radius:22px;border:1px solid rgba(255,255,255,.12);background:#1C2E32;color:#FBF6EF;font-family:Lora,Georgia,serif;font-size:14px;box-sizing:border-box;outline:none';
-
-    const btnRow = document.createElement('div');
-    btnRow.style.cssText = 'display:flex;gap:8px';
-
-    const submitBtn = document.createElement('button');
-    submitBtn.textContent = 'Kirim';
-    submitBtn.style.cssText =
-      'height:36px;padding:0 18px;background:#7A3341;color:#FBF6EF;border:none;border-radius:18px;font-family:Lora,Georgia,serif;font-size:13px;font-weight:600;cursor:pointer';
-
-    const doSubmit = () => {
-      const val = input.value.trim();
-      if (val) {
-        onSubmit(val);
-        wrap.remove();
-      }
-    };
-
-    submitBtn.addEventListener('click', doSubmit);
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') doSubmit();
-    });
-
-    btnRow.appendChild(submitBtn);
-
-    if (showSkip && onSkip) {
-      const skipBtn = document.createElement('button');
-      skipBtn.textContent = 'Lewati';
-      skipBtn.style.cssText =
-        'height:36px;padding:0 18px;background:transparent;color:#8AA0A4;border:1px solid rgba(255,255,255,.1);border-radius:18px;font-family:Lora,Georgia,serif;font-size:13px;cursor:pointer';
-      skipBtn.addEventListener('click', () => {
-        onSkip();
-        wrap.remove();
-      });
-      btnRow.appendChild(skipBtn);
+    if (!works.length) {
+      await botReply(chat, 'Belum ada karya di demo ini.');
+      resetIdle(true);
+      return;
     }
 
-    wrap.appendChild(input);
-    wrap.appendChild(btnRow);
-
-    setTimeout(() => input.focus(), 80);
-
-    return wrap;
+    await botReply(chat, 'Karya mana yang akan di-update?');
+    appendKeyboard(
+      chat,
+      works.map((w) => ({
+        label: `${w.title} (${w.status})`,
+        value: w.slug,
+      })),
+      async (slug, label) => {
+        const w = works.find((x) => x.slug === slug);
+        if (!w) return;
+        appendUserBubble(chat, label);
+        ctx.draft.workSlug = w.slug;
+        ctx.draft.workTitle = w.title;
+        ctx.draft.kbmUrl = w.kbmUrl;
+        ctx.step = 2;
+        setStepHint(stepHint, 'Update bab · 2/4 Judul');
+        await botReply(
+          chat,
+          'Judul bab barunya apa?<br/><span style="font-size:12px;color:#8AA0A4">Misal: <em>Bab 48 — Pintu yang Terbuka</em></span>',
+        );
+        appendTextControls(chat, {
+          placeholder: 'Bab 48 — …',
+          sample: 'Bab 48 — Pintu yang Terbuka',
+          onSubmit: async (title) => {
+            appendUserBubble(chat, title);
+            ctx.draft.title = title;
+            ctx.step = 3;
+            setStepHint(stepHint, 'Update bab · 3/4 Teaser');
+            await botReply(
+              chat,
+              'Teaser satu kalimat?<br/><span style="font-size:12px;color:#8AA0A4">Opsional — tanpa isi cerita, bisa dilewati</span>',
+            );
+            appendTextControls(chat, {
+              placeholder: 'Satu kalimat penggoda…',
+              sample: 'Satu kalimat penggoda…',
+              allowSkip: true,
+              onSubmit: async (teaser) => {
+                appendUserBubble(chat, teaser);
+                ctx.draft.teaser = teaser;
+                await showPublishPreview();
+              },
+              onSkip: async () => {
+                ctx.draft.teaser = '';
+                await showPublishPreview();
+              },
+            });
+          },
+        });
+      },
+      1,
+    );
   }
 
-  function actionButtons(actions: { label: string; style: 'primary' | 'danger'; onClick: () => void }[]): HTMLDivElement {
-    const row = document.createElement('div');
-    row.className = 'tg-dynamic';
-    row.style.cssText = 'display:flex;gap:8px;padding-left:6px;align-self:flex-start';
+  async function showPublishPreview() {
+    ctx.step = 4;
+    setStepHint(stepHint, 'Update bab · 4/4 Pratinjau');
+    clearActiveControls(chat);
 
-    actions.forEach((a) => {
-      const btn = document.createElement('button');
-      btn.innerHTML = a.label;
-      if (a.style === 'primary') {
-        btn.style.cssText =
-          'height:42px;padding:0 20px;background:#7A3341;color:#FBF6EF;border:none;border-radius:21px;font-family:Lora,Georgia,serif;font-size:14px;font-weight:600;cursor:pointer';
-      } else {
-        btn.style.cssText =
-          'height:42px;padding:0 20px;background:transparent;color:#D97A7A;border:1px solid rgba(217,122,122,.3);border-radius:21px;font-family:Lora,Georgia,serif;font-size:14px;cursor:pointer';
-      }
-      btn.addEventListener('click', a.onClick);
-      row.appendChild(btn);
-    });
+    let previewHtml = `<strong>Pratinjau Bab Baru</strong><br/><br/>
+      <strong>Karya:</strong> ${ctx.draft.workTitle}<br/>
+      <strong>Judul:</strong> ${ctx.draft.title}`;
 
-    return row;
-  }
+    if (ctx.draft.teaser) {
+      previewHtml += `<br/><strong>Teaser:</strong> <em>"${ctx.draft.teaser}"</em>`;
+    }
 
-  function backToMenuBtn(): HTMLButtonElement {
-    const btn = document.createElement('button');
-    btn.className = 'tg-dynamic';
-    btn.textContent = 'Kembali ke Menu';
-    btn.style.cssText =
-      'height:36px;padding:0 18px;background:transparent;color:#8AA0A4;border:1px solid rgba(255,255,255,.08);border-radius:18px;font-family:Lora,Georgia,serif;font-size:13px;cursor:pointer;align-self:flex-start;margin-left:6px';
-    btn.addEventListener('click', resetToMenu);
-    return btn;
-  }
+    previewHtml +=
+      '<br/><br/><span style="font-size:12px;color:#8AA0A4">Apakah sudah benar?</span>';
 
-  function resetToMenu() {
-    clearDynamic();
-    selectedWork = null;
-    chapterTitle = '';
-    chapterTeaser = '';
-    menuEl.style.display = 'flex';
-    scrollToBottom();
+    await botReply(chat, previewHtml);
+    appendKeyboard(
+      chat,
+      [
+        { label: '✓ Publikasikan', value: 'publish', style: 'primary' },
+        { label: '✗ Batalkan', value: 'cancel', style: 'danger' },
+      ],
+      async (value) => {
+        if (value === 'cancel') {
+          clearActiveControls(chat);
+          await botReply(chat, 'Dibatalkan.');
+          resetIdle(true);
+          return;
+        }
+
+        const chapter: LatestChapter = {
+          workSlug: ctx.draft.workSlug,
+          workTitle: ctx.draft.workTitle,
+          title: ctx.draft.title,
+          date: new Date().toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+          }),
+          kbmUrl: ctx.draft.kbmUrl,
+          teaser: ctx.draft.teaser || undefined,
+        };
+
+        publishChapter(TIER, chapter, author.latestChapters || []);
+        clearActiveControls(chat);
+        showWaPreview(chapter);
+      },
+      2,
+    );
   }
 
   function showWaPreview(chapter: LatestChapter) {
+    setStepHint(stepHint, 'Update bab · tersimpan');
     const msg = buildWaMessage(chapter);
 
     const wrap = document.createElement('div');
-    wrap.className = 'tg-dynamic';
-    wrap.style.cssText = 'align-self:flex-start;max-width:85%;display:flex;flex-direction:column;gap:8px';
+    wrap.className = 'tg-active-controls';
+    wrap.style.cssText =
+      'align-self:flex-start;max-width:85%;display:flex;flex-direction:column;gap:8px';
 
-    // Success text
     const ok = document.createElement('div');
     ok.style.cssText =
       'background:#1C2E32;color:#7CC9A4;border-radius:16px 16px 16px 4px;padding:10px 16px;font-family:Lora,Georgia,serif;font-size:13px';
     ok.innerHTML = '&#10003; Bab tersimpan! Berikut pesan siap-tempel:';
     wrap.appendChild(ok);
 
-    // WA draft
     const draft = document.createElement('div');
     draft.style.cssText =
       'background:#0D2A1E;border:1px solid rgba(30,122,87,.25);border-radius:14px;padding:12px 16px;font-family:Lora,Georgia,serif;font-size:12.5px;line-height:1.7;color:#DDE4E6;white-space:pre-wrap';
     draft.textContent = msg;
     wrap.appendChild(draft);
 
-    // Buttons: salin + kembali
     const btnRow = document.createElement('div');
-    btnRow.style.cssText = 'display:flex;gap:8px';
+    btnRow.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap';
 
     const copyBtn = document.createElement('button');
+    copyBtn.type = 'button';
     copyBtn.textContent = 'Salin Pesan WA';
     copyBtn.style.cssText =
       'height:36px;padding:0 18px;background:#1E7A57;color:#FBF6EF;border:none;border-radius:18px;font-family:Lora,Georgia,serif;font-size:13px;font-weight:600;cursor:pointer';
     copyBtn.addEventListener('click', () => {
       try {
         navigator.clipboard.writeText(msg);
-      } catch (_) { /* ignore */ }
-      copyBtn.textContent = '\u2713 Tersalin';
+      } catch {
+        /* ignore */
+      }
+      copyBtn.textContent = '✓ Tersalin';
       copyBtn.style.background = '#3E8A60';
       setTimeout(() => {
         copyBtn.textContent = 'Salin Pesan WA';
@@ -311,177 +336,213 @@ const fallbackChapters = author.latestChapters;
     });
 
     const backBtn = document.createElement('button');
+    backBtn.type = 'button';
     backBtn.textContent = 'Kembali';
     backBtn.style.cssText =
       'height:36px;padding:0 18px;background:transparent;color:#8AA0A4;border:1px solid rgba(255,255,255,.08);border-radius:18px;font-family:Lora,Georgia,serif;font-size:13px;cursor:pointer';
-    backBtn.addEventListener('click', resetToMenu);
+    backBtn.addEventListener('click', () => {
+      clearActiveControls(chat);
+      resetIdle(true);
+    });
 
     btnRow.appendChild(copyBtn);
     btnRow.appendChild(backBtn);
     wrap.appendChild(btnRow);
-
-    chatContainer.appendChild(wrap);
-    scrollToBottom();
+    chat.appendChild(wrap);
+    chat.scrollTop = chat.scrollHeight;
   }
 
-  function showPublishPreview() {
-    const w = selectedWork!;
-
-    let previewHtml = `<strong>Pratinjau Bab Baru</strong><br/><br/>
-      <strong>Karya:</strong> ${w.title}<br/>
-      <strong>Judul:</strong> ${chapterTitle}`;
-
-    if (chapterTeaser) {
-      previewHtml += `<br/><strong>Teaser:</strong> <em>"${chapterTeaser}"</em>`;
-    }
-
-    previewHtml +=
-      '<br/><br/><span style="font-size:12px;color:#8AA0A4">Apakah sudah benar?</span>';
-
-    chatContainer.appendChild(botBubble(previewHtml));
-    chatContainer.appendChild(
-      actionButtons([
-        {
-          label: '&#10003; Publikasikan',
-          style: 'primary',
-          onClick: () => {
-            const chapter: LatestChapter = {
-              workSlug: w.slug,
-              workTitle: w.title,
-              title: chapterTitle,
-              date: new Date().toLocaleDateString('id-ID', {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric',
-              }),
-              kbmUrl: w.kbmUrl,
-              teaser: chapterTeaser || undefined,
-            };
-
-            publishChapter('signature', chapter, fallbackChapters);
-
-            // Remove the preview & action buttons (last 2 dynamic elements)
-            const dynamics = chatContainer.querySelectorAll('.tg-dynamic');
-            const lastTwo = Array.from(dynamics).slice(-2);
-            lastTwo.forEach((el) => el.remove());
-
-            showWaPreview(chapter);
-          },
-        },
-        {
-          label: '&#10007; Batalkan',
-          style: 'danger',
-          onClick: () => {
-            // Remove preview & buttons
-            const dynamics = chatContainer.querySelectorAll('.tg-dynamic');
-            const lastTwo = Array.from(dynamics).slice(-2);
-            lastTwo.forEach((el) => el.remove());
-
-            chatContainer.appendChild(botBubble('Dibatalkan.'));
-            setTimeout(resetToMenu, 800);
-            scrollToBottom();
-          },
-        },
-      ]),
+  async function flowStatus() {
+    setStepHint(stepHint, 'Status · ringkasan demo');
+    const state = loadContent(TIER, author);
+    const latest = state.latestChapters?.[0];
+    const html = `<strong>Status Homebase</strong><br/><br/>
+    <strong>Karya:</strong> ${state.works?.length ?? 0}<br/>
+    <strong>Riwayat rilis:</strong> ${state.history?.length ?? 0}<br/>
+    <strong>Bab terbaru:</strong> ${
+      latest
+        ? `${latest.workTitle} — ${latest.title} <span style="color:#8AA0A4">(${latest.date})</span>`
+        : '<em style="color:#8AA0A4">belum ada</em>'
+    }`;
+    await botReply(chat, html);
+    appendKeyboard(
+      chat,
+      [
+        { label: 'Buka Dashboard', value: 'dash', style: 'primary' },
+        { label: 'Kembali ke Menu', value: 'menu' },
+      ],
+      (value) => {
+        if (value === 'dash') {
+          window.location.href = '/dashboard';
+          return;
+        }
+        appendUserBubble(chat, 'Kembali ke Menu');
+        resetIdle(true);
+      },
+      1,
     );
-    scrollToBottom();
   }
 
-  // ---- Menu handler ----
-  function handleMenu(action: string) {
-    menuEl.style.display = 'none';
-    clearDynamic();
-
-    if (action === 'update') {
-      chatContainer.appendChild(botBubble('Karya mana yang akan di-update?'));
-
-      chatContainer.appendChild(
-        workButtons((w) => {
-          selectedWork = w;
-          chapterTitle = '';
-          chapterTeaser = '';
-
-          chatContainer.appendChild(userBubble(w.title));
-          chatContainer.appendChild(
-            botBubble(
-              'Judul bab barunya apa?<br/><span style="font-size:12px;color:#8AA0A4">Misal: <em>Bab 48 &mdash; Pintu yang Terbuka</em></span>',
-            ),
+  async function flowLainnya() {
+    setStepHint(stepHint, 'Lainnya · pilih opsi');
+    await botReply(chat, 'Menu lainnya:');
+    appendKeyboard(
+      chat,
+      [
+        { label: '📄 Riwayat', value: 'riwayat' },
+        { label: '❓ Bantuan', value: 'bantuan' },
+        { label: '↻ Mulai ulang', value: 'start' },
+        { label: '← Kembali', value: 'menu' },
+      ],
+      async (value, label) => {
+        appendUserBubble(chat, label);
+        if (value === 'start') {
+          await botReply(
+            chat,
+            `Halo lagi, <strong style="color:#E8C4C8">${author.penName}</strong>! Siap coba simulasi.`,
           );
-          chatContainer.appendChild(
-            textInput('Bab 48 — …', (val) => {
-              chapterTitle = val;
-              chatContainer.appendChild(userBubble(val));
-              chatContainer.appendChild(
-                botBubble(
-                  'Teaser satu kalimat?<br/><span style="font-size:12px;color:#8AA0A4">Opsional &mdash; tanpa isi cerita, bisa dilewati</span>',
-                ),
-              );
-              chatContainer.appendChild(
-                textInput(
-                  'Satu kalimat penggoda…',
-                  (teaserVal) => {
-                    chapterTeaser = teaserVal;
-                    if (teaserVal) chatContainer.appendChild(userBubble(teaserVal));
-                    showPublishPreview();
-                  },
-                  true,
-                  () => {
-                    chapterTeaser = '';
-                    showPublishPreview();
-                  },
-                ),
-              );
-              scrollToBottom();
-            }),
-          );
-          scrollToBottom();
-        }),
-      );
+          resetIdle(true);
+          return;
+        }
+        if (value === 'menu') {
+          resetIdle(true);
+          return;
+        }
+        startFlow(value);
+      },
+      2,
+    );
+  }
 
-    } else if (action === 'riwayat') {
-      const state = loadDemoState('signature', fallbackChapters);
-      const history = state.history?.filter((c) => c.workSlug && c.title).slice(0, 10) ?? [];
+  async function flowBantuan() {
+    setStepHint(stepHint, 'Bantuan · cara pakai simulasi');
+    await botReply(
+      chat,
+      `<strong>Tentang Simulasi Ini</strong><br/><br/>
+      Start-up ini mendemonstrasikan <strong style="color:#E8C4C8">dual-surface</strong> manajemen penulis:<br/><br/>
+      <strong>• Dashboard</strong> — kontrol penuh via /dashboard (desktop)<br/>
+      <strong>• Telegram</strong> — notifikasi & aksi cepat dari HP<br/><br/>
+      Semua data demo disimpan di <em>localStorage</em> browser Anda (bukan bot asli).<br/><br/>
+      <strong>Perintah:</strong><br/>
+      <code style="color:#E8C4C8">/start</code> · menu utama<br/>
+      <code style="color:#E8C4C8">/update</code> · update bab<br/>
+      <code style="color:#E8C4C8">/status</code> · ringkasan<br/>
+      <code style="color:#E8C4C8">/riwayat</code> · rilis terbaru<br/>
+      <code style="color:#E8C4C8">/bantuan</code> · bantuan ini<br/>
+      <code style="color:#E8C4C8">/batal</code> · batalkan alur aktif`,
+    );
+    appendKeyboard(
+      chat,
+      [{ label: 'Kembali ke Menu', value: 'menu' }],
+      () => {
+        appendUserBubble(chat, 'Kembali ke Menu');
+        resetIdle(true);
+      },
+      1,
+    );
+  }
 
-      let html = '<strong>Riwayat Rilis</strong><br/><br/>';
-      if (history.length === 0) {
-        html += '<span style="color:#8AA0A4;font-style:italic">Belum ada rilis dari simulasi ini.</span>';
-      } else {
-        history.forEach((r) => {
-          html += `<div style="margin-bottom:7px;padding-bottom:7px;border-bottom:1px solid rgba(255,255,255,.06)">
-            <span style="color:#E8C4C8;font-weight:600">${r.workTitle}</span> &mdash; ${r.title}<br/>
-            <span style="font-size:11px;color:#8AA0A4">${r.date}</span>
-          </div>`;
-        });
-      }
+  async function flowRiwayat() {
+    setStepHint(stepHint, 'Riwayat · rilis demo');
+    const state = loadContent(TIER, author);
+    const history =
+      state.history?.filter((c) => c.workSlug && c.title).slice(0, 10) ?? [];
 
-      chatContainer.appendChild(botBubble(html));
-      chatContainer.appendChild(backToMenuBtn());
-
-    } else if (action === 'bantuan') {
-      chatContainer.appendChild(
-        botBubble(
-          `<strong>Tentang Simulasi Ini</strong><br/><br/>
-          Start-up ini mendemonstrasikan <strong style="color:#E8C4C8">dual-surface</strong> manajemen penulis:<br/><br/>
-          <strong>&#8226; Dashboard</strong> &mdash; kontrol penuh via /dashboard (desktop)<br/>
-          <strong>&#8226; Telegram</strong> &mdash; notifikasi & aksi cepat dari HP<br/><br/>
-          Hanya penulis yang sudah <strong style="color:#E8C4C8">allowlist</strong> yang bisa terhubung ke bot asli.
-          Simulasi ini hanya demo &mdash; semua data disimpan di <em>localStorage</em> browser Anda.<br/><br/>
-          <strong>&#8226; Semesta</strong> &mdash; Kelola tokoh, linimasa, lokasi, trivia semesta di tab Semesta pada dashboard.`,
-        ),
-      );
-      chatContainer.appendChild(backToMenuBtn());
+    let html = '<strong>Riwayat Rilis</strong><br/><br/>';
+    if (history.length === 0) {
+      html +=
+        '<span style="color:#8AA0A4;font-style:italic">Belum ada rilis dari simulasi ini.</span>';
+    } else {
+      history.forEach((r) => {
+        html += `<div style="margin-bottom:7px;padding-bottom:7px;border-bottom:1px solid rgba(255,255,255,.06)">
+          <span style="color:#E8C4C8;font-weight:600">${r.workTitle}</span> — ${r.title}<br/>
+          <span style="font-size:11px;color:#8AA0A4">${r.date}</span>
+        </div>`;
+      });
     }
 
-    scrollToBottom();
+    await botReply(chat, html);
+    appendKeyboard(
+      chat,
+      [{ label: 'Kembali ke Menu', value: 'menu' }],
+      () => {
+        appendUserBubble(chat, 'Kembali ke Menu');
+        resetIdle(true);
+      },
+      1,
+    );
   }
 
-  // Bind menu buttons
-  document.querySelectorAll<HTMLElement>('.tg-menu-btn').forEach((btn) => {
+  async function handleComposerSend() {
+    const val = composer.value.trim();
+    composer.value = '';
+    if (!val) return;
+
+    const cmd = parseCommand(val);
+
+    if (cmd === '/batal') {
+      clearActiveControls(chat);
+      appendUserBubble(chat, val);
+      await botReply(chat, 'Dibatalkan.');
+      resetIdle(true);
+      return;
+    }
+
+    if (ctx.phase === 'idle') {
+      appendUserBubble(chat, val);
+      if (cmd === '/start') {
+        await botReply(
+          chat,
+          `Halo, <strong style="color:#E8C4C8">${author.penName}</strong>! Pilih aksi di menu.`,
+        );
+        resetIdle(true);
+        return;
+      }
+      if (cmd === '/update') return startFlow('update');
+      if (cmd === '/status') return startFlow('status');
+      if (cmd === '/riwayat') return startFlow('riwayat');
+      if (cmd === '/bantuan') return startFlow('bantuan');
+      if (cmd) {
+        await botReply(
+          chat,
+          'Perintah tidak dikenal. Coba <code style="color:#E8C4C8">/start</code>, <code style="color:#E8C4C8">/update</code>, <code style="color:#E8C4C8">/status</code>, <code style="color:#E8C4C8">/riwayat</code>, <code style="color:#E8C4C8">/bantuan</code>.',
+        );
+        return;
+      }
+      await botReply(chat, 'Pilih menu atau ketik /start');
+      return;
+    }
+
+    // In flow: free text ignored (controls own input); non-batal commands tip only
+    if (cmd) {
+      appendUserBubble(chat, val);
+      await botReply(chat, 'Gunakan tombol di chat, atau /batal');
+      return;
+    }
+    appendUserBubble(chat, val);
+    await botReply(chat, 'Gunakan tombol di chat, atau /batal');
+  }
+
+  sendBtn?.addEventListener('click', () => {
+    void handleComposerSend();
+  });
+  composer?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      void handleComposerSend();
+    }
+  });
+
+  document.querySelectorAll('[data-tg-guide]').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const action = btn.dataset.tgAction;
-      if (action) handleMenu(action);
+      const f = btn.getAttribute('data-tg-guide');
+      if (!f) return;
+      clearActiveControls(chat);
+      appendUserBubble(chat, (btn.textContent || f).trim());
+      startFlow(f);
     });
   });
 
-  scrollToBottom();
+  setStepHint(stepHint, 'Menu utama · pilih aksi di bawah');
+  renderMainMenu();
 </script>
