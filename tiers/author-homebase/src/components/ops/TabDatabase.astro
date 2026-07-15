@@ -72,6 +72,7 @@ const { readers } = Astro.props;
   <div
     style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:18px;overflow:hidden"
   >
+    <div class="ops-scroll-x" style="overflow-x:auto;-webkit-overflow-scrolling:touch">
     <div
       style="display:flex;align-items:center;gap:14px;padding:16px 22px;border-bottom:1px solid rgba(122,51,65,.12)"
     >
@@ -107,6 +108,7 @@ const { readers } = Astro.props;
           <span style="color:#9A8078;font-size:13px">{r.date}</span>
         </div>
       ))}
+    </div>
     </div>
   </div>
 </div>

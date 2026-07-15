@@ -4,9 +4,10 @@ import '../styles/global.css';
 export interface Props {
   penName: string;
   activeTab?: string;
+  packageLabel?: string;
 }
 
-const { penName, activeTab } = Astro.props;
+const { penName, packageLabel = 'Paket Signature' } = Astro.props;
 ---
 
 <!doctype html>
@@ -15,71 +16,364 @@ const { penName, activeTab } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{penName} — Dashboard Signature</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap"
       rel="stylesheet"
     />
+    <style is:global>
+      /* ---- Ops shell responsive ---- */
+      .ops-banner {
+        background: #fff3cd;
+        color: #7a5a50;
+        text-align: center;
+        padding: 10px 16px;
+        font-size: 13px;
+        border-bottom: 1px solid rgba(122, 51, 65, 0.12);
+        position: sticky;
+        top: 0;
+        z-index: 60;
+      }
+
+      .ops-shell {
+        display: flex;
+        min-height: calc(100vh - 41px);
+        position: relative;
+      }
+
+      .ops-topbar {
+        display: none;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        background: #3b2a28;
+        color: #fbf6ef;
+        position: sticky;
+        top: 41px;
+        z-index: 55;
+        border-bottom: 1px solid rgba(217, 196, 187, 0.18);
+      }
+
+      .ops-menu-btn {
+        width: 44px;
+        height: 44px;
+        border: none;
+        border-radius: 12px;
+        background: rgba(251, 246, 239, 0.1);
+        color: #fbf6ef;
+        cursor: pointer;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        flex: none;
+      }
+
+      .ops-menu-btn span {
+        display: block;
+        width: 18px;
+        height: 2px;
+        background: #fbf6ef;
+        border-radius: 2px;
+      }
+
+      .ops-topbar-title {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 17px;
+        font-weight: 600;
+        margin: 0;
+        line-height: 1.2;
+      }
+
+      .ops-topbar-sub {
+        margin: 2px 0 0;
+        font-size: 11px;
+        color: #b99a8e;
+        font-style: italic;
+      }
+
+      .ops-aside {
+        width: 248px;
+        flex: none;
+        background: #3b2a28;
+        color: #d9c4bb;
+        display: flex;
+        flex-direction: column;
+        position: sticky;
+        top: 41px;
+        height: calc(100vh - 41px);
+        box-sizing: border-box;
+        padding: 24px 16px;
+        z-index: 50;
+      }
+
+      .ops-aside-brand {
+        padding: 0 10px 20px;
+        border-bottom: 1px solid rgba(217, 196, 187, 0.18);
+      }
+
+      .ops-aside-brand h1 {
+        margin: 0;
+        font-family: 'Playfair Display', serif;
+        font-size: 19px;
+        font-weight: 600;
+        color: #fbf6ef;
+      }
+
+      .ops-aside-brand p {
+        margin: 4px 0 0;
+        font-size: 12px;
+        font-style: italic;
+        color: #b99a8e;
+      }
+
+      .ops-menu-close {
+        display: none;
+        width: 40px;
+        height: 40px;
+        border: none;
+        border-radius: 10px;
+        background: rgba(251, 246, 239, 0.08);
+        color: #fbf6ef;
+        font-size: 20px;
+        cursor: pointer;
+        flex: none;
+        line-height: 1;
+      }
+
+      .ops-aside-foot {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 0 4px;
+      }
+
+      .ops-main {
+        flex: 1;
+        min-width: 0;
+        padding: 36px 44px 56px;
+        box-sizing: border-box;
+        background: #f3ebe0;
+      }
+
+      .ops-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(59, 42, 40, 0.45);
+        z-index: 45;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+      }
+
+      /* Tablet */
+      @media (max-width: 1024px) {
+        .ops-main {
+          padding: 28px 24px 48px;
+        }
+      }
+
+      /* Mobile + small tablet: drawer sidebar */
+      @media (max-width: 900px) {
+        .ops-topbar {
+          display: flex;
+        }
+
+        .ops-menu-close {
+          display: block;
+        }
+
+        .ops-shell {
+          flex-direction: column;
+          min-height: calc(100vh - 41px - 68px);
+        }
+
+        .ops-aside {
+          position: fixed;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          height: 100vh;
+          width: min(288px, 86vw);
+          transform: translateX(-105%);
+          transition: transform 0.22s ease;
+          box-shadow: 12px 0 40px rgba(59, 42, 40, 0.28);
+          padding-top: 20px;
+          z-index: 70;
+        }
+
+        body.ops-nav-open .ops-aside {
+          transform: translateX(0);
+        }
+
+        body.ops-nav-open .ops-overlay {
+          display: block;
+        }
+
+        body.ops-nav-open {
+          overflow: hidden;
+        }
+
+        .ops-main {
+          padding: 20px 16px 40px;
+          width: 100%;
+        }
+
+        /* Stack common dashboard headers */
+        .ops-main > #tab-content > * > div[style*='align-items:flex-end'] {
+          flex-direction: column !important;
+          align-items: stretch !important;
+        }
+
+        .ops-main a[style*='height:48px'],
+        .ops-main a[style*='height: 48px'] {
+          width: 100%;
+          justify-content: center !important;
+          box-sizing: border-box;
+        }
+
+        /* 4-col stats → 2 */
+        .ops-main div[style*='grid-template-columns:repeat(4'] {
+          grid-template-columns: repeat(2, 1fr) !important;
+        }
+
+        /* 3-col → 1 or 2 */
+        .ops-main div[style*='grid-template-columns:repeat(3'] {
+          grid-template-columns: 1fr !important;
+        }
+
+        /* Rilis two-column form */
+        .ops-main div[style*='grid-template-columns:1fr 420px'] {
+          grid-template-columns: 1fr !important;
+        }
+
+        /* Database table header/rows: allow horizontal scroll */
+        .ops-main div[style*='grid-template-columns:2fr 1.6fr'] {
+          min-width: 560px;
+        }
+
+        .ops-main div[style*='overflow'] {
+          max-width: 100%;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .ops-main h1[style*='font-size:32px'] {
+          font-size: 26px !important;
+        }
+
+        .ops-main div[style*='grid-template-columns:repeat(4'] {
+          grid-template-columns: 1fr 1fr !important;
+          gap: 10px !important;
+        }
+
+        .ops-main div[style*='font-size:30px'] {
+          font-size: 24px !important;
+        }
+      }
+
+      /* Horizontal scroll wrapper for wide tables */
+      .ops-scroll-x {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 0 -4px;
+        padding: 0 4px;
+      }
+    </style>
   </head>
-  <body
-    style="margin:0;background:#EAE0D3;font-family:Lora,Georgia,serif;color:#3B2A28"
-  >
-    <!-- Banner -->
-    <div
-      style="background:#FFF3CD;color:#7A5A50;text-align:center;padding:10px 16px;font-size:13px;border-bottom:1px solid rgba(122,51,65,.12)"
-    >
-      Simulasi demo — perubahan tidak ke server
+  <body style="margin:0;background:#EAE0D3;font-family:Lora,Georgia,serif;color:#3B2A28">
+    <div class="ops-banner">Simulasi demo — perubahan tidak ke server</div>
+
+    <div class="ops-topbar">
+      <button type="button" class="ops-menu-btn" id="ops-menu-open" aria-label="Buka menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div style="min-width:0;flex:1">
+        <p class="ops-topbar-title">Homebase Studio</p>
+        <p class="ops-topbar-sub">{penName} · {packageLabel}</p>
+      </div>
+      <a
+        href="/"
+        style="flex:none;height:40px;padding:0 14px;display:inline-flex;align-items:center;border:1px solid rgba(217,196,187,.35);border-radius:12px;font-size:12px;color:#D9C4BB;text-decoration:none"
+      >
+        Situs
+      </a>
     </div>
 
-    <div style="display:flex;min-height:calc(100vh - 41px)">
-      <!-- Sidebar -->
-      <aside
-        style="width:248px;flex:none;background:#3B2A28;color:#D9C4BB;display:flex;flex-direction:column;position:sticky;top:0;height:calc(100vh - 41px);box-sizing:border-box;padding:24px 16px"
-      >
-        <div style="padding:0 10px 20px;border-bottom:1px solid rgba(217,196,187,.18)">
-          <p
-            style="margin:0;font-family:'Playfair Display',serif;font-size:19px;font-weight:600;color:#FBF6EF"
-          >
-            Homebase Studio
-          </p>
-          <p style="margin:4px 0 0;font-size:12px;font-style:italic;color:#B99A8E">
-            ratnamaharani.id
-          </p>
+    <button type="button" class="ops-overlay" id="ops-overlay" aria-label="Tutup menu"></button>
+
+    <div class="ops-shell">
+      <aside class="ops-aside" id="ops-aside" aria-label="Navigasi dashboard">
+        <div class="ops-aside-brand">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+            <div>
+              <h1>Homebase Studio</h1>
+              <p>ratnamaharani.id</p>
+            </div>
+            <button type="button" class="ops-menu-close" id="ops-menu-close" aria-label="Tutup menu">
+              ✕
+            </button>
+          </div>
         </div>
 
         <slot name="nav" />
 
-        <div style="margin-top:auto;display:flex;flex-direction:column;gap:10px;padding:0 4px">
+        <div class="ops-aside-foot">
           <a
             href="/"
             style="display:flex;align-items:center;justify-content:center;height:44px;border:1px solid rgba(217,196,187,.35);border-radius:12px;font-size:13px;color:#D9C4BB;text-decoration:none"
           >
-            Lihat Situs &rarr;
+            Lihat Situs →
           </a>
           <div
             style="display:flex;align-items:center;gap:10px;padding:10px 8px;border-radius:12px;background:rgba(217,196,187,.08)"
           >
             <div
               style="width:36px;height:36px;border-radius:50%;background:repeating-linear-gradient(45deg,#7A5A50 0 6px,#8A6A5E 6px 12px);flex:none"
-            ></div>
-            <div>
-              <p style="margin:0;font-size:13px;font-weight:600;color:#FBF6EF">
+            >
+            </div>
+            <div style="min-width:0">
+              <p style="margin:0;font-size:13px;font-weight:600;color:#FBF6EF;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
                 {penName}
               </p>
-              <p style="margin:0;font-size:11px;color:#B99A8E">Paket Signature</p>
+              <p style="margin:0;font-size:11px;color:#B99A8E">{packageLabel}</p>
             </div>
           </div>
         </div>
       </aside>
 
-      <!-- Main Content -->
-      <main
-        style="flex:1;min-width:0;padding:36px 44px 56px;box-sizing:border-box;background:#F3EBE0"
-      >
+      <main class="ops-main">
         <slot />
       </main>
     </div>
+
+    <script>
+      const openBtn = document.getElementById('ops-menu-open');
+      const closeBtn = document.getElementById('ops-menu-close');
+      const overlay = document.getElementById('ops-overlay');
+      const mq = window.matchMedia('(max-width: 900px)');
+
+      function setOpen(open: boolean) {
+        document.body.classList.toggle('ops-nav-open', open);
+      }
+
+      openBtn?.addEventListener('click', () => setOpen(true));
+      closeBtn?.addEventListener('click', () => setOpen(false));
+      overlay?.addEventListener('click', () => setOpen(false));
+
+      document.querySelectorAll('.ops-nav-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          if (mq.matches) setOpen(false);
+        });
+      });
+
+      mq.addEventListener('change', () => {
+        if (!mq.matches) setOpen(false);
+      });
+    </script>
   </body>
 </html>
