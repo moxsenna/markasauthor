@@ -174,7 +174,7 @@
   /* ---------- ASSISTANT ---------- */
   .assistant{background:var(--paper)}
   .assistant-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;margin-top:48px}
-  .assistant-card{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:30px 26px;display:flex;flex-direction:column}
+  .assistant-card{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:30px 26px;display:flex;flex-direction:column;position:relative}
   .assistant-card.featured{border:2px solid var(--gold);box-shadow:0 12px 36px rgba(150,105,26,.12)}
   .assistant-card .plan-name{font-size:22px}
   .assistant-card .plan-price{font-size:32px;margin:12px 0 4px}
@@ -352,11 +352,10 @@
     <div class="center narrow">
       <span class="eyebrow">Investasi</span>
       <h2>Bukan biaya. Premi asuransi untuk aset yang sudah Anda bangun bertahun-tahun.</h2>
-      <p class="lead">Dibayar sekali. Tanpa langganan. Domain <strong>.my.id / .web.id gratis</strong> dari kami, hosting <strong>Rp0/bulan selamanya</strong> di akun Cloudflare milik Anda sendiri.</p>
+      <p class="lead">Dibayar sekali. Tanpa langganan situs. Domain <strong>.my.id / .web.id gratis</strong> dari kami, hosting <strong>Rp0/bulan selamanya</strong> di akun Cloudflare milik Anda sendiri.</p>
     </div>
 
     <div class="price-grid">
-      <!-- SIGNATURE (anchor, shown first) -->
       <div class="price-card">
         <div class="plan-name">Signature Universe</div>
         <p class="plan-tag">Untuk penulis yang membangun IP &amp; semesta cerita</p>
@@ -370,11 +369,10 @@
           <li>Rangkaian sambutan pembaca baru — berbasis WhatsApp</li>
           <li>Desain custom penuh sesuai nuansa karya Anda</li>
         </ul>
-        <a class="btn btn-ghost" href="https://wa.me/6200000000000?text=Halo%2C%20saya%20tertarik%20konsultasi%20Signature%20Universe" target="_blank" rel="noopener">Ajukan Konsultasi</a>
+        <a class="btn btn-ghost" href="https://wa.me/6285179595302?text=Halo%2C%20saya%20tertarik%20konsultasi%20Signature%20Universe" target="_blank" rel="noopener">Ajukan Konsultasi</a>
         <p class="invite-only">Karya Anda layak diperlakukan sebagai IP.</p>
       </div>
 
-      <!-- HERO -->
       <div class="price-card hero-plan">
         <div class="plan-badge">Pilihan Para Penulis</div>
         <div class="plan-name">Author Homebase</div>
@@ -383,10 +381,10 @@
         <div class="plan-once">Sekali bayar · milik Anda selamanya · bisa dicicil 2×</div>
         <ul class="plan-list">
           <li><strong>Sistem Kabar Rilis via WhatsApp</strong> — pembaca tahu chapter baru, tanpa Anda spam</li>
-          <li><strong>Database Pembaca</strong> milik sendiri — nama &amp; nomor WA pembaca setia Anda</li>
+          <li><strong>Database Pembaca</strong> milik sendiri — nama &amp; nomor WA pembaca setia</li>
           <li><strong>Ruang Bonus Pembaca</strong> — konten eksklusif penumbuh database</li>
           <li><strong>Peta Baca</strong> semua seri &amp; spin-off Anda</li>
-          <li><strong>Collaboration Kit</strong> lengkap untuk penerbit &amp; brand</li>
+          <li><strong>Collaboration Kit</strong> lengkap + PDF untuk penerbit &amp; brand</li>
           <li>Rak Buku visual + Author Timeline perjalanan karier</li>
           <li>Domain .my.id / .web.id <strong>gratis</strong> (senilai Rp250rb+)</li>
           <li>SEO dasar — nama pena Anda ditemukan di Google</li>
@@ -394,7 +392,6 @@
         <a class="btn btn-gold" href="#founding">Amankan Slot Founding Author →</a>
       </div>
 
-      <!-- STARTER -->
       <div class="price-card">
         <div class="plan-name">Homebase Starter</div>
         <p class="plan-tag">Cukup untuk mulai. Mengamankan yang paling penting dulu.</p>
@@ -402,7 +399,7 @@
         <div class="plan-once">Sekali bayar · bisa upgrade kapan pun (bayar selisihnya saja)</div>
         <ul class="plan-list">
           <li>Rak Buku visual + Author Timeline</li>
-          <li>Bio, kontak &amp; semua link karya di KBM</li>
+          <li>Bio, kontak &amp; semua link karya Anda</li>
           <li><strong>Database Pembaca versi dasar</strong> — mulai amankan nomor WA pembaca</li>
           <li>Collaboration Kit ringkas</li>
           <li>Domain .my.id / .web.id <strong>gratis</strong></li>
@@ -410,11 +407,66 @@
           <li class="muted">Ruang Bonus Pembaca — hanya di Author Homebase</li>
           <li class="muted">Peta Baca — hanya di Author Homebase</li>
         </ul>
-        <a class="btn btn-ghost" href="https://wa.me/6200000000000?text=Halo%2C%20saya%20tertarik%20paket%20Homebase%20Starter" target="_blank" rel="noopener">Mulai dari Starter</a>
+        <a class="btn btn-ghost" href="https://wa.me/6285179595302?text=Halo%2C%20saya%20tertarik%20paket%20Homebase%20Starter" target="_blank" rel="noopener">Mulai dari Starter</a>
       </div>
     </div>
 
     <p class="price-note">Semua paket: dikerjakan tangan satu per satu, DP 50% — <strong>pelunasan setelah rumah Anda berdiri dan Anda melihatnya sendiri.</strong></p>
+  </div>
+</section>
+
+<!-- ============ ASSISTANT ============ -->
+<section class="assistant" id="assistant">
+  <div class="wrap">
+    <div class="center narrow">
+      <span class="eyebrow">Setelah rumah berdiri</span>
+      <h2>MarkasAuthor Assistant — remote control lewat Telegram atau Dashboard</h2>
+      <p class="lead">Update bab, draft kabar rilis, dan undo — tanpa minta developer. Opsional di semua tier. Website tetap milik Anda meski Assistant dihentikan.</p>
+    </div>
+    <div class="assistant-grid">
+      <div class="assistant-card">
+        <div class="plan-name">Care</div>
+        <p class="plan-tag">Cukup untuk rilis rutin</p>
+        <div class="plan-price">Rp149rb<small>/bulan</small></div>
+        <ul class="plan-list">
+          <li>Maks. 30 update berhasil / bulan</li>
+          <li>Update bab + link di website</li>
+          <li>Draft pesan Saluran WhatsApp</li>
+          <li>Histori + Undo</li>
+          <li>Support dasar</li>
+        </ul>
+        <a class="btn btn-ghost" href="https://wa.me/6285179595302?text=Halo%2C%20saya%20ingin%20tahu%20paket%20Assistant%20Care" target="_blank" rel="noopener">Tanya Care</a>
+      </div>
+      <div class="assistant-card featured">
+        <div class="plan-badge">Paling sering dipilih</div>
+        <div class="plan-name">Active</div>
+        <p class="plan-tag">Untuk penulis yang rilis sering</p>
+        <div class="plan-price">Rp299rb<small>/bulan</small></div>
+        <ul class="plan-list">
+          <li>Maks. 100 update berhasil / bulan</li>
+          <li>Semua yang ada di Care</li>
+          <li>Beberapa anggota tim</li>
+          <li>Variasi copy lintas kanal</li>
+          <li>Laporan penggunaan bulanan</li>
+          <li>Prioritas support</li>
+        </ul>
+        <a class="btn btn-gold" href="https://wa.me/6285179595302?text=Halo%2C%20saya%20ingin%20tahu%20paket%20Assistant%20Active" target="_blank" rel="noopener">Tanya Active</a>
+      </div>
+      <div class="assistant-card">
+        <div class="plan-name">Managed</div>
+        <p class="plan-tag">Dampingan manusia + otomasi</p>
+        <div class="plan-price">Rp499–750rb<small>/bulan</small></div>
+        <ul class="plan-list">
+          <li>Semua yang ada di Active</li>
+          <li>Human review perubahan</li>
+          <li>Bantuan kampanye rilis</li>
+          <li>Optimasi CTA &amp; copy</li>
+          <li>Laporan kinerja</li>
+        </ul>
+        <a class="btn btn-ghost" href="https://wa.me/6285179595302?text=Halo%2C%20saya%20ingin%20tahu%20paket%20Assistant%20Managed" target="_blank" rel="noopener">Tanya Managed</a>
+      </div>
+    </div>
+    <p class="assistant-note">Telegram &amp; Dashboard menjalankan command yang diizinkan — dengan preview &amp; konfirmasi. Bukan CMS bebas, bukan AI yang mengedit HTML sendiri. Kuota dihitung dari update yang berhasil dipublikasikan.</p>
   </div>
 </section>
 
@@ -438,8 +490,8 @@
       </div>
       <div class="g-card">
         <div class="icon">🪶</div>
-        <h3>Waktu Anda Hanya 30 Menit</h3>
-        <p>Anda cukup mengisi satu formulir: link karya, bio, foto. Sisanya urusan kami. Anda tetap fokus pada satu-satunya hal yang penting — menulis.</p>
+        <h3>Waktu Materi ±45 Menit</h3>
+        <p>Anda mengisi formulir: link karya, bio, foto, bonus awal, urutan baca. Sisanya urusan kami. Anda tetap fokus pada satu-satunya hal yang penting — menulis.</p>
       </div>
     </div>
   </div>
@@ -462,7 +514,7 @@
       <div class="slot-bar"><div class="slot-fill"></div></div>
       <p class="slot-text"><strong>3 dari 10 slot terisi</strong> · slot ke-11 membayar harga penuh</p>
       <div class="mt-40">
-        <a class="btn btn-gold" href="https://wa.me/6200000000000?text=Halo%2C%20saya%20ingin%20mengamankan%20slot%20Founding%20Author" target="_blank" rel="noopener">Amankan Slot Founding Author →</a>
+        <a class="btn btn-gold" href="https://wa.me/6285179595302?text=Halo%2C%20saya%20ingin%20mengamankan%20slot%20Founding%20Author" target="_blank" rel="noopener">Amankan Slot Founding Author →</a>
       </div>
     </div>
   </div>
@@ -506,7 +558,7 @@
   <div class="wrap narrow">
     <h2 class="serif">Platform datang dan pergi.<br><em style="color:var(--accent)">Pembaca yang bisa Anda hubungi — itu selamanya.</em></h2>
     <p class="lead" style="margin:22px 0 36px">Suatu hari nanti, entah karena algoritma, adaptasi film, atau babak baru karier Anda — Anda akan bersyukur rumah ini sudah berdiri dari sekarang.</p>
-    <a class="btn btn-gold" href="https://wa.me/6200000000000?text=Halo%2C%20saya%20penulis%20di%20KBM%20dan%20ingin%20tanya%20soal%20Author%20Homebase" target="_blank" rel="noopener">Ngobrol Dulu via WhatsApp →</a>
+    <a class="btn btn-gold" href="https://wa.me/6285179595302?text=Halo%2C%20saya%20penulis%20di%20KBM%20dan%20ingin%20tanya%20soal%20Author%20Homebase" target="_blank" rel="noopener">Ngobrol Dulu via WhatsApp →</a>
     <p class="hero-note">Tanya-tanya dulu boleh banget. Tidak ada tim sales yang mengejar Anda — yang balas chat adalah orang yang akan membangun rumah Anda.</p>
   </div>
 </section>
