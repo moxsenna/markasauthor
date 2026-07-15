@@ -538,11 +538,11 @@ document.querySelectorAll('[data-tg-guide]').forEach(btn => {
 renderMainMenu()
 ```
 
-Implement **stub** flow functions that only `botReply` "TODO" then `resetIdle` except:
+Implement these flows in this task (not later stubs):
 
-- `flowLainnya` → keyboard Riwayat / Bantuan / Mulai ulang (/start) / Kembali
-- `flowBantuan` → full help text from spec + reset button
-- `flowRiwayat` → load history via `loadContent` / `loadDemoState` + list + menu button
+- `flowLainnya` → keyboard: Riwayat / Bantuan / Mulai ulang / Kembali (values `riwayat`|`bantuan`|`start`|`menu`). `start` → greeting + `resetIdle(true)`; `menu` → `resetIdle(true)`; others call `startFlow`.
+- `flowBantuan` → bot bubble dual-surface + localStorage + command list (`/start /update /status /riwayat /bantuan /batal`) then keyboard `Kembali ke Menu`.
+- `flowRiwayat` → `loadContent('signature', author).history` max 10; empty italic message if none; keyboard kembali menu.
 
 Port **Update Bab** fully in this task (existing logic), using:
 
