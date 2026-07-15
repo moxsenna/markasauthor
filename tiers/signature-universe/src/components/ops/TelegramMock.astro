@@ -103,7 +103,14 @@ const author = authorData as AuthorData;
     appendTextControls,
     parseCommand,
   } from '../../lib/telegram-sim';
-  import { publishChapter, buildWaMessage, loadContent } from '../../lib/demo-store';
+  import {
+    publishChapter,
+    buildWaMessage,
+    loadContent,
+    toggleBonusPublished,
+    setWorkStatus,
+    addUniverseTrivia,
+  } from '../../lib/demo-store';
   import type { AuthorData, LatestChapter, Work } from '../../lib/types';
 
   const author = JSON.parse(
@@ -149,9 +156,9 @@ const author = authorData as AuthorData;
     ctx = { phase: 'flow', flow, step: 0, draft: {} };
     if (flow === 'update') return flowUpdate();
     if (flow === 'status') return flowStatus();
-    if (flow === 'bonus') return flowStub('Bonus');
-    if (flow === 'karya') return flowStub('Karya');
-    if (flow === 'semesta') return flowStub('Semesta');
+    if (flow === 'bonus') return flowBonus();
+    if (flow === 'karya') return flowKarya();
+    if (flow === 'semesta') return flowSemesta();
     if (flow === 'riwayat') return flowRiwayat();
     if (flow === 'bantuan') return flowBantuan();
     if (flow === 'lainnya') return flowLainnya();
@@ -159,21 +166,205 @@ const author = authorData as AuthorData;
     resetIdle();
   }
 
-  async function flowStub(name: string) {
-    setStepHint(stepHint, `${name} · segera`);
-    await botReply(
-      chat,
-      `Segera — alur <strong style="color:#E8C4C8">${name}</strong> di langkah berikutnya demo.`,
-    );
+  async function flowBonus() {
+    setStepHint(stepHint, 'Bonus · pilih item');
+    const state = loadContent(TIER, author);
+    const bonuses = state.bonuses || [];
+
+    if (!bonuses.length) {
+      await botReply(chat, 'Belum ada bonus di demo ini.');
+      appendKeyboard(
+        chat,
+        [{ label: 'Kembali ke Menu', value: 'menu' }],
+        () => {
+          appendUserBubble(chat, 'Kembali ke Menu');
+          resetIdle(true);
+        },
+        1,
+      );
+      return;
+    }
+
+    await botReply(chat, 'Bonus mana yang diubah status publikasinya?');
     appendKeyboard(
       chat,
-      [{ label: 'Kembali ke Menu', value: 'menu' }],
-      () => {
-        appendUserBubble(chat, 'Kembali ke Menu');
-        resetIdle(true);
+      bonuses.map((b) => ({
+        label: `${b.title} · ${b.published ? 'PUBLIK' : 'DRAFT'}`,
+        value: b.id,
+      })),
+      async (id, label) => {
+        clearActiveControls(chat);
+        appendUserBubble(chat, label);
+        const bonus = bonuses.find((x) => x.id === id);
+        if (!bonus) return;
+
+        setStepHint(stepHint, 'Bonus · ubah status');
+        const toggleLabel = bonus.published ? 'Sembunyikan' : 'Tampilkan';
+        await botReply(
+          chat,
+          `<strong>${bonus.title}</strong><br/>Status: <span style="color:#E8C4C8">${bonus.published ? 'PUBLIK' : 'DRAFT'}</span>`,
+        );
+        appendKeyboard(
+          chat,
+          [
+            { label: toggleLabel, value: 'toggle', style: 'primary' },
+            { label: 'Kembali', value: 'back' },
+          ],
+          async (value, btnLabel) => {
+            clearActiveControls(chat);
+            appendUserBubble(chat, btnLabel);
+            if (value === 'back') {
+              resetIdle(true);
+              return;
+            }
+            const next = toggleBonusPublished(TIER, id, author);
+            const updated = (next.bonuses || []).find((x) => x.id === id);
+            const stateLabel = updated?.published ? 'PUBLIK' : 'DRAFT';
+            await botReply(
+              chat,
+              `✓ <strong>${bonus.title}</strong> sekarang <span style="color:#E8C4C8">${stateLabel}</span>.`,
+            );
+            resetIdle(true);
+          },
+          1,
+        );
       },
       1,
     );
+  }
+
+  async function flowKarya() {
+    setStepHint(stepHint, 'Karya · pilih status');
+    const state = loadContent(TIER, author);
+    const works: Work[] = state.works?.length ? state.works : author.works || [];
+
+    if (!works.length) {
+      await botReply(chat, 'Belum ada karya di demo ini.');
+      appendKeyboard(
+        chat,
+        [{ label: 'Kembali ke Menu', value: 'menu' }],
+        () => {
+          appendUserBubble(chat, 'Kembali ke Menu');
+          resetIdle(true);
+        },
+        1,
+      );
+      return;
+    }
+
+    await botReply(chat, 'Karya mana yang diubah statusnya?');
+    appendKeyboard(
+      chat,
+      works.map((w) => ({
+        label: `${w.title} · ${w.status}`,
+        value: w.slug,
+      })),
+      async (slug, label) => {
+        clearActiveControls(chat);
+        appendUserBubble(chat, label);
+        const work = works.find((x) => x.slug === slug);
+        if (!work) return;
+
+        setStepHint(stepHint, 'Karya · set status');
+        await botReply(
+          chat,
+          `<strong>${work.title}</strong><br/>Status: <span style="color:#E8C4C8">${work.status}</span>`,
+        );
+        appendKeyboard(
+          chat,
+          [
+            { label: 'TAYANG', value: 'TAYANG', style: 'primary' },
+            { label: 'TAMAT', value: 'TAMAT' },
+            { label: 'Kembali', value: 'back' },
+          ],
+          async (value, btnLabel) => {
+            clearActiveControls(chat);
+            appendUserBubble(chat, btnLabel);
+            if (value === 'back') {
+              resetIdle(true);
+              return;
+            }
+            if (value !== 'TAYANG' && value !== 'TAMAT') return;
+            setWorkStatus(TIER, slug, value, author);
+            await botReply(
+              chat,
+              `✓ <strong>${work.title}</strong> status <span style="color:#E8C4C8">${value}</span>.`,
+            );
+            resetIdle(true);
+          },
+          1,
+        );
+      },
+      1,
+    );
+  }
+
+  async function flowSemesta() {
+    setStepHint(stepHint, 'Semesta · tambah trivia');
+    await botReply(
+      chat,
+      'Mini-alur Semesta: <strong style="color:#E8C4C8">tambah trivia Q&amp;A</strong> ke semesta demo.<br/><span style="font-size:12px;color:#8AA0A4">Hanya tambah — edit/hapus lewat Dashboard.</span>',
+    );
+    await botReply(
+      chat,
+      'Pertanyaan trivia?<br/><span style="font-size:12px;color:#8AA0A4">Misal: <em>Apa nama semesta ini?</em></span>',
+    );
+    appendTextControls(chat, {
+      placeholder: 'Pertanyaan…',
+      sample: 'Apa nama semesta ini?',
+      onSubmit: async (q) => {
+        appendUserBubble(chat, q);
+        ctx.draft.triviaQ = q;
+        setStepHint(stepHint, 'Semesta · jawaban trivia');
+        await botReply(
+          chat,
+          'Jawaban trivia?<br/><span style="font-size:12px;color:#8AA0A4">Satu–dua kalimat singkat</span>',
+        );
+        appendTextControls(chat, {
+          placeholder: 'Jawaban…',
+          sample: 'Semesta di bawah langit berkarat.',
+          onSubmit: async (a) => {
+            appendUserBubble(chat, a);
+            ctx.draft.triviaA = a;
+            setStepHint(stepHint, 'Semesta · pratinjau');
+            clearActiveControls(chat);
+            await botReply(
+              chat,
+              `<strong>Pratinjau Trivia</strong><br/><br/>
+              <strong>Q:</strong> ${ctx.draft.triviaQ}<br/>
+              <strong>A:</strong> ${a}<br/><br/>
+              <span style="font-size:12px;color:#8AA0A4">Simpan ke semesta demo?</span>`,
+            );
+            appendKeyboard(
+              chat,
+              [
+                { label: '✓ Simpan', value: 'save', style: 'primary' },
+                { label: '✗ Batalkan', value: 'cancel', style: 'danger' },
+              ],
+              async (value) => {
+                clearActiveControls(chat);
+                if (value === 'cancel') {
+                  await botReply(chat, 'Dibatalkan.');
+                  resetIdle(true);
+                  return;
+                }
+                addUniverseTrivia(
+                  TIER,
+                  { q: String(ctx.draft.triviaQ || ''), a: String(a) },
+                  author,
+                );
+                await botReply(
+                  chat,
+                  '✓ Trivia tersimpan di semesta demo.',
+                );
+                resetIdle(true);
+              },
+              2,
+            );
+          },
+        });
+      },
+    });
   }
 
   async function flowUpdate() {
