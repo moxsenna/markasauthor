@@ -1,6 +1,6 @@
 # Landing Page Multi-Platform + PRD Sync Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Rewrite `index.html` copy and section structure so LP is multi-platform (minim brand platform), syncs PRD (Assistant, pricing, SLA), then deploy to Cloudflare Pages.
 
@@ -29,7 +29,7 @@ Tidak membuat file JS/backend baru. Tidak menyentuh `tiers/`, `author-homebase-r
 **Files:**
 - Modify: `index.html` (blok `<style>` sebelum penutup `</style>`)
 
-- [ ] **Step 1: Tambah CSS How-it-works + Assistant**
+- [x] **Step 1: Tambah CSS How-it-works + Assistant**
 
 Sisipkan sebelum penutup `</style>` (setelah `.mt-40{margin-top:40px}`):
 
@@ -54,7 +54,7 @@ Sisipkan sebelum penutup `</style>` (setelah `.mt-40{margin-top:40px}`):
   .assistant-note{text-align:center;margin-top:28px;font-size:15px;color:var(--ink-soft);max-width:640px;margin-left:auto;margin-right:auto}
 ```
 
-- [ ] **Step 2: Verifikasi CSS valid (tidak putus tag)**
+- [x] **Step 2: Verifikasi CSS valid (tidak putus tag)**
 
 Run:
 
@@ -64,7 +64,7 @@ grep -n "HOW IT WORKS\|ASSISTANT\|</style>" index.html | head -20
 
 Expected: komentar HOW/ASSISTANT muncul sebelum `</style>`.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add index.html
@@ -78,7 +78,7 @@ git commit -m "style(lp): add how-it-works and assistant section CSS"
 **Files:**
 - Modify: `index.html` (nav + `<header class="hero">`)
 
-- [ ] **Step 1: Ganti nav links**
+- [x] **Step 1: Ganti nav links**
 
 Ganti blok `.nav-links` menjadi:
 
@@ -92,7 +92,7 @@ Ganti blok `.nav-links` menjadi:
     </div>
 ```
 
-- [ ] **Step 2: Ganti hero copy**
+- [x] **Step 2: Ganti hero copy**
 
 Ganti seluruh isi `<header class="hero">` … `</header>` dengan:
 
@@ -118,7 +118,7 @@ Ganti seluruh isi `<header class="hero">` … `</header>` dengan:
 </header>
 ```
 
-- [ ] **Step 3: Verifikasi tidak ada “KBM” di hero**
+- [x] **Step 3: Verifikasi tidak ada “KBM” di hero**
 
 Run:
 
@@ -129,7 +129,7 @@ awk '/class="hero"/,/<\/header>/' index.html | grep -i kbm || echo "OK: no KBM i
 
 Expected: `OK: no KBM in hero`
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add index.html
@@ -143,7 +143,7 @@ git commit -m "copy(lp): multi-platform hero and nav"
 **Files:**
 - Modify: `index.html` (section `#masalah` + section pain-grid)
 
-- [ ] **Step 1: Ganti Truth (dark) section**
+- [x] **Step 1: Ganti Truth (dark) section**
 
 ```html
 <section class="dark" id="masalah">
@@ -157,7 +157,7 @@ git commit -m "copy(lp): multi-platform hero and nav"
 </section>
 ```
 
-- [ ] **Step 2: Ganti 6 pain cards (quotes generik, solusi fitur)**
+- [x] **Step 2: Ganti 6 pain cards (quotes generik, solusi fitur)**
 
 Ganti isi `.pain-grid` dengan:
 
@@ -209,7 +209,7 @@ Pastikan heading section pain tetap:
       <h2>Enam masalah yang diam-diam menggerogoti karier penulis</h2>
 ```
 
-- [ ] **Step 3: Verifikasi**
+- [x] **Step 3: Verifikasi**
 
 ```bash
 grep -n "KBM\|kbm" index.html || echo "OK: no KBM yet (soft mention added later in FAQ only)"
@@ -218,7 +218,7 @@ grep -c "pain-card" index.html
 
 Expected: 6 `pain-card`; KBM belum wajib ada sampai Task 6 FAQ.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add index.html
@@ -232,7 +232,7 @@ git commit -m "copy(lp): generic truth and pain cards"
 **Files:**
 - Modify: `index.html` (sisip section baru + rewrite `#pembaca`)
 
-- [ ] **Step 1: Sisipkan section How it works SETELAH pain section, SEBELUM readers**
+- [x] **Step 1: Sisipkan section How it works SETELAH pain section, SEBELUM readers**
 
 ```html
 <!-- ============ HOW IT WORKS ============ -->
@@ -274,7 +274,7 @@ git commit -m "copy(lp): generic truth and pain cards"
 </section>
 ```
 
-- [ ] **Step 2: Rewrite For readers + ganti kbm-note**
+- [x] **Step 2: Rewrite For readers + ganti kbm-note**
 
 ```html
 <section class="readers" id="pembaca">
@@ -309,7 +309,7 @@ git commit -m "copy(lp): generic truth and pain cards"
 </section>
 ```
 
-- [ ] **Step 3: Verifikasi anchor nav**
+- [x] **Step 3: Verifikasi anchor nav**
 
 ```bash
 grep -n 'id="cara-kerja"\|href="#cara-kerja"\|id="pembaca"' index.html
@@ -317,7 +317,7 @@ grep -n 'id="cara-kerja"\|href="#cara-kerja"\|id="pembaca"' index.html
 
 Expected: ketiga muncul.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add index.html
@@ -331,7 +331,7 @@ git commit -m "feat(lp): how-it-works loop and multi-platform readers section"
 **Files:**
 - Modify: `index.html` (section `#investasi` sampai `#founding`)
 
-- [ ] **Step 1: Update pricing cards (fitur list + WA links)**
+- [x] **Step 1: Update pricing cards (fitur list + WA links)**
 
 Ganti seluruh section `#investasi` dengan:
 
@@ -405,7 +405,7 @@ Ganti seluruh section `#investasi` dengan:
 </section>
 ```
 
-- [ ] **Step 2: Sisipkan section Assistant SETELAH pricing, SEBELUM guarantee**
+- [x] **Step 2: Sisipkan section Assistant SETELAH pricing, SEBELUM guarantee**
 
 ```html
 <!-- ============ ASSISTANT ============ -->
@@ -464,7 +464,7 @@ Ganti seluruh section `#investasi` dengan:
 </section>
 ```
 
-- [ ] **Step 3: Update Guarantee (45 menit materi)**
+- [x] **Step 3: Update Guarantee (45 menit materi)**
 
 ```html
 <section class="guarantee">
@@ -494,7 +494,7 @@ Ganti seluruh section `#investasi` dengan:
 </section>
 ```
 
-- [ ] **Step 4: Update Founding (10 slot, WA benar)**
+- [x] **Step 4: Update Founding (10 slot, WA benar)**
 
 ```html
 <section class="founding" id="founding">
@@ -520,7 +520,7 @@ Ganti seluruh section `#investasi` dengan:
 </section>
 ```
 
-- [ ] **Step 5: Verifikasi harga & WA**
+- [x] **Step 5: Verifikasi harga & WA**
 
 ```bash
 grep -n "6285179595302\|6200000000000\|Penjaga Rumah\|Rp149\|Rp299\|10 slot\|3 dari 10" index.html
@@ -528,7 +528,7 @@ grep -n "6285179595302\|6200000000000\|Penjaga Rumah\|Rp149\|Rp299\|10 slot\|3 d
 
 Expected: nomor `6285179595302` muncul berkali-kali; `620000…` **tidak** ada; `Penjaga Rumah` **tidak** ada; Care/Active harga ada; “3 dari 10 slot”.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add index.html
@@ -542,7 +542,7 @@ git commit -m "feat(lp): pricing, assistant packages, guarantee, founding sync"
 **Files:**
 - Modify: `index.html` (`#faq`, final CTA, footer, `<head>` meta)
 
-- [ ] **Step 1: Ganti FAQ lengkap**
+- [x] **Step 1: Ganti FAQ lengkap**
 
 ```html
 <section class="faq" id="faq">
@@ -582,7 +582,7 @@ git commit -m "feat(lp): pricing, assistant packages, guarantee, founding sync"
 </section>
 ```
 
-- [ ] **Step 2: Final CTA + Footer**
+- [x] **Step 2: Final CTA + Footer**
 
 ```html
 <section class="final">
@@ -602,7 +602,7 @@ git commit -m "feat(lp): pricing, assistant packages, guarantee, founding sync"
 </footer>
 ```
 
-- [ ] **Step 3: Update meta description (soft multi-platform)**
+- [x] **Step 3: Update meta description (soft multi-platform)**
 
 Ganti di `<head>`:
 
@@ -615,7 +615,7 @@ Ganti di `<head>`:
 
 (Meta sudah cocok — pastikan tidak ada frasa “khusus KBM”.)
 
-- [ ] **Step 4: Acceptance grep (checklist spec §14)**
+- [x] **Step 4: Acceptance grep (checklist spec §14)**
 
 ```bash
 # Harus NOL
@@ -630,7 +630,7 @@ Expected: `PASS_forbidden`; WA count ≥ 6; section ids + harga Assistant + foun
 
 Soft KBM: opsional di FAQ #2 — **tidak wajib** sebut kata “KBM”; frasa “app serial populer di Indonesia” sudah cukup soft. Jangan tambah brand lain di hero.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add index.html

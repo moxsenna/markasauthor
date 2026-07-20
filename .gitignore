@@ -1,0 +1,33 @@
+# Tooling / agent local
+.claude/
+.agents/
+.playwright-mcp/
+.superpowers/
+.wrangler/
+graphify-out/
+
+# OS / junk
+nul
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.log
+
+# Local QA screenshots (root)
+/audit-*.png
+/verify-*.png
+
+# Node (if ever at root)
+node_modules/
+dist/
+.astro/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Editor
+.idea/
+*.swp
+*~

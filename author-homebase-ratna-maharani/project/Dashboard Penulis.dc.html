@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#EAE0D3}
+input::placeholder,textarea::placeholder{color:#B39A90;opacity:1}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;background:#F3EBE0;font-family:Lora,Georgia,serif;color:#3B2A28">
+
+<aside style="width:248px;flex:none;background:#3B2A28;color:#D9C4BB;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;box-sizing:border-box;padding:24px 16px">
+  <div style="padding:0 10px 20px;border-bottom:1px solid rgba(217,196,187,.18)">
+    <p style="margin:0;font-family:'Playfair Display',serif;font-size:19px;font-weight:600;color:#FBF6EF">Homebase Studio</p>
+    <p style="margin:4px 0 0;font-size:12px;font-style:italic;color:#B99A8E">ratnamaharani.id</p>
+  </div>
+  <nav style="display:flex;flex-direction:column;gap:4px;padding-top:16px">
+    <sc-for list="{{ navItems }}" as="nav" hint-placeholder-count="6">
+      <button onClick="{{ nav.go }}" style="display:flex;align-items:center;gap:10px;text-align:left;background:{{ nav.bg }};border:none;border-radius:10px;padding:12px 14px;cursor:pointer;font-family:Lora,serif;font-size:14px;font-weight:{{ nav.weight }};color:{{ nav.color }}">
+        <span style="width:6px;height:6px;border-radius:50%;background:{{ nav.dot }};flex:none"></span>
+        <span>{{ nav.label }}</span>
+      </button>
+    </sc-for>
+  </nav>
+  <div style="margin-top:auto;display:flex;flex-direction:column;gap:10px;padding:0 4px">
+    <a href="#" style="display:flex;align-items:center;justify-content:center;height:44px;border:1px solid rgba(217,196,187,.35);border-radius:12px;font-size:13px;color:#D9C4BB;text-decoration:none">Lihat Situs →</a>
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 8px;border-radius:12px;background:rgba(217,196,187,.08)">
+      <div style="width:36px;height:36px;border-radius:50%;background:repeating-linear-gradient(45deg,#7A5A50 0 6px,#8A6A5E 6px 12px);flex:none"></div>
+      <div>
+        <p style="margin:0;font-size:13px;font-weight:600;color:#FBF6EF">Ratna Maharani</p>
+        <p style="margin:0;font-size:11px;color:#B99A8E">Paket Homebase</p>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main style="flex:1;min-width:0;padding:36px 44px 56px;box-sizing:border-box">
+
+<sc-if value="{{ isRingkasan }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="Ringkasan">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:28px">
+    <div>
+      <h1 style="margin:0 0 6px;font-family:'Playfair Display',serif;font-size:32px;font-weight:600;color:#3B2A28">Selamat pagi, Ratna</h1>
+      <p style="margin:0;font-size:14px;color:#7A5A50">Selasa, 7 Juli 2026 · rumahmu dikunjungi 742 pembaca kemarin.</p>
+    </div>
+    <button onClick="{{ goRilis }}" style="flex:none;height:48px;padding:0 22px;background:#7A3341;color:#FBF6EF;border:none;border-radius:12px;font-family:Lora,serif;font-size:14px;font-weight:600;cursor:pointer" style-hover="background:#8E3E4C">+ Umumkan Bab Baru</button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px">
+    <sc-for list="{{ statCards }}" as="s" hint-placeholder-count="4">
+      <div style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:16px;padding:20px 22px">
+        <p style="margin:0 0 8px;font-size:12px;letter-spacing:.06em;color:#8A6A5E">{{ s.label }}</p>
+        <p style="margin:0;font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:#5C2430;line-height:1">{{ s.angka }}</p>
+        <p style="margin:8px 0 0;font-size:12px;color:{{ s.deltaColor }}">{{ s.delta }}</p>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start">
+    <div style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:18px;padding:24px 26px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px">
+        <h2 style="margin:0;font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:#3B2A28">Kontak pembaca terbaru</h2>
+        <button onClick="{{ goDatabase }}" style="background:none;border:none;font-family:Lora,serif;font-size:13px;color:#7A3341;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Lihat semua →</button>
+      </div>
+      <div style="display:flex;flex-direction:column">
+        <sc-for list="{{ kontakTerbaru }}" as="k" hint-placeholder-count="5">
+          <div style="display:flex;align-items:center;gap:14px;border-bottom:1px solid rgba(122,51,65,.1);padding:11px 2px">
+            <span style="width:32px;height:32px;border-radius:50%;background:#F4E3DE;color:#7A3341;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex:none">{{ k.inisial }}</span>
+            <div style="flex:1;min-width:0">
+              <p style="margin:0;font-size:14px;font-weight:600;color:#3B2A28">{{ k.nama }}</p>
+              <p style="margin:0;font-size:12px;color:#9A8078">{{ k.wa }}</p>
+            </div>
+            <span style="flex:none;font-size:12px;color:#9A8078">{{ k.waktu }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="background:#5C2430;border-radius:18px;padding:22px 24px;color:#F4E3DE">
+        <p style="margin:0 0 6px;font-size:11px;letter-spacing:.14em;color:#D8A7A4;font-weight:600">KABAR RILIS TERAKHIR</p>
+        <p style="margin:0 0 4px;font-size:13px;font-style:italic;color:#E3C6C0">Istri Kedua: Musim 2 · 3 Juli 2026</p>
+        <p style="margin:0 0 14px;font-family:'Playfair Display',serif;font-size:19px;font-weight:600;line-height:1.35;color:#FBF6EF">Bab 47 — Pintu yang Tak Pernah Dikunci</p>
+        <div style="display:flex;gap:14px;font-size:12px;color:#C99B94">
+          <span>1.204 klik ke KBM</span>
+          <span>·</span>
+          <span>dikirim ke Saluran WA</span>
+        </div>
+      </div>
+      <div style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:18px;padding:22px 24px">
+        <h2 style="margin:0 0 12px;font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:#3B2A28">Aksi cepat</h2>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button onClick="{{ goBonusTab }}" style="display:flex;align-items:center;justify-content:space-between;height:46px;padding:0 16px;background:#F4E3DE;border:none;border-radius:11px;font-family:Lora,serif;font-size:14px;color:#4A3833;cursor:pointer" style-hover="background:#EFD8D2"><span>Tambah bonus konten</span><span style="color:#7A3341">→</span></button>
+          <button onClick="{{ goKarya }}" style="display:flex;align-items:center;justify-content:space-between;height:46px;padding:0 16px;background:#F4E3DE;border:none;border-radius:11px;font-family:Lora,serif;font-size:14px;color:#4A3833;cursor:pointer" style-hover="background:#EFD8D2"><span>Perbarui rak buku</span><span style="color:#7A3341">→</span></button>
+          <button onClick="{{ goDatabase }}" style="display:flex;align-items:center;justify-content:space-between;height:46px;padding:0 16px;background:#F4E3DE;border:none;border-radius:11px;font-family:Lora,serif;font-size:14px;color:#4A3833;cursor:pointer" style-hover="background:#EFD8D2"><span>Unduh database pembaca</span><span style="color:#7A3341">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isRilis }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Kabar Rilis">
+  <h1 style="margin:0 0 6px;font-family:'Playfair Display',serif;font-size:32px;font-weight:600;color:#3B2A28">Kabar Rilis</h1>
+  <p style="margin:0 0 26px;max-width:620px;font-size:14px;line-height:1.6;color:#7A5A50">Tulis pengumuman bab baru — kartu "Baru Terbit" di Beranda ikut diperbarui, dan pesan siap tempel untuk Saluran WhatsApp dibuat otomatis. Tanpa isi cerita, hanya kabar.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 420px;gap:24px;align-items:start">
+    <div style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:18px;padding:26px 28px;display:flex;flex-direction:column;gap:16px">
+      <div>
+        <label style="display:block;font-size:13px;font-weight:600;color:#5A453F;margin-bottom:6px">Karya</label>
+        <select value="{{ rilisKarya }}" onChange="{{ setRilisKarya }}" style="width:100%;height:48px;padding:0 14px;border-radius:11px;border:1px solid rgba(122,51,65,.25);background:#FFFDF9;color:#3B2A28;font-family:Lora,serif;font-size:15px;box-sizing:border-box">
+          <option value="Istri Kedua: Musim 2">Istri Kedua: Musim 2</option>
+          <option value="Istri Kedua">Istri Kedua</option>
+          <option value="Menantu Pilihan Ibu">Menantu Pilihan Ibu</option>
+          <option value="Jodoh untuk Laras">Jodoh untuk Laras</option>
+        </select>
+      </div>
+      <div>
+        <label style="display:block;font-size:13px;font-weight:600;color:#5A453F;margin-bottom:6px">Judul bab</label>
+        <input type="text" value="{{ rilisJudul }}" onChange="{{ setRilisJudul }}" placeholder="Bab 48 — …" style="width:100%;height:48px;padding:0 14px;border-radius:11px;border:1px solid rgba(122,51,65,.25);background:#FFFDF9;color:#3B2A28;font-family:Lora,serif;font-size:15px;box-sizing:border-box" />
+      </div>
+      <div>
+        <label style="display:block;font-size:13px;font-weight:600;color:#5A453F;margin-bottom:6px">Teaser satu kalimat <span style="font-weight:400;color:#9A8078">— tanpa isi cerita</span></label>
+        <textarea value="{{ rilisTeaser }}" onChange="{{ setRilisTeaser }}" rows="3" placeholder="Satu kalimat penggoda, tanpa bocoran…" style="width:100%;padding:12px 14px;border-radius:11px;border:1px solid rgba(122,51,65,.25);background:#FFFDF9;color:#3B2A28;font-family:Lora,serif;font-size:15px;line-height:1.6;box-sizing:border-box;resize:vertical"></textarea>
+        <p style="margin:6px 0 0;font-size:12px;color:{{ teaserColor }}">{{ teaserCount }}</p>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button onClick="{{ terbitkanRilis }}" style="height:50px;padding:0 24px;background:#7A3341;color:#FBF6EF;border:none;border-radius:12px;font-family:Lora,serif;font-size:15px;font-weight:600;cursor:pointer" style-hover="background:#8E3E4C">Terbitkan ke Beranda</button>
+        <sc-if value="{{ rilisSukses }}" hint-placeholder-val="{{ false }}">
+          <span style="align-self:center;font-size:13px;color:#1E7A57">✓ Kartu "Baru Terbit" diperbarui</span>
+        </sc-if>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="background:#E7F0E6;border:1px solid rgba(30,122,87,.2);border-radius:18px;padding:20px 22px">
+        <p style="margin:0 0 10px;font-size:11px;letter-spacing:.14em;color:#1E7A57;font-weight:600">PESAN SIAP TEMPEL — SALURAN WA</p>
+        <div style="background:#FFFDF9;border-radius:12px;padding:14px 16px;border:1px solid rgba(30,122,87,.15)">
+          <p style="margin:0;font-size:13.5px;line-height:1.7;color:#3B2A28;white-space:pre-wrap">{{ pesanWa }}</p>
+        </div>
+        <button onClick="{{ salinPesan }}" style="margin-top:12px;width:100%;height:46px;background:#1E7A57;color:#FBF6EF;border:none;border-radius:11px;font-family:Lora,serif;font-size:14px;font-weight:600;cursor:pointer" style-hover="background:#23895F">{{ salinLabel }}</button>
+        <p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:#5F7A64">Tempel di Saluran WhatsApp-mu — 3 ketukan dari HP, semua pengikut langsung tahu.</p>
+      </div>
+      <div style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:18px;padding:18px 22px">
+        <p style="margin:0 0 10px;font-size:11px;letter-spacing:.14em;color:#8A6A5E;font-weight:600">RIWAYAT RILIS</p>
+        <sc-for list="{{ riwayat }}" as="r" hint-placeholder-count="3">
+          <div style="display:flex;align-items:baseline;gap:10px;border-bottom:1px solid rgba(122,51,65,.1);padding:9px 0">
+            <span style="flex:1;font-size:13px;color:#3B2A28">{{ r.judul }}</span>
+            <span style="flex:none;font-size:11px;color:#9A8078">{{ r.tanggal }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isKarya }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Karya">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:26px">
+    <div>
+      <h1 style="margin:0 0 6px;font-family:'Playfair Display',serif;font-size:32px;font-weight:600;color:#3B2A28">Rak Buku</h1>
+      <p style="margin:0;font-size:14px;color:#7A5A50">Urutan di sini = urutan tampil di situs. Semua tombol "Baca" mengarah ke KBM.</p>
+    </div>
+    <button style="flex:none;height:48px;padding:0 22px;background:#7A3341;color:#FBF6EF;border:none;border-radius:12px;font-family:Lora,serif;font-size:14px;font-weight:600;cursor:pointer" style-hover="background:#8E3E4C">+ Tambah Karya</button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <sc-for list="{{ karyaList }}" as="w" hint-placeholder-count="4">
+      <div style="display:flex;align-items:center;gap:18px;background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:16px;padding:16px 20px">
+        <div style="display:flex;flex-direction:column;gap:2px;flex:none">
+          <button onClick="{{ w.naik }}" style="width:32px;height:26px;background:#F4E3DE;border:none;border-radius:7px 7px 3px 3px;cursor:pointer;color:#7A3341;font-size:12px">▲</button>
+          <button onClick="{{ w.turun }}" style="width:32px;height:26px;background:#F4E3DE;border:none;border-radius:3px 3px 7px 7px;cursor:pointer;color:#7A3341;font-size:12px">▼</button>
+        </div>
+        <div style="flex:none;width:44px;aspect-ratio:2/3;border-radius:4px;background:{{ w.coverBg }};display:flex;align-items:center;justify-content:center;padding:4px">
+          <span style="font-family:'Playfair Display',serif;font-size:7px;font-weight:600;line-height:1.3;color:#FBF6EF;text-align:center">{{ w.judul }}</span>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:10px">
+            <p style="margin:0;font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:#3B2A28">{{ w.judul }}</p>
+            <span style="font-size:10px;letter-spacing:.1em;font-weight:600;color:{{ w.statusColor }};background:{{ w.statusBg }};border-radius:999px;padding:4px 10px">{{ w.status }}</span>
+          </div>
+          <p style="margin:4px 0 0;font-size:13px;color:#9A8078">{{ w.pembaca }} · {{ w.link }}</p>
+        </div>
+        <button style="flex:none;height:42px;padding:0 18px;background:none;border:1.5px solid #7A3341;color:#7A3341;border-radius:10px;font-family:Lora,serif;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:rgba(122,51,65,.06)">Edit</button>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isBonusTab }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Bonus">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:14px">
+    <div>
+      <h1 style="margin:0 0 6px;font-family:'Playfair Display',serif;font-size:32px;font-weight:600;color:#3B2A28">Ruang Bonus</h1>
+      <p style="margin:0;font-size:14px;color:#7A5A50">Bonus adalah umpan database-mu — makin menarik, makin banyak kontak masuk.</p>
+    </div>
+    <button style="flex:none;height:48px;padding:0 22px;background:#7A3341;color:#FBF6EF;border:none;border-radius:12px;font-family:Lora,serif;font-size:14px;font-weight:600;cursor:pointer" style-hover="background:#8E3E4C">+ Tambah Bonus</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;background:#F9EFE3;border:1px solid rgba(176,72,60,.25);border-radius:12px;padding:12px 16px;margin-bottom:22px">
+    <span style="color:#B0483C;flex:none">✦</span>
+    <p style="margin:0;font-size:13px;line-height:1.5;color:#7A5A50">Ingat batas konten: bonus = materi pelengkap (deleted scene, POV, surat, trivia) — <strong>bukan lanjutan cerita</strong>. Kelanjutan hanya terbit di KBM.</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <sc-for list="{{ bonusList }}" as="b" hint-placeholder-count="3">
+      <div style="display:flex;align-items:center;gap:18px;background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:16px;padding:18px 22px">
+        <div style="flex:1;min-width:0">
+          <span style="font-size:10px;letter-spacing:.14em;color:#B98A7C;font-weight:600">{{ b.jenis }}</span>
+          <p style="margin:4px 0 2px;font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:#3B2A28">{{ b.judul }}</p>
+          <p style="margin:0;font-size:13px;color:#9A8078;font-style:italic">dari “{{ b.karya }}” · {{ b.dibuka }} kali dibuka</p>
+        </div>
+        <button onClick="{{ b.toggle }}" role="switch" aria-checked="{{ b.terbit }}" style="flex:none;display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:6px">
+          <span style="width:44px;height:26px;border-radius:999px;background:{{ b.switchBg }};position:relative;display:inline-block;transition:background .15s">
+            <span style="position:absolute;top:3px;left:{{ b.knobLeft }};width:20px;height:20px;border-radius:50%;background:#FBF6EF;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .15s"></span>
+          </span>
+          <span style="font-size:12px;font-weight:600;color:{{ b.statusColor }};min-width:44px;text-align:left">{{ b.statusLabel }}</span>
+        </button>
+        <button style="flex:none;height:42px;padding:0 18px;background:none;border:1.5px solid #7A3341;color:#7A3341;border-radius:10px;font-family:Lora,serif;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:rgba(122,51,65,.06)">Edit</button>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isPetaTab }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Peta Baca">
+  <h1 style="margin:0 0 6px;font-family:'Playfair Display',serif;font-size:32px;font-weight:600;color:#3B2A28">Peta Baca</h1>
+  <p style="margin:0 0 26px;max-width:620px;font-size:14px;line-height:1.6;color:#7A5A50">Atur urutan resmi membaca semesta-mu. Panah ▲▼ mengubah urutan yang tampil di situs.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
+    <div style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:18px;padding:22px 24px">
+      <h2 style="margin:0 0 14px;font-family:'Playfair Display',serif;font-size:19px;font-weight:600;color:#3B2A28">Semesta “Istri Kedua”</h2>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ petaList }}" as="p" hint-placeholder-count="2">
+          <div style="display:flex;align-items:center;gap:14px;background:#FFFDF9;border:1px solid rgba(122,51,65,.16);border-radius:12px;padding:12px 14px">
+            <span style="flex:none;width:28px;height:28px;border-radius:50%;background:#5C2430;color:#F4E3DE;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600">{{ p.urutan }}</span>
+            <span style="flex:1;font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:#3B2A28">{{ p.judul }}</span>
+            <div style="display:flex;gap:4px;flex:none">
+              <button onClick="{{ p.naik }}" style="width:34px;height:34px;background:#F4E3DE;border:none;border-radius:8px;cursor:pointer;color:#7A3341;font-size:12px">▲</button>
+              <button onClick="{{ p.turun }}" style="width:34px;height:34px;background:#F4E3DE;border:none;border-radius:8px;cursor:pointer;color:#7A3341;font-size:12px">▼</button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <button style="margin-top:12px;height:44px;width:100%;background:none;border:1.5px dashed rgba(122,51,65,.35);color:#7A3341;border-radius:11px;font-family:Lora,serif;font-size:13px;font-weight:600;cursor:pointer">+ Tambah ke semesta ini</button>
+    </div>
+    <div style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:18px;padding:22px 24px">
+      <h2 style="margin:0 0 6px;font-family:'Playfair Display',serif;font-size:19px;font-weight:600;color:#3B2A28">Novel lepas</h2>
+      <p style="margin:0 0 14px;font-size:13px;color:#9A8078">Tampil di bagian "Bisa dibaca kapan saja".</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ lepasList }}" as="p" hint-placeholder-count="2">
+          <div style="display:flex;align-items:center;gap:14px;background:#FFFDF9;border:1px solid rgba(122,51,65,.16);border-radius:12px;padding:12px 14px">
+            <span style="flex:1;font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:#3B2A28">{{ p }}</span>
+            <span style="flex:none;font-size:11px;color:#9A8078">bebas urutan</span>
+          </div>
+        </sc-for>
+      </div>
+      <button style="margin-top:12px;height:44px;width:100%;background:none;border:1.5px dashed rgba(122,51,65,.35);color:#7A3341;border-radius:11px;font-family:Lora,serif;font-size:13px;font-weight:600;cursor:pointer">+ Buat semesta baru</button>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isDatabase }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Database Pembaca">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:22px">
+    <div>
+      <h1 style="margin:0 0 6px;font-family:'Playfair Display',serif;font-size:32px;font-weight:600;color:#3B2A28">Database Pembaca</h1>
+      <p style="margin:0;font-size:14px;color:#7A5A50">1.284 kontak — <strong>milikmu selamanya</strong>, tersimpan juga di Google Sheet-mu.</p>
+    </div>
+    <div style="display:flex;gap:10px;flex:none">
+      <a href="#" style="display:flex;align-items:center;justify-content:center;height:48px;padding:0 20px;background:none;border:1.5px solid #7A3341;color:#7A3341;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none" style-hover="background:rgba(122,51,65,.06)">Buka Google Sheet →</a>
+      <button style="height:48px;padding:0 20px;background:#7A3341;color:#FBF6EF;border:none;border-radius:12px;font-family:Lora,serif;font-size:14px;font-weight:600;cursor:pointer" style-hover="background:#8E3E4C">Unduh CSV</button>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px">
+    <div style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:14px;padding:16px 20px">
+      <p style="margin:0;font-size:12px;color:#8A6A5E">Kontak baru minggu ini</p>
+      <p style="margin:6px 0 0;font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#5C2430">+86</p>
+    </div>
+    <div style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:14px;padding:16px 20px">
+      <p style="margin:0;font-size:12px;color:#8A6A5E">Sumber terbesar</p>
+      <p style="margin:6px 0 0;font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#5C2430">Ruang Bonus</p>
+    </div>
+    <div style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:14px;padding:16px 20px">
+      <p style="margin:0;font-size:12px;color:#8A6A5E">Pengikut Saluran WA</p>
+      <p style="margin:6px 0 0;font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#5C2430">8.950</p>
+    </div>
+  </div>
+
+  <div style="background:#FBF6EF;border:1px solid rgba(122,51,65,.14);border-radius:18px;overflow:hidden">
+    <div style="display:flex;align-items:center;gap:14px;padding:16px 22px;border-bottom:1px solid rgba(122,51,65,.12)">
+      <input type="text" value="{{ cari }}" onChange="{{ setCari }}" placeholder="Cari nama atau nomor…" style="flex:1;height:44px;padding:0 14px;border-radius:10px;border:1px solid rgba(122,51,65,.2);background:#FFFDF9;color:#3B2A28;font-family:Lora,serif;font-size:14px;box-sizing:border-box" />
+      <span style="flex:none;font-size:13px;color:#9A8078">{{ jumlahTampil }}</span>
+    </div>
+    <div style="display:grid;grid-template-columns:2fr 1.6fr 1.2fr 1fr;gap:0;padding:10px 22px;font-size:11px;letter-spacing:.1em;color:#8A6A5E;font-weight:600;border-bottom:1px solid rgba(122,51,65,.12)">
+      <span>NAMA</span><span>NOMOR WA</span><span>SUMBER</span><span>TANGGAL</span>
+    </div>
+    <sc-for list="{{ kontakTabel }}" as="k" hint-placeholder-count="8">
+      <div style="display:grid;grid-template-columns:2fr 1.6fr 1.2fr 1fr;gap:0;padding:13px 22px;border-bottom:1px solid rgba(122,51,65,.08);font-size:14px;color:#3B2A28;align-items:center">
+        <span style="font-weight:600">{{ k.nama }}</span>
+        <span style="color:#6A5248">{{ k.wa }}</span>
+        <span><span style="font-size:11px;font-weight:600;color:#7A3341;background:#F4E3DE;border-radius:999px;padding:4px 10px">{{ k.sumber }}</span></span>
+        <span style="color:#9A8078;font-size:13px">{{ k.tanggal }}</span>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isTema }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Tema Situs">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:8px">
+    <div>
+      <h1 style="margin:0 0 6px;font-family:'Playfair Display',serif;font-size:32px;font-weight:600;color:#3B2A28">Tema Situs</h1>
+      <p style="margin:0;max-width:560px;font-size:14px;line-height:1.6;color:#7A5A50">Pilih palet warna untuk situs publikmu. Tipografi serif tetap sama — hanya warna yang berubah, jadi rumahmu selalu terasa hangat dan elegan.</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;flex:none">
+      <sc-if value="{{ temaTersimpan }}" hint-placeholder-val="{{ false }}">
+        <span style="font-size:13px;color:#1E7A57">✓ Tema diterapkan ke situs</span>
+      </sc-if>
+      <button onClick="{{ simpanTema }}" style="height:48px;padding:0 24px;background:#7A3341;color:#FBF6EF;border:none;border-radius:12px;font-family:Lora,serif;font-size:14px;font-weight:600;cursor:pointer" style-hover="background:#8E3E4C">Terapkan ke Situs</button>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:8px;margin:22px 0 14px">
+    <span style="font-size:12px;letter-spacing:.1em;color:#8A6A5E;font-weight:600">SEDANG DIPRATINJAU</span>
+    <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:{{ temaAktif.primary }}">{{ temaAktif.nama }}</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:32px">
+    <sc-for list="{{ temaList }}" as="t" hint-placeholder-count="5">
+      <button onClick="{{ t.pilih }}" style="text-align:left;background:{{ t.bg }};border:2px solid {{ t.borderCol }};border-radius:18px;padding:0;overflow:hidden;cursor:pointer;box-shadow:0 2px 12px rgba(92,36,48,.07)">
+        <div style="height:120px;background:{{ t.hero }};position:relative;padding:16px 18px;box-sizing:border-box">
+          <sc-if value="{{ t.aktif }}" hint-placeholder-val="{{ false }}">
+            <span style="position:absolute;top:12px;right:12px;width:24px;height:24px;border-radius:50%;background:{{ t.primary }};color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px">✓</span>
+          </sc-if>
+          <div style="width:34px;height:34px;border-radius:50%;background:{{ t.soft }};border:1px solid {{ t.primary }};margin-bottom:10px"></div>
+          <p style="margin:0;font-family:'Playfair Display',serif;font-size:17px;font-weight:600;color:{{ t.ink }};line-height:1.2">Ratna Maharani</p>
+          <p style="margin:3px 0 0;font-size:10px;font-style:italic;color:{{ t.primary }}">Penulis romance keluarga</p>
+        </div>
+        <div style="background:{{ t.bg }};padding:14px 18px 16px">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+            <span style="height:22px;padding:0 12px;display:flex;align-items:center;border-radius:999px;background:{{ t.primary }};color:#fff;font-size:9px;font-weight:600">Baca di KBM</span>
+            <span style="height:22px;padding:0 12px;display:flex;align-items:center;border-radius:999px;background:none;border:1px solid {{ t.primary }};color:{{ t.primary }};font-size:9px;font-weight:600">Bonus</span>
+          </div>
+          <div style="display:flex;gap:6px;margin-bottom:12px">
+            <span style="width:22px;height:12px;border-radius:3px;background:{{ t.deep }}"></span>
+            <span style="width:22px;height:12px;border-radius:3px;background:{{ t.primary }}"></span>
+            <span style="width:22px;height:12px;border-radius:3px;background:{{ t.soft }}"></span>
+            <span style="width:22px;height:12px;border-radius:3px;background:{{ t.ink }}"></span>
+          </div>
+          <p style="margin:0 0 3px;font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:{{ t.ink }}">{{ t.nama }}</p>
+          <p style="margin:0;font-size:12px;line-height:1.5;color:#7A5A50">{{ t.desc }}</p>
+        </div>
+      </button>
+    </sc-for>
+  </div>
+
+  <div style="background:{{ temaAktif.bg }};border:1px solid rgba(122,51,65,.14);border-radius:20px;overflow:hidden">
+    <div style="padding:12px 22px;border-bottom:1px solid rgba(122,51,65,.1);display:flex;align-items:center;gap:8px">
+      <span style="width:10px;height:10px;border-radius:50%;background:#D8A7A4"></span>
+      <span style="width:10px;height:10px;border-radius:50%;background:#E4C08A"></span>
+      <span style="width:10px;height:10px;border-radius:50%;background:#B7C9A8"></span>
+      <span style="margin-left:10px;font-size:12px;color:#9A8078">ratnamaharani.id — pratinjau langsung</span>
+    </div>
+    <div style="padding:44px 40px;background:{{ temaAktif.hero }};text-align:center">
+      <span style="display:inline-flex;align-items:center;gap:8px;background:{{ temaAktif.deep }};color:#fff;border-radius:999px;padding:7px 16px;font-size:12px;margin-bottom:16px">★ Penulis Terlaris KBM App 2024</span>
+      <h2 style="margin:0 0 8px;font-family:'Playfair Display',serif;font-size:38px;font-weight:600;color:{{ temaAktif.ink }}">Ratna Maharani</h2>
+      <p style="margin:0 0 22px;font-style:italic;font-size:17px;color:{{ temaAktif.primary }}">Penulis romance keluarga &amp; rumah tangga</p>
+      <div style="display:flex;gap:12px;justify-content:center">
+        <span style="height:46px;padding:0 24px;display:flex;align-items:center;border-radius:12px;background:{{ temaAktif.primary }};color:#fff;font-size:14px;font-weight:600">Baca di KBM →</span>
+        <span style="height:46px;padding:0 24px;display:flex;align-items:center;border-radius:12px;background:none;border:1.5px solid {{ temaAktif.primary }};color:{{ temaAktif.primary }};font-size:14px;font-weight:600">Ruang Bonus</span>
+      </div>
+    </div>
+  </div>
+  <p style="margin:14px 2px 0;font-size:12px;color:#9A8078">Ini pratinjau — situs publik ikut berubah setelah kamu menekan "Terapkan ke Situs".</p>
+</div>
+</sc-if>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:800},&quot;tabAwal&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Ringkasan&quot;,&quot;Kabar Rilis&quot;,&quot;Karya&quot;,&quot;Bonus&quot;,&quot;Peta Baca&quot;,&quot;Database&quot;,&quot;Tema&quot;],&quot;default&quot;:&quot;Ringkasan&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Navigasi&quot;}}">
+class Component extends DCLogic {
+  state = {
+    tab: null,
+    rilisKarya: 'Istri Kedua: Musim 2',
+    rilisJudul: '',
+    rilisTeaser: '',
+    rilisSukses: false,
+    disalin: false,
+    cari: '',
+    bonusTerbit: { b1: true, b2: true, b3: false },
+    karyaOrder: ['w1', 'w2', 'w3', 'w4'],
+    petaOrder: ['p1', 'p2'],
+    tema: 'maroon',
+    temaTersimpan: false
+  };
+
+  go(t) {
+    this.setState({ tab: t });
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
+
+  move(key, id, dir) {
+    this.setState(s => {
+      const arr = [...s[key]];
+      const i = arr.indexOf(id);
+      const j = i + dir;
+      if (i < 0 || j < 0 || j >= arr.length) return {};
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+      return { [key]: arr };
+    });
+  }
+
+  renderVals() {
+    const tabMap = { 'Ringkasan': 'ringkasan', 'Kabar Rilis': 'rilis', 'Karya': 'karya', 'Bonus': 'bonus', 'Peta Baca': 'peta', 'Database': 'database', 'Tema': 'tema' };
+    const tab = this.state.tab || tabMap[this.props.tabAwal] || 'ringkasan';
+
+    const navDefs = [
+      { key: 'ringkasan', label: 'Ringkasan' },
+      { key: 'rilis', label: 'Kabar Rilis' },
+      { key: 'karya', label: 'Rak Buku' },
+      { key: 'bonus', label: 'Ruang Bonus' },
+      { key: 'peta', label: 'Peta Baca' },
+      { key: 'database', label: 'Database Pembaca' },
+      { key: 'tema', label: 'Tema Situs' }
+    ];
+    const navItems = navDefs.map(n => ({
+      label: n.label,
+      bg: tab === n.key ? '#F4E3DE' : 'transparent',
+      color: tab === n.key ? '#5C2430' : '#D9C4BB',
+      dot: tab === n.key ? '#7A3341' : 'rgba(217,196,187,.35)',
+      weight: tab === n.key ? 600 : 400,
+      go: () => this.go(n.key)
+    }));
+
+    const teaserLen = this.state.rilisTeaser.length;
+    const linkMap = {
+      'Istri Kedua': 'https://kbm.id/ratna-maharani/istri-kedua?ref=homebase',
+      'Istri Kedua: Musim 2': 'https://kbm.id/ratna-maharani/istri-kedua-musim-2?ref=homebase',
+      'Menantu Pilihan Ibu': 'https://kbm.id/ratna-maharani/menantu-pilihan-ibu?ref=homebase',
+      'Jodoh untuk Laras': 'https://kbm.id/ratna-maharani/jodoh-untuk-laras?ref=homebase'
+    };
+    const pesanWa = '📖 BAB BARU TERBIT\n' +
+      this.state.rilisKarya + (this.state.rilisJudul ? ' — ' + this.state.rilisJudul : ' — [judul bab]') + '\n\n' +
+      (this.state.rilisTeaser || '[teaser satu kalimat]') + '\n\n' +
+      'Baca sekarang di KBM:\n' + linkMap[this.state.rilisKarya];
+
+    const karyaDefs = {
+      w1: { judul: 'Istri Kedua', pembaca: '18 juta pembaca', status: 'TAMAT', coverBg: 'linear-gradient(160deg,#5C2430,#7A3341)', link: 'kbm.id/…/istri-kedua' },
+      w2: { judul: 'Istri Kedua: Musim 2', pembaca: 'sedang tayang', status: 'TAYANG', coverBg: 'linear-gradient(160deg,#7A3341,#A05055)', link: 'kbm.id/…/istri-kedua-musim-2' },
+      w3: { judul: 'Menantu Pilihan Ibu', pembaca: '9 juta pembaca', status: 'TAMAT', coverBg: 'linear-gradient(160deg,#6E3B33,#94574C)', link: 'kbm.id/…/menantu-pilihan-ibu' },
+      w4: { judul: 'Jodoh untuk Laras', pembaca: '5 juta pembaca', status: 'TAMAT', coverBg: 'linear-gradient(160deg,#8A5A52,#B07E71)', link: 'kbm.id/…/jodoh-untuk-laras' }
+    };
+    const karyaList = this.state.karyaOrder.map(id => {
+      const w = karyaDefs[id];
+      const tayang = w.status === 'TAYANG';
+      return {
+        ...w,
+        statusColor: tayang ? '#1E7A57' : '#8A6A5E',
+        statusBg: tayang ? '#E7F0E6' : '#F4E3DE',
+        naik: () => this.move('karyaOrder', id, -1),
+        turun: () => this.move('karyaOrder', id, 1)
+      };
+    });
+
+    const bonusDefs = {
+      b1: { jenis: 'DELETED SCENE', judul: 'Malam Sebelum Akad', karya: 'Istri Kedua', dibuka: '3.412' },
+      b2: { jenis: 'POV EKSTRA', judul: 'POV Mas Bram', karya: 'Istri Kedua', dibuka: '2.871' },
+      b3: { jenis: 'SURAT', judul: 'Surat Laras yang Tak Pernah Dikirim', karya: 'Jodoh untuk Laras', dibuka: '—' }
+    };
+    const bonusList = Object.keys(bonusDefs).map(id => {
+      const terbit = this.state.bonusTerbit[id];
+      return {
+        ...bonusDefs[id],
+        terbit,
+        switchBg: terbit ? '#1E7A57' : '#C9B5AC',
+        knobLeft: terbit ? '21px' : '3px',
+        statusLabel: terbit ? 'Terbit' : 'Draf',
+        statusColor: terbit ? '#1E7A57' : '#8A6A5E',
+        toggle: () => this.setState(s => ({ bonusTerbit: { ...s.bonusTerbit, [id]: !s.bonusTerbit[id] } }))
+      };
+    });
+
+    const petaDefs = { p1: 'Istri Kedua', p2: 'Istri Kedua: Musim 2' };
+    const petaList = this.state.petaOrder.map((id, i) => ({
+      judul: petaDefs[id],
+      urutan: i + 1,
+      naik: () => this.move('petaOrder', id, -1),
+      turun: () => this.move('petaOrder', id, 1)
+    }));
+
+    const kontakSemua = [
+      { nama: 'Dewi Anggraini', wa: '0812-3456-7801', sumber: 'Ruang Bonus', tanggal: '7 Jul 2026', waktu: '2 jam lalu', inisial: 'DA' },
+      { nama: 'Siti Rahmawati', wa: '0857-2210-4432', sumber: 'Ruang Bonus', tanggal: '7 Jul 2026', waktu: '5 jam lalu', inisial: 'SR' },
+      { nama: 'Fitri Handayani', wa: '0813-9987-2210', sumber: 'Beranda', tanggal: '6 Jul 2026', waktu: 'kemarin', inisial: 'FH' },
+      { nama: 'Maya Kusuma', wa: '0821-5567-8890', sumber: 'Ruang Bonus', tanggal: '6 Jul 2026', waktu: 'kemarin', inisial: 'MK' },
+      { nama: 'Rina Septiani', wa: '0856-3321-9087', sumber: 'Beranda', tanggal: '5 Jul 2026', waktu: '2 hari lalu', inisial: 'RS' },
+      { nama: 'Lestari Wulandari', wa: '0812-8876-5543', sumber: 'Ruang Bonus', tanggal: '5 Jul 2026', waktu: '2 hari lalu', inisial: 'LW' },
+      { nama: 'Nur Aini', wa: '0838-1123-4456', sumber: 'Ruang Bonus', tanggal: '4 Jul 2026', waktu: '3 hari lalu', inisial: 'NA' },
+      { nama: 'Yulia Pratiwi', wa: '0819-2234-7789', sumber: 'Beranda', tanggal: '4 Jul 2026', waktu: '3 hari lalu', inisial: 'YP' }
+    ];
+    const q = this.state.cari.trim().toLowerCase();
+    const kontakTabel = q ? kontakSemua.filter(k => (k.nama + k.wa).toLowerCase().includes(q)) : kontakSemua;
+
+    const temaDefs = [
+      { key: 'maroon', nama: 'Maroon Klasik', desc: 'Hangat, elegan, khas novel romance premium.', bg: '#FBF6EF', hero: 'linear-gradient(180deg,#F4E3DE,#FBF6EF)', primary: '#7A3341', deep: '#5C2430', ink: '#3B2A28', soft: '#F4E3DE' },
+      { key: 'rose', nama: 'Dusty Rose', desc: 'Lebih lembut dan feminin, nuansa merah muda pudar.', bg: '#FCF3F1', hero: 'linear-gradient(180deg,#F3DCD9,#FCF3F1)', primary: '#A4586A', deep: '#7C3A4C', ink: '#42272E', soft: '#F3DCD9' },
+      { key: 'sage', nama: 'Sage Tenang', desc: 'Krem dengan hijau sage — kalem dan membumi.', bg: '#F6F4EC', hero: 'linear-gradient(180deg,#E4EADB,#F6F4EC)', primary: '#5E7A5C', deep: '#3F5A3E', ink: '#2F3A2C', soft: '#E4EADB' },
+      { key: 'navy', nama: 'Navy Malam', desc: 'Krem dengan biru tua — anggun dan berkelas.', bg: '#F5F2EC', hero: 'linear-gradient(180deg,#DDE2EC,#F5F2EC)', primary: '#3E5175', deep: '#2A3A57', ink: '#25293A', soft: '#DDE2EC' },
+      { key: 'terracotta', nama: 'Terakota', desc: 'Oranye-bata hangat, terasa akrab dan bersahaja.', bg: '#FBF4EC', hero: 'linear-gradient(180deg,#F4DFC9,#FBF4EC)', primary: '#B06A3C', deep: '#8A4E2A', ink: '#3E2C20', soft: '#F4DFC9' }
+    ];
+    const temaList = temaDefs.map(t => {
+      const aktif = this.state.tema === t.key;
+      return { ...t, aktif, borderCol: aktif ? t.primary : 'rgba(122,51,65,.14)', pilih: () => this.setState({ tema: t.key, temaTersimpan: false }) };
+    });
+    const temaAktif = temaDefs.find(t => t.key === this.state.tema) || temaDefs[0];
+
+    return {
+      isRingkasan: tab === 'ringkasan',
+      isRilis: tab === 'rilis',
+      isKarya: tab === 'karya',
+      isBonusTab: tab === 'bonus',
+      isPetaTab: tab === 'peta',
+      isDatabase: tab === 'database',
+      isTema: tab === 'tema',
+      temaList, temaAktif,
+      temaTersimpan: this.state.temaTersimpan,
+      simpanTema: () => this.setState({ temaTersimpan: true }),
+      navItems,
+      goRilis: () => this.go('rilis'),
+      goKarya: () => this.go('karya'),
+      goBonusTab: () => this.go('bonus'),
+      goDatabase: () => this.go('database'),
+
+      statCards: [
+        { label: 'Kontak WA terkumpul', angka: '1.284', delta: '+86 minggu ini', deltaColor: '#1E7A57' },
+        { label: 'Klik ke KBM · 30 hari', angka: '4.720', delta: '+12% dari bulan lalu', deltaColor: '#1E7A57' },
+        { label: 'Pengikut Saluran WA', angka: '8.950', delta: '+310 minggu ini', deltaColor: '#1E7A57' },
+        { label: 'Kunjungan situs · 30 hari', angka: '21.4rb', delta: 'terbanyak dari pencarian', deltaColor: '#8A6A5E' }
+      ],
+      kontakTerbaru: kontakSemua.slice(0, 5),
+      kontakTabel,
+      jumlahTampil: kontakTabel.length + ' dari 1.284 kontak',
+      cari: this.state.cari,
+      setCari: (e) => this.setState({ cari: e.target.value }),
+
+      rilisKarya: this.state.rilisKarya,
+      rilisJudul: this.state.rilisJudul,
+      rilisTeaser: this.state.rilisTeaser,
+      setRilisKarya: (e) => this.setState({ rilisKarya: e.target.value, rilisSukses: false }),
+      setRilisJudul: (e) => this.setState({ rilisJudul: e.target.value, rilisSukses: false }),
+      setRilisTeaser: (e) => this.setState({ rilisTeaser: e.target.value, rilisSukses: false }),
+      teaserCount: teaserLen + '/140 karakter',
+      teaserColor: teaserLen > 140 ? '#B0483C' : '#9A8078',
+      pesanWa,
+      rilisSukses: this.state.rilisSukses,
+      terbitkanRilis: () => this.setState({ rilisSukses: true }),
+      salinLabel: this.state.disalin ? '✓ Tersalin' : 'Salin Pesan',
+      salinPesan: () => {
+        try { navigator.clipboard.writeText(pesanWa); } catch (e) {}
+        this.setState({ disalin: true });
+        setTimeout(() => this.setState({ disalin: false }), 2000);
+      },
+      riwayat: [
+        { judul: 'Bab 47 — Pintu yang Tak Pernah Dikunci', tanggal: '3 Jul' },
+        { judul: 'Bab 46 — Tamu dari Masa Lalu', tanggal: '26 Jun' },
+        { judul: 'Bab 45 — Piring yang Retak', tanggal: '19 Jun' }
+      ],
+
+      karyaList, bonusList, petaList,
+      lepasList: ['Menantu Pilihan Ibu', 'Jodoh untuk Laras']
+    };
+  }
+}
+</script>
+</body>
+</html>

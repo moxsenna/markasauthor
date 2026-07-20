@@ -1,6 +1,6 @@
 # 3-Tier Frontend Mock Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Ship three standalone Astro static demos (Starter / Hero / Signature) for Ratna Maharani presentations, plus PRD updates so Telegram Assistant + Dashboard exist on every tier.
 
@@ -56,7 +56,7 @@ Dev ports: Starter `4321`, Hero `4322`, Signature `4323`.
 **Files:**
 - Modify: `docs/prd-homebase-starter.md`
 
-- [ ] **Step 1: Adjust non-goals and add dual-ops section**
+- [x] **Step 1: Adjust non-goals and add dual-ops section**
 
 In §1 Non-tujuan, replace any line that says Starter is not release tooling with narrower language:
 
@@ -98,11 +98,11 @@ In §7 Di luar scope table, change row “Kabar rilis otomatis ke pembaca” to:
 | Update bab + draft WA via bot/dashboard | **Termasuk** Starter (add-on Assistant) |
 ```
 
-- [ ] **Step 2: Verify doc consistency**
+- [x] **Step 2: Verify doc consistency**
 
 Read §1–§3 and §7. Ensure no remaining claim that Telegram/dashboard is hero-only.
 
-- [ ] **Step 3: Commit** (if git available)
+- [x] **Step 3: Commit** (if git available)
 
 ```bash
 git add docs/prd-homebase-starter.md
@@ -116,7 +116,7 @@ git commit -m "docs(prd): Starter gets Telegram+Dashboard ops scope"
 **Files:**
 - Modify: `docs/prd-author-homebase.md`
 
-- [ ] **Step 1: Reframe Assistant as all-tier; add Dashboard**
+- [x] **Step 1: Reframe Assistant as all-tier; add Dashboard**
 
 In §1 Ringkasan, ensure wording says Assistant is add-on available across MarkasAuthor tiers (not “hanya hero”).
 
@@ -149,7 +149,7 @@ Add short matrix subsection under §3.3:
 | Universe tokoh/timeline/trivia ops | — | — | ✓ |
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add docs/prd-author-homebase.md
@@ -163,7 +163,7 @@ git commit -m "docs(prd): Hero Assistant all-tier + Dashboard dual surface"
 **Files:**
 - Modify: `docs/prd-signature-universe.md`
 
-- [ ] **Step 1: Add ops paragraph**
+- [x] **Step 1: Add ops paragraph**
 
 After §3 (or in §5 Arsitektur), add:
 
@@ -175,7 +175,7 @@ Signature memakai surface ops yang sama dengan tier lain (Telegram bot + Dashboa
 Paket bulanan Assistant: sama dengan PRD Author Homebase §7.2.
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add docs/prd-signature-universe.md
@@ -189,7 +189,7 @@ git commit -m "docs(prd): Signature ops via Telegram+Dashboard"
 **Files:**
 - Create: all starter scaffold files listed below
 
-- [ ] **Step 1: Create app with npm**
+- [x] **Step 1: Create app with npm**
 
 ```bash
 mkdir -p tiers
@@ -201,7 +201,7 @@ npx astro add tailwind --yes
 
 If interactive prompts block, scaffold manually with the `package.json` below.
 
-- [ ] **Step 2: Write `package.json` scripts and port**
+- [x] **Step 2: Write `package.json` scripts and port**
 
 Ensure `package.json` contains:
 
@@ -228,7 +228,7 @@ Ensure `package.json` contains:
 
 (Adjust versions to whatever `create astro` installed; keep port **4321**.)
 
-- [ ] **Step 3: `astro.config.mjs`**
+- [x] **Step 3: `astro.config.mjs`**
 
 ```js
 import { defineConfig } from 'astro/config';
@@ -242,7 +242,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 4: `src/styles/global.css`**
+- [x] **Step 4: `src/styles/global.css`**
 
 ```css
 @import "tailwindcss";
@@ -280,7 +280,7 @@ a {
 }
 ```
 
-- [ ] **Step 5: Verify dev server starts**
+- [x] **Step 5: Verify dev server starts**
 
 ```bash
 cd tiers/homebase-starter && npm run dev
@@ -288,7 +288,7 @@ cd tiers/homebase-starter && npm run dev
 
 Expected: listening on `http://localhost:4321`. Stop after confirm.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add tiers/homebase-starter
@@ -304,7 +304,7 @@ git commit -m "chore: scaffold homebase-starter Astro app"
 - Create: `tiers/homebase-starter/src/lib/demo-store.ts`
 - Create: `tiers/homebase-starter/src/data/author.json`
 
-- [ ] **Step 1: Write `types.ts`**
+- [x] **Step 1: Write `types.ts`**
 
 ```ts
 export type Tier = 'starter' | 'hero' | 'signature';
@@ -416,7 +416,7 @@ export interface AuthorData {
 }
 ```
 
-- [ ] **Step 2: Write `demo-store.ts`**
+- [x] **Step 2: Write `demo-store.ts`**
 
 ```ts
 import type { LatestChapter } from './types';
@@ -483,7 +483,7 @@ export function unlockReader(tier: string, name: string, fallback: LatestChapter
 }
 ```
 
-- [ ] **Step 3: Write `author.json` (Ratna — full data; Starter pages only *render* subset)**
+- [x] **Step 3: Write `author.json` (Ratna — full data; Starter pages only *render* subset)**
 
 ```json
 {
@@ -726,7 +726,7 @@ export function unlockReader(tier: string, name: string, fallback: LatestChapter
 }
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add tiers/homebase-starter/src
@@ -748,7 +748,7 @@ git commit -m "feat(starter): author data, types, demo-store"
 - Create: `tiers/homebase-starter/src/components/public/SiteFooter.astro`
 - Create: `tiers/homebase-starter/src/pages/index.astro`
 
-- [ ] **Step 1: `BaseLayout.astro`**
+- [x] **Step 1: `BaseLayout.astro`**
 
 ```astro
 ---
@@ -784,7 +784,7 @@ const { title, description = 'Rumah digital penulis di KBM App.' } = Astro.props
 </html>
 ```
 
-- [ ] **Step 2: Port section components from prototype**
+- [x] **Step 2: Port section components from prototype**
 
 Implement each component using **inline styles / Tailwind with exact prototype colors**. Match:
 - Hero: photo placeholder circle, H1 Playfair 36px, tagline italic, KBM badge `#5C2430`, bio, CTA WA green + optional secondary
@@ -796,7 +796,7 @@ Implement each component using **inline styles / Tailwind with exact prototype c
 
 `SiteHeader.astro` for Starter: logo pen name only (no multi-page menu). Add small text links to `/dashboard` and `/untuk-penulis` in footer ops line for demo (“Area penulis (demo)”).
 
-- [ ] **Step 3: `ReaderForm.astro` client script**
+- [x] **Step 3: `ReaderForm.astro` client script**
 
 On submit: validate name non-empty and WA digits length ≥ 9; on success show inline success (“Terdaftar (simulasi) — di production masuk Google Sheet milikmu”). Use `unlockReader` only on hero/signature bonus pages later; Starter form does **not** need bonus unlock.
 
@@ -820,7 +820,7 @@ On submit: validate name non-empty and WA digits length ≥ 9; on success show i
 </script>
 ```
 
-- [ ] **Step 4: `index.astro` assemble one-page**
+- [x] **Step 4: `index.astro` assemble one-page**
 
 ```astro
 ---
@@ -847,7 +847,7 @@ import author from '../data/author.json';
 </BaseLayout>
 ```
 
-- [ ] **Step 5: Visual check**
+- [x] **Step 5: Visual check**
 
 ```bash
 cd tiers/homebase-starter && npm run dev
@@ -855,7 +855,7 @@ cd tiers/homebase-starter && npm run dev
 
 Open `http://localhost:4321` — compare section order/colors to prototype home (minus bonus/peta/chapter card).
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add tiers/homebase-starter
@@ -876,14 +876,14 @@ git commit -m "feat(starter): public one-page from Ratna prototype"
 - Create: `tiers/homebase-starter/src/components/ops/UpgradeLock.astro`
 - Create: `tiers/homebase-starter/src/pages/dashboard.astro`
 
-- [ ] **Step 1: Port Dashboard chrome from `Dashboard Penulis.dc.html`**
+- [x] **Step 1: Port Dashboard chrome from `Dashboard Penulis.dc.html`**
 
 `OpsLayout`: full-width (not phone shell), cream paper, sidebar nav rose theme. Include banner: `Simulasi demo — perubahan tidak ke server`.
 
 Starter nav tabs (enabled): Ringkasan, Kabar Rilis, Database, Tema.  
 Locked tabs with `UpgradeLock`: Ruang Bonus, Peta Baca, (and hide Universe).
 
-- [ ] **Step 2: `TabRilis` publish flow**
+- [x] **Step 2: `TabRilis` publish flow**
 
 Fields: select work, chapter title, teaser (max 140), date default today. Buttons: Preview, Publikasikan (simulasi), Salin pesan WA.
 
@@ -923,13 +923,13 @@ Because Astro `<script>` can import TS modules, prefer:
 </script>
 ```
 
-- [ ] **Step 3: Ringkasan + Database + Tema**
+- [x] **Step 3: Ringkasan + Database + Tema**
 
 - Ringkasan: show pen name, last chapter from `loadDemoState`, CTA “+ Umumkan Bab Baru” switches tab via `?tab=rilis` or client state.
 - Database: table of `demoReaders`, button “Buka Google Sheet →” `#`.
 - Tema: 5 swatches from prototype `temaDefs` (maroon default); selecting updates CSS variables on `document.documentElement` for demo.
 
-- [ ] **Step 4: Verify**
+- [x] **Step 4: Verify**
 
 ```bash
 npm run dev
@@ -937,7 +937,7 @@ npm run dev
 
 Open `/dashboard`, publish bab, confirm success UI + WA draft text.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add tiers/homebase-starter
@@ -952,7 +952,7 @@ git commit -m "feat(starter): dashboard mock with tier locks"
 - Create: `tiers/homebase-starter/src/pages/untuk-penulis.astro`
 - Create: `tiers/homebase-starter/src/components/ops/TelegramMock.astro`
 
-- [ ] **Step 1: Build chat UI**
+- [x] **Step 1: Build chat UI**
 
 Phone-width column, header “MarkasAuthor Assistant · Simulasi”, bubbles:
 
@@ -963,11 +963,11 @@ Phone-width column, header “MarkasAuthor Assistant · Simulasi”, bubbles:
 
 Style chips/buttons with rose `#7A3341` and paper bubbles matching dashboard tokens.
 
-- [ ] **Step 2: Verify parity**
+- [x] **Step 2: Verify parity**
 
 Publish from Telegram mock → open `/dashboard` history area (or re-load ringkasan) → same latest chapter in `localStorage` key `ma-demo-starter`.
 
-- [ ] **Step 3: README**
+- [x] **Step 3: README**
 
 `tiers/homebase-starter/README.md`:
 
@@ -982,7 +982,7 @@ npm run dev   # http://localhost:4321
 Routes: `/`, `/dashboard`, `/untuk-penulis`
 ```
 
-- [ ] **Step 4: Build**
+- [x] **Step 4: Build**
 
 ```bash
 cd tiers/homebase-starter && npm run build
@@ -990,7 +990,7 @@ cd tiers/homebase-starter && npm run build
 
 Expected: exit 0, `dist/` generated.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add tiers/homebase-starter
@@ -1004,7 +1004,7 @@ git commit -m "feat(starter): Telegram mock + README"
 **Files:**
 - Create: `tiers/author-homebase/**` (copy from starter then expand)
 
-- [ ] **Step 1: Clone scaffold**
+- [x] **Step 1: Clone scaffold**
 
 ```bash
 cp -R tiers/homebase-starter tiers/author-homebase
@@ -1016,7 +1016,7 @@ Edit `package.json` name → `author-homebase`, dev port → `4322`.
 Edit `author.json` `"tier": "hero"`.  
 Update `demo-store` calls to use `'hero'`.
 
-- [ ] **Step 2: Multi-page public routes**
+- [x] **Step 2: Multi-page public routes**
 
 Create pages by splitting prototype screens:
 
@@ -1030,23 +1030,23 @@ Create pages by splitting prototype screens:
 | `src/pages/karya/index.astro` | list works |
 | `src/pages/karya/[slug].astro` | title, hook, KBM button only |
 
-- [ ] **Step 3: Header nav**
+- [x] **Step 3: Header nav**
 
 Port slide-out menu items: Beranda, Ruang Bonus, Peta Baca, Kolaborasi. Desktop: top nav row.
 
-- [ ] **Step 4: Bonus gate**
+- [x] **Step 4: Bonus gate**
 
 Use `unlockReader('hero', name, …)` + `loadDemoState` on bonus page. Unlocked shows excerpts; locked shows form. Thank-you page links “Buka Bonusmu” + WA channel.
 
-- [ ] **Step 5: Chapter card live binding**
+- [x] **Step 5: Chapter card live binding**
 
 On home, `<script>` replaces chapter card fields from `loadDemoState('hero', fallback)`.
 
-- [ ] **Step 6: Dashboard unlocks**
+- [x] **Step 6: Dashboard unlocks**
 
 Enable tabs: Bonus, Peta Baca, Karya reorder (client-only). Remove upgrade locks for those. Keep Universe locked with CTA to Signature.
 
-- [ ] **Step 7: Build + commit**
+- [x] **Step 7: Build + commit**
 
 ```bash
 cd tiers/author-homebase && npm run build
@@ -1061,7 +1061,7 @@ git commit -m "feat(hero): full public multi-page + ops from prototype"
 **Files:**
 - Create: `tiers/signature-universe/**`
 
-- [ ] **Step 1: Clone from hero**
+- [x] **Step 1: Clone from hero**
 
 ```bash
 cp -R tiers/author-homebase tiers/signature-universe
@@ -1069,7 +1069,7 @@ cp -R tiers/author-homebase tiers/signature-universe
 
 Port `4323`, tier `signature`, storage key `signature`.
 
-- [ ] **Step 2: Universe routes**
+- [x] **Step 2: Universe routes**
 
 | Page | Content from `author.universe` |
 |---|---|
@@ -1082,15 +1082,15 @@ Port `4323`, tier `signature`, storage key `signature`.
 
 Nav: add “Semesta” entry.
 
-- [ ] **Step 3: Ops universe tab**
+- [x] **Step 3: Ops universe tab**
 
 Dashboard tab “Semesta”: list characters/trivia counts (read-only mock editors: toggle spoiler flag in `localStorage` optional). Enable all previous hero tabs.
 
-- [ ] **Step 4: Visual depth**
+- [x] **Step 4: Visual depth**
 
 Keep palette; add subtle paper texture CSS on universe hub only (CSS gradient noise OK). Do not invent new brand colors.
 
-- [ ] **Step 5: Build + commit**
+- [x] **Step 5: Build + commit**
 
 ```bash
 cd tiers/signature-universe && npm run build
@@ -1106,7 +1106,7 @@ git commit -m "feat(signature): universe pages + full ops"
 - Create: `tiers/README.md`
 - Modify: root `README` only if exists; else `tiers/README.md` is enough
 
-- [ ] **Step 1: `tiers/README.md`**
+- [x] **Step 1: `tiers/README.md`**
 
 ```markdown
 # MarkasAuthor — Tier demos
@@ -1122,7 +1122,7 @@ Persona: Ratna Maharani. Mock only — no real Sheet/Telegram/backend.
 Demo loop: open site → `/dashboard` or `/untuk-penulis` → publish chapter → home chapter card updates (`localStorage`).
 ```
 
-- [ ] **Step 2: Run acceptance checklist from spec §10**
+- [x] **Step 2: Run acceptance checklist from spec §10**
 
 Manually verify each box:
 
@@ -1138,7 +1138,7 @@ Manually verify each box:
 [ ] README per tier
 ```
 
-- [ ] **Step 3: Final commit**
+- [x] **Step 3: Final commit**
 
 ```bash
 git add tiers docs

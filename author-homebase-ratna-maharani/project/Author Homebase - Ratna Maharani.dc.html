@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#EAE0D3}
+input::placeholder{color:#B39A90;opacity:1}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;justify-content:center;background:#EAE0D3;font-family:Lora,Georgia,serif;color:#3B2A28">
+<div style="width:100%;max-width:430px;background:#FBF6EF;min-height:100vh;box-shadow:0 0 44px rgba(59,42,40,.18);position:relative;display:flex;flex-direction:column">
+
+<header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:rgba(251,246,239,.95);backdrop-filter:blur(8px);border-bottom:1px solid rgba(122,51,65,.12)">
+  <a onClick="{{ goHome }}" style="font-family:'Playfair Display',serif;font-size:19px;font-weight:600;letter-spacing:.02em;color:#5C2430;cursor:pointer;text-decoration:none">Ratna Maharani</a>
+  <button onClick="{{ toggleMenu }}" aria-label="Buka menu" style="width:44px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:none;border:none;cursor:pointer;border-radius:10px" style-hover="background:rgba(122,51,65,.07)">
+    <span style="display:block;width:20px;height:2px;background:#5C2430;border-radius:2px"></span>
+    <span style="display:block;width:20px;height:2px;background:#5C2430;border-radius:2px"></span>
+    <span style="display:block;width:14px;height:2px;background:#5C2430;border-radius:2px;align-self:flex-end;margin-right:12px"></span>
+  </button>
+</header>
+
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:50;background:rgba(59,42,40,.45)"></div>
+  <nav style="position:fixed;top:0;right:0;bottom:0;z-index:51;width:280px;background:#FBF6EF;padding:20px 22px 28px;display:flex;flex-direction:column;box-shadow:-12px 0 32px rgba(59,42,40,.25)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <span style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:#8A6A5E">Menu</span>
+      <button onClick="{{ closeMenu }}" aria-label="Tutup menu" style="width:44px;height:44px;background:none;border:none;cursor:pointer;font-size:22px;color:#5C2430;font-family:Georgia,serif">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <sc-for list="{{ navItems }}" as="nav" hint-placeholder-count="4">
+        <button onClick="{{ nav.go }}" style="display:flex;align-items:baseline;gap:10px;text-align:left;background:{{ nav.bg }};border:none;border-radius:12px;padding:14px 14px;cursor:pointer;font-family:'Playfair Display',serif;font-size:19px;font-weight:500;color:#3B2A28">
+          <span style="font-family:Lora,serif;font-size:11px;color:#B98A7C">{{ nav.num }}</span>
+          <span>{{ nav.label }}</span>
+        </button>
+      </sc-for>
+    </div>
+    <div style="margin-top:auto;border-top:1px solid rgba(122,51,65,.14);padding-top:18px;display:flex;flex-direction:column;gap:10px">
+      <a href="https://whatsapp.com/channel/ratnamaharani" target="_blank" style="display:flex;align-items:center;justify-content:center;min-height:48px;background:#1E7A57;color:#FBF6EF;border-radius:14px;font-size:15px;font-weight:600;text-decoration:none">Ikuti Saluran WhatsApp</a>
+      <p style="margin:0;font-size:12px;line-height:1.5;color:#8A6A5E;text-align:center">Kabar bab baru, langsung di WhatsApp-mu.</p>
+    </div>
+  </nav>
+</sc-if>
+
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<main data-screen-label="Beranda" style="display:flex;flex-direction:column">
+
+  <section style="padding:40px 24px 36px;text-align:center;background:linear-gradient(180deg,#F4E3DE 0%,#FBF6EF 100%)">
+    <div style="width:124px;height:124px;margin:0 auto 18px;border-radius:50%;border:1px solid rgba(122,51,65,.25);padding:5px">
+      <div style="width:100%;height:100%;border-radius:50%;background:repeating-linear-gradient(45deg,#EBD8D2 0 8px,#F4E7E2 8px 16px);display:flex;align-items:center;justify-content:center">
+        <span style="font-family:ui-monospace,Menlo,monospace;font-size:10px;color:#8A6A5E">foto penulis</span>
+      </div>
+    </div>
+    <h1 style="margin:0 0 8px;font-family:'Playfair Display',serif;font-size:36px;font-weight:600;line-height:1.15;color:#3B2A28">Ratna Maharani</h1>
+    <p style="margin:0 0 14px;font-style:italic;font-size:16px;line-height:1.5;color:#7A5A50">Penulis romance keluarga &amp; rumah tangga</p>
+    <div style="display:inline-flex;align-items:center;gap:8px;background:#5C2430;color:#F4E3DE;border-radius:999px;padding:8px 16px;font-size:13px;letter-spacing:.03em">
+      <span style="color:#E4B87E">★</span>
+      <span>Penulis Terlaris KBM App 2024</span>
+    </div>
+    <p style="margin:18px auto 22px;max-width:320px;font-size:16px;line-height:1.7;color:#5A453F">Menulis kisah rumah tangga yang dekat dengan hidup kita — tentang cinta, luka, dan perempuan yang memilih bertahan atau pergi. Lebih dari 32 juta kali dibaca di KBM App.</p>
+    <div style="display:flex;flex-direction:column;gap:10px;max-width:320px;margin:0 auto">
+      <a href="https://whatsapp.com/channel/ratnamaharani" target="_blank" style="display:flex;align-items:center;justify-content:center;min-height:52px;background:#1E7A57;color:#FBF6EF;border-radius:14px;font-size:16px;font-weight:600;text-decoration:none">Ikuti Saluran WhatsApp</a>
+      <button onClick="{{ goPeta }}" style="display:flex;align-items:center;justify-content:center;min-height:52px;background:none;border:1.5px solid #7A3341;color:#7A3341;border-radius:14px;font-family:Lora,serif;font-size:16px;font-weight:600;cursor:pointer">Mulai baca dari mana?</button>
+    </div>
+  </section>
+
+  <section style="padding:8px 20px 0">
+    <div style="background:#FFFDF9;border:1px solid rgba(122,51,65,.16);border-radius:18px;padding:20px;box-shadow:0 2px 12px rgba(92,36,48,.06)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="width:8px;height:8px;border-radius:50%;background:#B0483C"></span>
+        <span style="font-size:11px;letter-spacing:.14em;color:#B0483C;font-weight:600">BARU TERBIT</span>
+        <span style="margin-left:auto;font-size:12px;color:#9A8078">3 Juli 2026</span>
+      </div>
+      <p style="margin:0 0 2px;font-size:13px;color:#8A6A5E;font-style:italic">Istri Kedua: Musim 2</p>
+      <h3 style="margin:0 0 14px;font-family:'Playfair Display',serif;font-size:21px;font-weight:600;line-height:1.3;color:#3B2A28">Bab 47 — Pintu yang Tak Pernah Dikunci</h3>
+      <a href="https://kbm.id/ratna-maharani/istri-kedua-musim-2?ref=homebase" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;min-height:48px;background:#7A3341;color:#FBF6EF;border-radius:12px;font-size:15px;font-weight:600;text-decoration:none">Baca di KBM →</a>
+    </div>
+  </section>
+
+  <section style="padding:36px 20px 8px">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px">
+      <h2 style="margin:0;font-family:'Playfair Display',serif;font-size:26px;font-weight:600;color:#3B2A28">Rak Buku</h2>
+      <span style="font-size:12px;color:#9A8078">4 karya · semua di KBM App</span>
+    </div>
+    <p style="margin:0 0 18px;font-size:14px;line-height:1.6;color:#7A5A50">Semua cerita dibaca gratis lewat aplikasi KBM.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px 16px">
+      <sc-for list="{{ works }}" as="work" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <div style="position:relative;aspect-ratio:2/3;border-radius:8px;background:{{ work.coverBg }};box-shadow:0 6px 16px rgba(92,36,48,.25);padding:14px 12px;display:flex;flex-direction:column;overflow:hidden">
+            <div style="position:absolute;inset:7px;border:1px solid rgba(251,246,239,.35);border-radius:4px;pointer-events:none"></div>
+            <span style="font-size:9px;letter-spacing:.16em;color:rgba(251,246,239,.75);text-align:center;margin-bottom:auto">{{ work.tag }}</span>
+            <h3 style="margin:auto 0;font-family:'Playfair Display',serif;font-size:{{ work.coverSize }};font-weight:600;line-height:1.25;color:#FBF6EF;text-align:center">{{ work.judul }}</h3>
+            <span style="font-size:9px;letter-spacing:.14em;color:rgba(251,246,239,.75);text-align:center;margin-top:auto">RATNA MAHARANI</span>
+          </div>
+          <div>
+            <p style="margin:0;font-size:13px;font-weight:600;color:#3B2A28;line-height:1.35">{{ work.judul }}</p>
+            <p style="margin:2px 0 0;font-size:12px;color:#9A8078">{{ work.pembaca }}</p>
+          </div>
+          <a href="{{ work.link }}" target="_blank" style="display:flex;align-items:center;justify-content:center;min-height:44px;background:none;border:1.5px solid #7A3341;color:#7A3341;border-radius:11px;font-size:14px;font-weight:600;text-decoration:none">Baca di KBM →</a>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="margin-top:40px;background:linear-gradient(180deg,#F4E3DE 0%,#EFD8D2 100%);border-top:1px solid rgba(122,51,65,.12);border-bottom:1px solid rgba(122,51,65,.12);padding:32px 20px 36px">
+    <span style="display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.16em;color:#B0483C;font-weight:600"><span style="width:8px;height:8px;border-radius:50%;background:#B0483C"></span>GRATIS · KHUSUS PEMBACA</span>
+    <h2 style="margin:10px 0 8px;font-family:'Playfair Display',serif;font-size:28px;font-weight:600;line-height:1.2;color:#3B2A28">Ruang Bonus Pembaca</h2>
+    <p style="margin:0 0 18px;font-size:15px;line-height:1.7;color:#5A453F">Adegan yang dipotong, sudut pandang tokoh lain, dan surat yang tak pernah dikirim — tidak ada di KBM, hanya di sini. Cukup tinggalkan nama dan nomor WhatsApp untuk membukanya.</p>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px">
+      <sc-for list="{{ bonusItems }}" as="b" hint-placeholder-count="3">
+        <div onClick="{{ goBonus }}" style="display:flex;align-items:center;gap:12px;background:#FFFDF9;border:1px solid rgba(122,51,65,.18);border-radius:14px;padding:14px 16px;cursor:pointer;box-shadow:0 2px 10px rgba(92,36,48,.07)">
+          <div style="flex:1;min-width:0">
+            <span style="font-size:10px;letter-spacing:.14em;color:#B98A7C;font-weight:600">{{ b.jenis }}</span>
+            <h3 style="margin:3px 0 0;font-family:'Playfair Display',serif;font-size:16px;font-weight:600;line-height:1.3;color:#3B2A28">{{ b.judul }}</h3>
+          </div>
+          <span style="flex:none;font-size:9px;letter-spacing:.1em;font-weight:600;color:{{ gateColor }};border:1px solid {{ gateBorder }};border-radius:999px;padding:5px 9px">{{ gateBadge }}</span>
+        </div>
+      </sc-for>
+    </div>
+    <button onClick="{{ goBonus }}" style="display:flex;align-items:center;justify-content:center;min-height:54px;width:100%;background:#7A3341;color:#FBF6EF;border:none;border-radius:14px;font-family:Lora,serif;font-size:16px;font-weight:600;cursor:pointer;box-shadow:0 6px 18px rgba(92,36,48,.28)">{{ bonusCta }}</button>
+    <p style="margin:12px 0 0;font-size:12px;color:#8A6A5E;text-align:center">3 konten eksklusif · bertambah seiring cerita berjalan</p>
+  </section>
+
+  <section style="padding:40px 24px 12px">
+    <h2 style="margin:0 0 4px;font-family:'Playfair Display',serif;font-size:26px;font-weight:600;color:#3B2A28">Perjalanan Menulis</h2>
+    <p style="margin:0 0 22px;font-size:14px;line-height:1.6;color:#7A5A50">Dari bab pertama sampai hari ini.</p>
+    <div style="display:flex;flex-direction:column">
+      <sc-for list="{{ timeline }}" as="t" hint-placeholder-count="4">
+        <div style="display:flex;gap:16px">
+          <div style="display:flex;flex-direction:column;align-items:center;width:14px;flex:none">
+            <span style="width:14px;height:14px;border-radius:50%;background:{{ t.dot }};border:3px solid #F4E3DE;flex:none;margin-top:4px"></span>
+            <span style="width:1.5px;flex:1;background:{{ t.line }}"></span>
+          </div>
+          <div style="padding-bottom:26px">
+            <span style="font-size:12px;letter-spacing:.1em;color:#B0483C;font-weight:600">{{ t.tahun }}</span>
+            <h3 style="margin:3px 0 4px;font-family:'Playfair Display',serif;font-size:19px;font-weight:600;color:#3B2A28;line-height:1.3">{{ t.judul }}</h3>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:#6A5248">{{ t.desc }}</p>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="margin:8px 20px 36px;background:#5C2430;border-radius:22px;padding:28px 24px;color:#F4E3DE">
+    <h2 style="margin:0 0 6px;font-family:'Playfair Display',serif;font-size:24px;font-weight:600;line-height:1.25;color:#FBF6EF">Jangan ketinggalan bab baru</h2>
+    <p style="margin:0 0 18px;font-size:14px;line-height:1.65;color:#E3C6C0">Tinggalkan nama dan nomor WhatsApp — setiap ada bab baru atau bonus eksklusif, kamu yang pertama tahu.</p>
+    <form onSubmit="{{ submitForm }}" style="display:flex;flex-direction:column;gap:10px">
+      <input type="text" value="{{ nama }}" onChange="{{ setNama }}" placeholder="Nama panggilanmu" style="min-height:50px;padding:0 16px;border-radius:12px;border:1px solid rgba(251,246,239,.25);background:#FBF6EF;color:#3B2A28;font-family:Lora,serif;font-size:16px" />
+      <input type="tel" value="{{ wa }}" onChange="{{ setWa }}" placeholder="Nomor WhatsApp (08…)" style="min-height:50px;padding:0 16px;border-radius:12px;border:1px solid rgba(251,246,239,.25);background:#FBF6EF;color:#3B2A28;font-family:Lora,serif;font-size:16px" />
+      <sc-if value="{{ formError }}" hint-placeholder-val="{{ false }}">
+        <p style="margin:0;font-size:13px;color:#F0B9A8">{{ formError }}</p>
+      </sc-if>
+      <button type="submit" style="min-height:52px;background:#D8A7A4;color:#4A1D26;border:none;border-radius:12px;font-family:Lora,serif;font-size:16px;font-weight:600;cursor:pointer">Daftar Kabar Rilis</button>
+    </form>
+    <p style="margin:14px 0 0;font-size:12px;line-height:1.6;color:#C99B94">Nomormu aman, hanya untuk kabar rilis — tidak dibagikan ke siapa pun. Bonus: akses <a onClick="{{ goBonus }}" style="color:#F4E3DE;text-decoration:underline;cursor:pointer">Ruang Bonus Pembaca</a> langsung terbuka.</p>
+  </section>
+
+</main>
+</sc-if>
+
+<sc-if value="{{ isBonus }}" hint-placeholder-val="{{ false }}">
+<main data-screen-label="Halaman Bonus" style="display:flex;flex-direction:column">
+  <section style="padding:36px 24px 8px;background:linear-gradient(180deg,#F4E3DE 0%,#FBF6EF 100%)">
+    <span style="font-size:11px;letter-spacing:.16em;color:#B0483C;font-weight:600">KHUSUS PEMBACA</span>
+    <h1 style="margin:8px 0 10px;font-family:'Playfair Display',serif;font-size:32px;font-weight:600;line-height:1.2;color:#3B2A28">Ruang Bonus Pembaca</h1>
+    <p style="margin:0 0 24px;font-size:15px;line-height:1.7;color:#5A453F">Cerita di balik cerita: adegan yang dipotong, sudut pandang tokoh lain, dan surat yang tak pernah sampai. Tidak ada di KBM — hanya di sini.</p>
+  </section>
+
+  <sc-if value="{{ unlocked }}" hint-placeholder-val="{{ false }}">
+    <section style="padding:0 20px 40px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:10px;background:#EAF3EC;border:1px solid rgba(30,122,87,.25);border-radius:14px;padding:12px 16px">
+        <span style="width:22px;height:22px;border-radius:50%;background:#1E7A57;color:#FBF6EF;display:flex;align-items:center;justify-content:center;font-size:12px;flex:none">✓</span>
+        <p style="margin:0;font-size:14px;color:#25543F;line-height:1.5">Selamat datang kembali, <strong>{{ pembaca }}</strong>. Semua bonus terbuka untukmu.</p>
+      </div>
+      <sc-for list="{{ bonusItems }}" as="b" hint-placeholder-count="3">
+        <article style="background:#FFFDF9;border:1px solid rgba(122,51,65,.16);border-radius:18px;padding:20px;box-shadow:0 2px 12px rgba(92,36,48,.06)">
+          <span style="font-size:10px;letter-spacing:.14em;color:#B98A7C;font-weight:600">{{ b.jenis }}</span>
+          <h3 style="margin:6px 0 4px;font-family:'Playfair Display',serif;font-size:21px;font-weight:600;line-height:1.3;color:#3B2A28">{{ b.judul }}</h3>
+          <p style="margin:0 0 12px;font-size:12px;color:#9A8078;font-style:italic">dari “{{ b.karya }}”</p>
+          <p style="margin:0 0 14px;font-size:14px;line-height:1.65;color:#6A5248">{{ b.teaser }}</p>
+          <sc-if value="{{ b.expanded }}" hint-placeholder-val="{{ false }}">
+            <div style="border-left:2px solid #D8A7A4;padding:4px 0 4px 16px;margin:0 0 14px">
+              <p style="margin:0;font-size:15px;line-height:1.8;color:#4A3833;font-style:italic">{{ b.excerpt }}</p>
+              <p style="margin:10px 0 0;font-size:12px;color:#9A8078">— cuplikan pembuka · versi lengkap ada di bawah</p>
+            </div>
+          </sc-if>
+          <button onClick="{{ b.toggle }}" style="display:flex;align-items:center;justify-content:center;min-height:46px;width:100%;background:#7A3341;color:#FBF6EF;border:none;border-radius:12px;font-family:Lora,serif;font-size:14px;font-weight:600;cursor:pointer">{{ b.tombol }}</button>
+        </article>
+      </sc-for>
+      <p style="margin:6px 4px 0;font-size:12px;line-height:1.6;color:#9A8078">Semua bonus adalah materi pelengkap — kelanjutan cerita hanya terbit di KBM App.</p>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ locked }}" hint-placeholder-val="{{ true }}">
+    <section style="padding:0 20px 8px;display:flex;flex-direction:column;gap:12px">
+      <sc-for list="{{ bonusItems }}" as="b" hint-placeholder-count="3">
+        <article style="background:#FFFDF9;border:1px solid rgba(122,51,65,.16);border-radius:18px;padding:18px 20px;display:flex;align-items:center;gap:14px">
+          <div style="flex:1">
+            <span style="font-size:10px;letter-spacing:.14em;color:#B98A7C;font-weight:600">{{ b.jenis }}</span>
+            <h3 style="margin:5px 0 3px;font-family:'Playfair Display',serif;font-size:18px;font-weight:600;line-height:1.3;color:#3B2A28">{{ b.judul }}</h3>
+            <p style="margin:0;font-size:12px;color:#9A8078;font-style:italic">dari “{{ b.karya }}”</p>
+          </div>
+          <span style="flex:none;font-size:10px;letter-spacing:.1em;font-weight:600;color:#8A6A5E;border:1px solid rgba(122,51,65,.25);border-radius:999px;padding:6px 10px">TERKUNCI</span>
+        </article>
+      </sc-for>
+    </section>
+    <section style="margin:16px 20px 40px;background:#5C2430;border-radius:22px;padding:28px 24px;color:#F4E3DE">
+      <h2 style="margin:0 0 6px;font-family:'Playfair Display',serif;font-size:23px;font-weight:600;line-height:1.3;color:#FBF6EF">Buka semua bonus — gratis</h2>
+      <p style="margin:0 0 18px;font-size:14px;line-height:1.65;color:#E3C6C0">Cukup tinggalkan nama dan nomor WhatsApp. Bonus langsung terbuka, dan kamu dapat kabar setiap bab baru terbit.</p>
+      <form onSubmit="{{ submitForm }}" style="display:flex;flex-direction:column;gap:10px">
+        <input type="text" value="{{ nama }}" onChange="{{ setNama }}" placeholder="Nama panggilanmu" style="min-height:50px;padding:0 16px;border-radius:12px;border:1px solid rgba(251,246,239,.25);background:#FBF6EF;color:#3B2A28;font-family:Lora,serif;font-size:16px" />
+        <input type="tel" value="{{ wa }}" onChange="{{ setWa }}" placeholder="Nomor WhatsApp (08…)" style="min-height:50px;padding:0 16px;border-radius:12px;border:1px solid rgba(251,246,239,.25);background:#FBF6EF;color:#3B2A28;font-family:Lora,serif;font-size:16px" />
+        <sc-if value="{{ formError }}" hint-placeholder-val="{{ false }}">
+          <p style="margin:0;font-size:13px;color:#F0B9A8">{{ formError }}</p>
+        </sc-if>
+        <button type="submit" style="min-height:52px;background:#D8A7A4;color:#4A1D26;border:none;border-radius:12px;font-family:Lora,serif;font-size:16px;font-weight:600;cursor:pointer">Buka Bonus Sekarang</button>
+      </form>
+      <p style="margin:14px 0 0;font-size:12px;line-height:1.6;color:#C99B94">Nomormu aman, hanya untuk kabar rilis — tidak dibagikan ke siapa pun.</p>
+    </section>
+  </sc-if>
+</main>
+</sc-if>
+
+<sc-if value="{{ isTerimaKasih }}" hint-placeholder-val="{{ false }}">
+<main data-screen-label="Terima Kasih" style="display:flex;flex-direction:column;padding:56px 24px 48px;text-align:center">
+  <div style="width:72px;height:72px;margin:0 auto 20px;border-radius:50%;background:#1E7A57;color:#FBF6EF;display:flex;align-items:center;justify-content:center;font-size:30px">✓</div>
+  <h1 style="margin:0 0 10px;font-family:'Playfair Display',serif;font-size:30px;font-weight:600;line-height:1.25;color:#3B2A28">Terima kasih, {{ pembaca }}!</h1>
+  <p style="margin:0 auto 28px;max-width:300px;font-size:15px;line-height:1.7;color:#5A453F">Kamu sudah terdaftar. Dua langkah kecil lagi supaya tidak ketinggalan apa pun:</p>
+  <div style="display:flex;flex-direction:column;gap:12px;max-width:320px;margin:0 auto;width:100%">
+    <button onClick="{{ goBonus }}" style="min-height:54px;background:#7A3341;color:#FBF6EF;border:none;border-radius:14px;font-family:Lora,serif;font-size:16px;font-weight:600;cursor:pointer">Buka Bonusmu →</button>
+    <a href="https://whatsapp.com/channel/ratnamaharani" target="_blank" style="display:flex;align-items:center;justify-content:center;min-height:54px;background:#1E7A57;color:#FBF6EF;border-radius:14px;font-size:16px;font-weight:600;text-decoration:none">Ikuti Saluran WhatsApp</a>
+  </div>
+  <p style="margin:24px auto 0;max-width:300px;font-size:13px;line-height:1.6;color:#9A8078">Saluran WhatsApp adalah cara tercepat tahu bab baru — cukup sekali ikuti.</p>
+</main>
+</sc-if>
+
+<sc-if value="{{ isPeta }}" hint-placeholder-val="{{ false }}">
+<main data-screen-label="Peta Baca" style="display:flex;flex-direction:column">
+  <section style="padding:36px 24px 4px;background:linear-gradient(180deg,#F4E3DE 0%,#FBF6EF 100%)">
+    <span style="font-size:11px;letter-spacing:.16em;color:#B0483C;font-weight:600">PETA BACA</span>
+    <h1 style="margin:8px 0 10px;font-family:'Playfair Display',serif;font-size:32px;font-weight:600;line-height:1.2;color:#3B2A28">Mulai dari mana?</h1>
+    <p style="margin:0 0 24px;font-size:15px;line-height:1.7;color:#5A453F">Ikuti urutan ini supaya tidak ada kejutan yang bocor duluan. Semua dibaca di KBM App.</p>
+  </section>
+
+  <section style="padding:0 20px 8px">
+    <h2 style="margin:0 0 14px;font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:#3B2A28">Semesta “Istri Kedua”</h2>
+    <div style="display:flex;flex-direction:column">
+      <sc-for list="{{ petaUtama }}" as="node" hint-placeholder-count="2">
+        <div style="display:flex;flex-direction:column">
+          <div style="display:flex;gap:14px;background:#FFFDF9;border:1.5px solid {{ node.border }};border-radius:18px;padding:16px;box-shadow:0 2px 12px rgba(92,36,48,.06)">
+            <div style="flex:none;width:58px;aspect-ratio:2/3;border-radius:5px;background:{{ node.coverBg }};display:flex;align-items:center;justify-content:center;padding:6px">
+              <span style="font-family:'Playfair Display',serif;font-size:9px;font-weight:600;line-height:1.3;color:#FBF6EF;text-align:center">{{ node.judul }}</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+              <span style="align-self:flex-start;font-size:10px;letter-spacing:.12em;font-weight:600;color:{{ node.badgeColor }};background:{{ node.badgeBg }};border-radius:999px;padding:4px 10px">{{ node.badge }}</span>
+              <h3 style="margin:2px 0 0;font-family:'Playfair Display',serif;font-size:19px;font-weight:600;line-height:1.25;color:#3B2A28">{{ node.judul }}</h3>
+              <p style="margin:0;font-size:13px;line-height:1.55;color:#6A5248">{{ node.desc }}</p>
+              <a href="{{ node.link }}" target="_blank" style="margin-top:8px;display:flex;align-items:center;justify-content:center;min-height:44px;background:#7A3341;color:#FBF6EF;border-radius:11px;font-size:14px;font-weight:600;text-decoration:none">Baca di KBM →</a>
+            </div>
+          </div>
+          <sc-if value="{{ node.panah }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;align-items:center;padding:6px 0">
+              <span style="width:1.5px;height:16px;background:#C99B94"></span>
+              <span style="font-size:11px;color:#B0483C;letter-spacing:.08em;padding:3px 0">lalu lanjut ke</span>
+              <span style="width:1.5px;height:16px;background:#C99B94"></span>
+              <span style="color:#B0483C;font-size:13px;line-height:1">▼</span>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="padding:28px 20px 44px">
+    <h2 style="margin:0 0 4px;font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:#3B2A28">Bisa dibaca kapan saja</h2>
+    <p style="margin:0 0 14px;font-size:13px;line-height:1.6;color:#7A5A50">Dua novel lepas — tidak terhubung dengan semesta mana pun.</p>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <sc-for list="{{ petaLepas }}" as="node" hint-placeholder-count="2">
+        <div style="display:flex;gap:14px;align-items:center;background:#FFFDF9;border:1px solid rgba(122,51,65,.16);border-radius:16px;padding:14px 16px">
+          <div style="flex:none;width:46px;aspect-ratio:2/3;border-radius:4px;background:{{ node.coverBg }};display:flex;align-items:center;justify-content:center;padding:5px">
+            <span style="font-family:'Playfair Display',serif;font-size:8px;font-weight:600;line-height:1.3;color:#FBF6EF;text-align:center">{{ node.judul }}</span>
+          </div>
+          <div style="flex:1">
+            <h3 style="margin:0 0 2px;font-family:'Playfair Display',serif;font-size:17px;font-weight:600;color:#3B2A28;line-height:1.3">{{ node.judul }}</h3>
+            <p style="margin:0;font-size:12px;color:#9A8078">{{ node.desc }}</p>
+          </div>
+          <a href="{{ node.link }}" target="_blank" style="flex:none;display:flex;align-items:center;justify-content:center;min-height:44px;padding:0 14px;border:1.5px solid #7A3341;color:#7A3341;border-radius:11px;font-size:13px;font-weight:600;text-decoration:none">Baca →</a>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+</main>
+</sc-if>
+
+<sc-if value="{{ isKolab }}" hint-placeholder-val="{{ false }}">
+<main data-screen-label="Kolaborasi" style="display:flex;flex-direction:column">
+  <section style="padding:36px 24px 4px;background:linear-gradient(180deg,#F4E3DE 0%,#FBF6EF 100%)">
+    <span style="font-size:11px;letter-spacing:.16em;color:#B0483C;font-weight:600">UNTUK PENERBIT &amp; BRAND</span>
+    <h1 style="margin:8px 0 10px;font-family:'Playfair Display',serif;font-size:32px;font-weight:600;line-height:1.2;color:#3B2A28">Bekerja sama dengan Ratna</h1>
+    <p style="margin:0 0 24px;font-size:15px;line-height:1.7;color:#5A453F">Ratna Maharani menulis romance keluarga &amp; rumah tangga sejak 2021 dan kini menjadi salah satu penulis terlaris di KBM App. Ceritanya dikenal lewat konflik rumah tangga yang jujur dan tokoh perempuan yang kuat — dibaca jutaan perempuan Indonesia usia 25–45.</p>
+  </section>
+
+  <section style="padding:0 20px">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <sc-for list="{{ stats }}" as="s" hint-placeholder-count="3">
+        <div style="background:#FFFDF9;border:1px solid rgba(122,51,65,.16);border-radius:14px;padding:14px 10px;text-align:center">
+          <p style="margin:0;font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#5C2430;line-height:1.1">{{ s.angka }}</p>
+          <p style="margin:5px 0 0;font-size:11px;line-height:1.4;color:#8A6A5E">{{ s.label }}</p>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="padding:30px 20px 0">
+    <h2 style="margin:0 0 12px;font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:#3B2A28">Karya</h2>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <sc-for list="{{ works }}" as="work" hint-placeholder-count="4">
+        <div style="display:flex;align-items:baseline;gap:10px;border-bottom:1px solid rgba(122,51,65,.12);padding:10px 2px">
+          <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:#3B2A28">{{ work.judul }}</span>
+          <span style="margin-left:auto;font-size:12px;color:#9A8078;flex:none">{{ work.pembaca }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="padding:30px 20px 0">
+    <h2 style="margin:0 0 12px;font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:#3B2A28">Kerja sama yang dibuka</h2>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <sc-for list="{{ kolabJenis }}" as="k" hint-placeholder-count="4">
+        <div style="display:flex;align-items:center;gap:12px;background:#F4E3DE;border-radius:12px;padding:13px 16px">
+          <span style="width:6px;height:6px;border-radius:50%;background:#7A3341;flex:none"></span>
+          <span style="font-size:15px;color:#4A3833">{{ k }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="padding:30px 20px 0">
+    <h2 style="margin:0 0 12px;font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:#3B2A28">Aset media</h2>
+    <div style="display:flex;gap:12px;margin-bottom:12px">
+      <div style="flex:1;aspect-ratio:3/4;border-radius:12px;background:repeating-linear-gradient(45deg,#EBD8D2 0 8px,#F4E7E2 8px 16px);border:1px solid rgba(122,51,65,.18);display:flex;align-items:center;justify-content:center">
+        <span style="font-family:ui-monospace,Menlo,monospace;font-size:10px;color:#8A6A5E;text-align:center">foto HD penulis<br>(unduh)</span>
+      </div>
+      <div style="flex:1;aspect-ratio:3/4;border-radius:12px;background:repeating-linear-gradient(45deg,#EBD8D2 0 8px,#F4E7E2 8px 16px);border:1px solid rgba(122,51,65,.18);display:flex;align-items:center;justify-content:center">
+        <span style="font-family:ui-monospace,Menlo,monospace;font-size:10px;color:#8A6A5E;text-align:center">mockup cover<br>(unduh)</span>
+      </div>
+    </div>
+    <a href="#" style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;background:#7A3341;color:#FBF6EF;border-radius:14px;font-size:15px;font-weight:600;text-decoration:none">Unduh Collaboration Kit (PDF)</a>
+    <p style="margin:8px 0 0;font-size:12px;color:#9A8078;text-align:center">PDF 2 halaman · bio, statistik, katalog karya · 1,4 MB</p>
+  </section>
+
+  <section style="margin:30px 20px 44px;background:#5C2430;border-radius:22px;padding:26px 24px;color:#F4E3DE;text-align:center">
+    <h2 style="margin:0 0 8px;font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:#FBF6EF">Kontak manajemen</h2>
+    <p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:#E3C6C0">Untuk penawaran penerbitan, adaptasi, atau kolaborasi brand — hubungi langsung via WhatsApp. Dibalas dalam 1–2 hari kerja.</p>
+    <a href="https://wa.me/6281200000000" target="_blank" style="display:flex;align-items:center;justify-content:center;min-height:52px;background:#1E7A57;color:#FBF6EF;border-radius:14px;font-size:16px;font-weight:600;text-decoration:none">WhatsApp Manajemen</a>
+  </section>
+</main>
+</sc-if>
+
+<footer style="margin-top:auto;background:#3B2A28;color:#D9C4BB;padding:32px 24px 36px">
+  <p style="margin:0 0 4px;font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:#FBF6EF">Ratna Maharani</p>
+  <p style="margin:0 0 18px;font-size:13px;font-style:italic;color:#B99A8E">Semua cerita dibaca di KBM App.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:8px 18px;margin-bottom:20px">
+    <sc-for list="{{ navItems }}" as="nav" hint-placeholder-count="4">
+      <a onClick="{{ nav.go }}" style="font-size:14px;color:#D9C4BB;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:6px 0">{{ nav.label }}</a>
+    </sc-for>
+  </div>
+  <p style="margin:0;font-size:11px;line-height:1.6;color:#8A6F64">© 2026 Ratna Maharani · Situs ini tidak memuat isi cerita — seluruh bab dibaca di KBM App.</p>
+</footer>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844},&quot;halaman&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Beranda&quot;,&quot;Bonus&quot;,&quot;Peta Baca&quot;,&quot;Kolaborasi&quot;],&quot;default&quot;:&quot;Beranda&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Navigasi&quot;},&quot;bonusTerbuka&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Pratinjau&quot;}}">
+class Component extends DCLogic {
+  state = { page: null, menuOpen: false, nama: '', wa: '', formError: '', unlocked: false, pembaca: '', expandedId: null };
+
+  componentDidMount() {
+    try {
+      const s = JSON.parse(localStorage.getItem('ah_ratna') || '{}');
+      if (s.unlocked) this.setState({ unlocked: true, pembaca: s.nama || 'Pembaca' });
+    } catch (e) {}
+  }
+
+  nav(p) {
+    this.setState({ page: p, menuOpen: false });
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    const nama = this.state.nama.trim();
+    const wa = this.state.wa.replace(/[^0-9+]/g, '');
+    if (!nama || wa.length < 9) {
+      this.setState({ formError: 'Mohon isi nama dan nomor WhatsApp yang benar, ya.' });
+      return;
+    }
+    try { localStorage.setItem('ah_ratna', JSON.stringify({ unlocked: true, nama })); } catch (e) {}
+    this.setState({ unlocked: true, pembaca: nama, formError: '', page: 'tk', nama: '', wa: '' });
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
+
+  renderVals() {
+    const propPage = { 'Beranda': 'home', 'Bonus': 'bonus', 'Peta Baca': 'peta', 'Kolaborasi': 'kolab' }[this.props.halaman] || 'home';
+    const page = this.state.page || propPage;
+    const unlocked = this.state.unlocked || (this.props.bonusTerbuka ?? false);
+    const pembaca = this.state.pembaca || 'Pembaca';
+
+    const pages = [
+      { key: 'home', label: 'Beranda', num: '01' },
+      { key: 'bonus', label: 'Ruang Bonus', num: '02' },
+      { key: 'peta', label: 'Peta Baca', num: '03' },
+      { key: 'kolab', label: 'Kolaborasi', num: '04' }
+    ];
+    const navItems = pages.map(p => ({
+      label: p.label, num: p.num,
+      bg: page === p.key ? '#F4E3DE' : 'transparent',
+      go: () => this.nav(p.key)
+    }));
+
+    const works = [
+      { judul: 'Istri Kedua', pembaca: '18 juta pembaca', tag: 'SERI UTAMA', coverBg: 'linear-gradient(160deg,#5C2430,#7A3341)', coverSize: '20px', link: 'https://kbm.id/ratna-maharani/istri-kedua?ref=homebase' },
+      { judul: 'Istri Kedua: Musim 2', pembaca: 'Spin-off · sedang tayang', tag: 'SPIN-OFF · BARU', coverBg: 'linear-gradient(160deg,#7A3341,#A05055)', coverSize: '17px', link: 'https://kbm.id/ratna-maharani/istri-kedua-musim-2?ref=homebase' },
+      { judul: 'Menantu Pilihan Ibu', pembaca: '9 juta pembaca', tag: 'NOVEL LEPAS', coverBg: 'linear-gradient(160deg,#6E3B33,#94574C)', coverSize: '18px', link: 'https://kbm.id/ratna-maharani/menantu-pilihan-ibu?ref=homebase' },
+      { judul: 'Jodoh untuk Laras', pembaca: '5 juta pembaca', tag: 'NOVEL LEPAS', coverBg: 'linear-gradient(160deg,#8A5A52,#B07E71)', coverSize: '18px', link: 'https://kbm.id/ratna-maharani/jodoh-untuk-laras?ref=homebase' }
+    ];
+
+    const timeline = [
+      { tahun: '2021', judul: 'Bab pertama ditulis', desc: 'Mulai menulis “Istri Kedua” di sela mengurus rumah, diunggah diam-diam ke KBM App.', dot: '#B98A7C', line: 'rgba(122,51,65,.25)' },
+      { tahun: '2022', judul: 'Viral pertama', desc: '“Istri Kedua” menembus 1 juta pembaca dalam 3 bulan dan masuk jajaran trending KBM.', dot: '#A05055', line: 'rgba(122,51,65,.25)' },
+      { tahun: '2024', judul: 'Penulis Terlaris KBM App', desc: '18 juta pembaca “Istri Kedua” — dinobatkan sebagai penulis terlaris KBM App.', dot: '#7A3341', line: 'rgba(122,51,65,.25)' },
+      { tahun: '2025', judul: '“Musim 2” dimulai', desc: 'Spin-off “Istri Kedua: Musim 2” tayang — melanjutkan kisah dari sudut yang baru.', dot: '#5C2430', line: 'transparent' }
+    ];
+
+    const bonusData = [
+      { id: 'b1', jenis: 'DELETED SCENE', judul: 'Malam Sebelum Akad', karya: 'Istri Kedua', teaser: 'Adegan yang dipotong dari Bab 12: percakapan terakhir Arini dengan ibunya, semalam sebelum ia menandatangani hidup barunya.', excerpt: 'Ibu tidak menyalakan lampu. “Kamu masih bisa pulang,” katanya pelan, seolah pintu di belakangku belum pernah tertutup.' },
+      { id: 'b2', jenis: 'POV EKSTRA', judul: 'POV Mas Bram', karya: 'Istri Kedua', teaser: 'Bab 23 diceritakan ulang dari mata Bram — apa yang sebenarnya ia pikirkan saat memilih diam di meja makan itu.', excerpt: 'Aku bukan tidak melihat. Aku melihat semuanya. Justru karena itu aku diam — karena satu kata dariku malam itu akan meruntuhkan dua rumah sekaligus.' },
+      { id: 'b3', jenis: 'SURAT', judul: 'Surat Laras yang Tak Pernah Dikirim', karya: 'Jodoh untuk Laras', teaser: 'Ditulis Laras di halaman belakang buku resepnya — surat untuk lelaki yang hampir menjadi jodohnya.', excerpt: 'Kalau surat ini sampai padamu, berarti aku sudah cukup berani. Tapi kamu membacanya di sini, di tempat aku menyembunyikannya — jadi kita sama-sama tahu aku tidak pernah seberani itu.' }
+    ];
+    const bonusItems = bonusData.map(b => ({
+      ...b,
+      expanded: this.state.expandedId === b.id,
+      tombol: this.state.expandedId === b.id ? 'Tutup Cuplikan' : 'Baca Sekarang',
+      toggle: () => this.setState(s => ({ expandedId: s.expandedId === b.id ? null : b.id }))
+    }));
+
+    const petaUtama = [
+      { judul: 'Istri Kedua', badge: '1 · MULAI DI SINI', badgeBg: '#5C2430', badgeColor: '#F4E3DE', border: '#7A3341', coverBg: 'linear-gradient(160deg,#5C2430,#7A3341)', desc: 'Kisah utama Arini — 200 bab, tamat. Fondasi seluruh semesta.', link: 'https://kbm.id/ratna-maharani/istri-kedua?ref=homebase', panah: true },
+      { judul: 'Istri Kedua: Musim 2', badge: '2 · SPIN-OFF', badgeBg: '#F4E3DE', badgeColor: '#7A3341', border: 'rgba(122,51,65,.2)', coverBg: 'linear-gradient(160deg,#7A3341,#A05055)', desc: 'Lanjutan dari sudut baru — baca setelah kisah utama supaya tidak kena bocoran.', link: 'https://kbm.id/ratna-maharani/istri-kedua-musim-2?ref=homebase', panah: false }
+    ];
+    const petaLepas = [
+      { judul: 'Menantu Pilihan Ibu', desc: '9 juta pembaca · tamat', coverBg: 'linear-gradient(160deg,#6E3B33,#94574C)', link: 'https://kbm.id/ratna-maharani/menantu-pilihan-ibu?ref=homebase' },
+      { judul: 'Jodoh untuk Laras', desc: '5 juta pembaca · tamat', coverBg: 'linear-gradient(160deg,#8A5A52,#B07E71)', link: 'https://kbm.id/ratna-maharani/jodoh-untuk-laras?ref=homebase' }
+    ];
+
+    return {
+      isHome: page === 'home',
+      isBonus: page === 'bonus',
+      isPeta: page === 'peta',
+      isKolab: page === 'kolab',
+      isTerimaKasih: page === 'tk',
+      menuOpen: this.state.menuOpen,
+      toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      goHome: () => this.nav('home'),
+      goBonus: () => this.nav('bonus'),
+      goPeta: () => this.nav('peta'),
+      goKolab: () => this.nav('kolab'),
+      navItems,
+      works, timeline, bonusItems, petaUtama, petaLepas,
+      stats: [
+        { angka: '32 jt+', label: 'total dibaca di KBM' },
+        { angka: '4', label: 'karya · 1 seri semesta' },
+        { angka: '#1', label: 'Penulis Terlaris KBM 2024' }
+      ],
+      kolabJenis: ['Penerbitan cetak & digital', 'Adaptasi film / series', 'Kolaborasi brand & endorsement', 'Wawancara media & podcast'],
+      unlocked, locked: !unlocked, pembaca,
+      bonusCta: unlocked ? 'Lihat Bonusmu →' : 'Buka Bonus Gratis →',
+      gateBadge: unlocked ? '✓ TERBUKA' : 'TERKUNCI',
+      gateColor: unlocked ? '#1E7A57' : '#8A6A5E',
+      gateBorder: unlocked ? 'rgba(30,122,87,.4)' : 'rgba(122,51,65,.25)',
+      nama: this.state.nama, wa: this.state.wa, formError: this.state.formError,
+      setNama: (e) => this.setState({ nama: e.target.value }),
+      setWa: (e) => this.setState({ wa: e.target.value }),
+      submitForm: (e) => this.handleSubmit(e)
+    };
+  }
+}
+</script>
+</body>
+</html>

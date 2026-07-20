@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homebase Studio — Dashboard Ratna Maharani</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-wrap:#F3EBE0; --sidebar-bg:#3B2A28; --sidebar-text:#D9C4BB;
+    --card:#FBF6EF; --card-border:rgba(122,51,65,.14); --ink:#3B2A28;
+    --maroon:#7A3341; --maroon-deep:#5C2430; --maroon-hover:#8E3E4C;
+    --muted:#7A5A50; --muted2:#9A8078; --muted3:#8A6A5E;
+    --pill:#F4E3DE; --pill-hover:#EFD8D2; --green:#1E7A57; --green-bg:#E7F0E6;
+    --warn-bg:#F9EFE3; --warn-border:rgba(176,72,60,.25); --warn-text:#B0483C;
+    --input-border:rgba(122,51,65,.25); --input-bg:#FFFDF9;
+    --serif:'Playfair Display',serif; --body:'Lora',Georgia,serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#EAE0D3;font-family:var(--body);color:var(--ink)}
+  input::placeholder,textarea::placeholder{color:#B39A90;opacity:1}
+  button{font-family:var(--body)}
+  .app{min-height:100vh;display:flex;background:var(--bg-wrap)}
+
+  /* ---- sidebar ---- */
+  aside{width:248px;flex:none;background:var(--sidebar-bg);color:var(--sidebar-text);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;padding:24px 16px}
+  .brand{padding:0 10px 20px;border-bottom:1px solid rgba(217,196,187,.18)}
+  .brand p:first-child{margin:0;font-family:var(--serif);font-size:19px;font-weight:600;color:#FBF6EF}
+  .brand p:last-child{margin:4px 0 0;font-size:12px;font-style:italic;color:#B99A8E}
+  nav{display:flex;flex-direction:column;gap:4px;padding-top:16px}
+  .nav-btn{display:flex;align-items:center;gap:10px;text-align:left;border:none;border-radius:10px;padding:12px 14px;cursor:pointer;font-size:14px;background:transparent;color:var(--sidebar-text)}
+  .nav-btn .dot{width:6px;height:6px;border-radius:50%;background:rgba(217,196,187,.35);flex:none}
+  .nav-btn.active{background:var(--pill);color:var(--maroon-deep);font-weight:600}
+  .nav-btn.active .dot{background:var(--maroon)}
+  .side-bottom{margin-top:auto;display:flex;flex-direction:column;gap:10px;padding:0 4px}
+  .side-bottom a{display:flex;align-items:center;justify-content:center;height:44px;border:1px solid rgba(217,196,187,.35);border-radius:12px;font-size:13px;color:var(--sidebar-text);text-decoration:none}
+  .profile-chip{display:flex;align-items:center;gap:10px;padding:10px 8px;border-radius:12px;background:rgba(217,196,187,.08)}
+  .avatar{width:36px;height:36px;border-radius:50%;background:repeating-linear-gradient(45deg,#7A5A50 0 6px,#8A6A5E 6px 12px);flex:none}
+  .profile-chip p:first-child{margin:0;font-size:13px;font-weight:600;color:#FBF6EF}
+  .profile-chip p:last-child{margin:0;font-size:11px;color:#B99A8E}
+
+  /* ---- main ---- */
+  main{flex:1;min-width:0;padding:36px 44px 56px}
+  h1.page-title{margin:0 0 6px;font-family:var(--serif);font-size:32px;font-weight:600;color:var(--ink)}
+  .page-sub{margin:0;font-size:14px;color:var(--muted);line-height:1.6}
+  .btn-primary{height:48px;padding:0 22px;background:var(--maroon);color:#FBF6EF;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer}
+  .btn-primary:hover{background:var(--maroon-hover)}
+  .btn-outline{height:42px;padding:0 18px;background:none;border:1.5px solid var(--maroon);color:var(--maroon);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer}
+  .btn-outline:hover{background:rgba(122,51,65,.06)}
+  .card{background:var(--card);border:1px solid var(--card-border);border-radius:16px}
+  .row-between{display:flex;align-items:flex-end;justify-content:space-between;gap:20px}
+
+  /* stat cards */
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:28px 0}
+  .stat-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:20px 22px}
+  .stat-card .lbl{margin:0 0 8px;font-size:12px;letter-spacing:.06em;color:var(--muted3)}
+  .stat-card .val{margin:0;font-family:var(--serif);font-size:30px;font-weight:700;color:var(--maroon-deep);line-height:1}
+  .stat-card .delta{margin:8px 0 0;font-size:12px}
+
+  /* reorder rows */
+  .reorder-btns{display:flex;flex-direction:column;gap:2px;flex:none}
+  .reorder-btns button{width:32px;height:26px;background:var(--pill);border:none;cursor:pointer;color:var(--maroon);font-size:12px}
+  .reorder-btns button:first-child{border-radius:7px 7px 3px 3px}
+  .reorder-btns button:last-child{border-radius:3px 3px 7px 7px}
+
+  /* toggle switch */
+  .switch{flex:none;display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:6px}
+  .switch-track{width:44px;height:26px;border-radius:999px;position:relative;display:inline-block;transition:background .15s}
+  .switch-knob{position:absolute;top:3px;width:20px;height:20px;border-radius:50%;background:#FBF6EF;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .15s}
+
+  input[type=text],select,textarea{width:100%;padding:0 14px;border-radius:11px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--ink);font-family:var(--body);font-size:15px}
+  input[type=text],select{height:48px}
+  textarea{padding:12px 14px;line-height:1.6;resize:vertical}
+  label.field-label{display:block;font-size:13px;font-weight:600;color:#5A453F;margin-bottom:6px}
+
+  table.contact-table{width:100%;border-collapse:collapse}
+  .table-head{display:grid;grid-template-columns:2fr 1.6fr 1.2fr 1fr;padding:10px 22px;font-size:11px;letter-spacing:.1em;color:var(--muted3);font-weight:600;border-bottom:1px solid rgba(122,51,65,.12)}
+  .table-row{display:grid;grid-template-columns:2fr 1.6fr 1.2fr 1fr;padding:13px 22px;border-bottom:1px solid rgba(122,51,65,.08);font-size:14px;align-items:center}
+  .pill{font-size:11px;font-weight:600;color:var(--maroon);background:var(--pill);border-radius:999px;padding:4px 10px}
+
+  ::-webkit-scrollbar{width:10px}
+  ::-webkit-scrollbar-thumb{background:rgba(122,51,65,.25);border-radius:10px}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="brand">
+      <p>Homebase Studio</p>
+      <p>ratnamaharani.id</p>
+    </div>
+    <nav id="nav"></nav>
+    <div class="side-bottom">
+      <a href="#" title="Contoh — di produk asli, tombol ini membuka situs publik penulis">Lihat Situs →</a>
+      <div class="profile-chip">
+        <div class="avatar"></div>
+        <div>
+          <p>Ratna Maharani</p>
+          <p>Paket Homebase</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <main><div id="content"></div></main>
+</div>
+
+<script>
+/* ---------------- DATA ---------------- */
+const linkMap = {
+  'Istri Kedua': 'https://kbm.id/ratna-maharani/istri-kedua?ref=homebase',
+  'Istri Kedua: Musim 2': 'https://kbm.id/ratna-maharani/istri-kedua-musim-2?ref=homebase',
+  'Menantu Pilihan Ibu': 'https://kbm.id/ratna-maharani/menantu-pilihan-ibu?ref=homebase',
+  'Jodoh untuk Laras': 'https://kbm.id/ratna-maharani/jodoh-untuk-laras?ref=homebase'
+};
+
+const karyaDefs = {
+  w1: { judul:'Istri Kedua', pembaca:'18 juta pembaca', status:'TAMAT', coverBg:'linear-gradient(160deg,#5C2430,#7A3341)', link:'kbm.id/…/istri-kedua' },
+  w2: { judul:'Istri Kedua: Musim 2', pembaca:'sedang tayang', status:'TAYANG', coverBg:'linear-gradient(160deg,#7A3341,#A05055)', link:'kbm.id/…/istri-kedua-musim-2' },
+  w3: { judul:'Menantu Pilihan Ibu', pembaca:'9 juta pembaca', status:'TAMAT', coverBg:'linear-gradient(160deg,#6E3B33,#94574C)', link:'kbm.id/…/menantu-pilihan-ibu' },
+  w4: { judul:'Jodoh untuk Laras', pembaca:'5 juta pembaca', status:'TAMAT', coverBg:'linear-gradient(160deg,#8A5A52,#B07E71)', link:'kbm.id/…/jodoh-untuk-laras' }
+};
+
+const bonusDefs = {
+  b1: { jenis:'DELETED SCENE', judul:'Malam Sebelum Akad', karya:'Istri Kedua', dibuka:'3.412' },
+  b2: { jenis:'POV EKSTRA', judul:'POV Mas Bram', karya:'Istri Kedua', dibuka:'2.871' },
+  b3: { jenis:'SURAT', judul:'Surat Laras yang Tak Pernah Dikirim', karya:'Jodoh untuk Laras', dibuka:'—' }
+};
+
+const petaDefs = { p1:'Istri Kedua', p2:'Istri Kedua: Musim 2' };
+
+const kontakSemua = [
+  { nama:'Dewi Anggraini', wa:'0812-3456-7801', sumber:'Ruang Bonus', tanggal:'7 Jul 2026', waktu:'2 jam lalu', inisial:'DA' },
+  { nama:'Siti Rahmawati', wa:'0857-2210-4432', sumber:'Ruang Bonus', tanggal:'7 Jul 2026', waktu:'5 jam lalu', inisial:'SR' },
+  { nama:'Fitri Handayani', wa:'0813-9987-2210', sumber:'Beranda', tanggal:'6 Jul 2026', waktu:'kemarin', inisial:'FH' },
+  { nama:'Maya Kusuma', wa:'0821-5567-8890', sumber:'Ruang Bonus', tanggal:'6 Jul 2026', waktu:'kemarin', inisial:'MK' },
+  { nama:'Rina Septiani', wa:'0856-3321-9087', sumber:'Beranda', tanggal:'5 Jul 2026', waktu:'2 hari lalu', inisial:'RS' },
+  { nama:'Lestari Wulandari', wa:'0812-8876-5543', sumber:'Ruang Bonus', tanggal:'5 Jul 2026', waktu:'2 hari lalu', inisial:'LW' },
+  { nama:'Nur Aini', wa:'0838-1123-4456', sumber:'Ruang Bonus', tanggal:'4 Jul 2026', waktu:'3 hari lalu', inisial:'NA' },
+  { nama:'Yulia Pratiwi', wa:'0819-2234-7789', sumber:'Beranda', tanggal:'4 Jul 2026', waktu:'3 hari lalu', inisial:'YP' }
+];
+
+const temaDefs = [
+  { key:'maroon', nama:'Maroon Klasik', desc:'Hangat, elegan, khas novel romance premium.', bg:'#FBF6EF', hero:'linear-gradient(180deg,#F4E3DE,#FBF6EF)', primary:'#7A3341', deep:'#5C2430', ink:'#3B2A28', soft:'#F4E3DE' },
+  { key:'rose', nama:'Dusty Rose', desc:'Lebih lembut dan feminin, nuansa merah muda pudar.', bg:'#FCF3F1', hero:'linear-gradient(180deg,#F3DCD9,#FCF3F1)', primary:'#A4586A', deep:'#7C3A4C', ink:'#42272E', soft:'#F3DCD9' },
+  { key:'sage', nama:'Sage Tenang', desc:'Krem dengan hijau sage — kalem dan membumi.', bg:'#F6F4EC', hero:'linear-gradient(180deg,#E4EADB,#F6F4EC)', primary:'#5E7A5C', deep:'#3F5A3E', ink:'#2F3A2C', soft:'#E4EADB' },
+  { key:'navy', nama:'Navy Malam', desc:'Krem dengan biru tua — anggun dan berkelas.', bg:'#F5F2EC', hero:'linear-gradient(180deg,#DDE2EC,#F5F2EC)', primary:'#3E5175', deep:'#2A3A57', ink:'#25293A', soft:'#DDE2EC' },
+  { key:'terracotta', nama:'Terakota', desc:'Oranye-bata hangat, terasa akrab dan bersahaja.', bg:'#FBF4EC', hero:'linear-gradient(180deg,#F4DFC9,#FBF4EC)', primary:'#B06A3C', deep:'#8A4E2A', ink:'#3E2C20', soft:'#F4DFC9' }
+];
+
+/* ---------------- STATE ---------------- */
+const state = {
+  tab: 'ringkasan',
+  rilisKarya: 'Istri Kedua: Musim 2',
+  rilisJudul: '',
+  rilisTeaser: '',
+  rilisSukses: false,
+  disalin: false,
+  cari: '',
+  bonusTerbit: { b1:true, b2:true, b3:false },
+  karyaOrder: ['w1','w2','w3','w4'],
+  petaOrder: ['p1','p2'],
+  tema: 'maroon',
+  temaTersimpan: false,
+  riwayat: [
+    { judul:'Bab 47 — Pintu yang Tak Pernah Dikunci', tanggal:'3 Jul' },
+    { judul:'Bab 46 — Tamu dari Masa Lalu', tanggal:'26 Jun' },
+    { judul:'Bab 45 — Piring yang Retak', tanggal:'19 Jun' }
+  ]
+};
+
+/* ---------------- HELPERS ---------------- */
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function move(arr, id, dir){
+  const a = [...arr];
+  const i = a.indexOf(id), j = i + dir;
+  if (i < 0 || j < 0 || j >= a.length) return a;
+  [a[i], a[j]] = [a[j], a[i]];
+  return a;
+}
+
+function pesanWaText(){
+  const judul = state.rilisJudul ? (' — ' + state.rilisJudul) : ' — [judul bab]';
+  const teaser = state.rilisTeaser || '[teaser satu kalimat]';
+  const link = linkMap[state.rilisKarya];
+  return '📖 BAB BARU TERBIT\n' + state.rilisKarya + judul + '\n\n' + teaser + '\n\nBaca sekarang di KBM:\n' + link;
+}
+
+/* ---------------- NAV ---------------- */
+const navDefs = [
+  { key:'ringkasan', label:'Ringkasan' },
+  { key:'rilis', label:'Kabar Rilis' },
+  { key:'karya', label:'Rak Buku' },
+  { key:'bonus', label:'Ruang Bonus' },
+  { key:'peta', label:'Peta Baca' },
+  { key:'database', label:'Database Pembaca' },
+  { key:'tema', label:'Tema Situs' }
+];
+
+function goTab(t){
+  state.tab = t;
+  window.scrollTo(0,0);
+  render();
+}
+
+function renderNav(){
+  document.getElementById('nav').innerHTML = navDefs.map(n => `
+    <button class="nav-btn ${state.tab===n.key?'active':''}" onclick="goTab('${n.key}')">
+      <span class="dot"></span><span>${n.label}</span>
+    </button>`).join('');
+}
+
+/* ---------------- TAB: RINGKASAN ---------------- */
+function renderRingkasan(){
+  const stats = [
+    { label:'Kontak WA terkumpul', angka:'1.284', delta:'+86 minggu ini', deltaColor:'#1E7A57' },
+    { label:'Klik ke KBM · 30 hari', angka:'4.720', delta:'+12% dari bulan lalu', deltaColor:'#1E7A57' },
+    { label:'Pengikut Saluran WA', angka:'8.950', delta:'+310 minggu ini', deltaColor:'#1E7A57' },
+    { label:'Kunjungan situs · 30 hari', angka:'21.4rb', delta:'terbanyak dari pencarian', deltaColor:'#8A6A5E' }
+  ];
+  const kontakTerbaru = kontakSemua.slice(0,5);
+  const rilisTerakhir = state.riwayat[0];
+
+  return `
+  <div class="row-between" style="margin-bottom:28px">
+    <div>
+      <h1 class="page-title">Selamat pagi, Ratna</h1>
+      <p class="page-sub">Selasa, 7 Juli 2026 · rumahmu dikunjungi 742 pembaca kemarin.</p>
+    </div>
+    <button class="btn-primary" onclick="goTab('rilis')">+ Umumkan Bab Baru</button>
+  </div>
+
+  <div class="stat-grid">
+    ${stats.map(s => `
+      <div class="stat-card">
+        <p class="lbl">${s.label}</p>
+        <p class="val">${s.angka}</p>
+        <p class="delta" style="color:${s.deltaColor}">${s.delta}</p>
+      </div>`).join('')}
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start">
+    <div class="card" style="padding:24px 26px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px">
+        <h2 style="margin:0;font-family:var(--serif);font-size:20px;font-weight:600">Kontak pembaca terbaru</h2>
+        <button onclick="goTab('database')" style="background:none;border:none;font-size:13px;color:var(--maroon);cursor:pointer;text-decoration:underline;text-underline-offset:3px">Lihat semua →</button>
+      </div>
+      <div>
+        ${kontakTerbaru.map(k => `
+          <div style="display:flex;align-items:center;gap:14px;border-bottom:1px solid rgba(122,51,65,.1);padding:11px 2px">
+            <span style="width:32px;height:32px;border-radius:50%;background:#F4E3DE;color:var(--maroon);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex:none">${k.inisial}</span>
+            <div style="flex:1;min-width:0">
+              <p style="margin:0;font-size:14px;font-weight:600">${esc(k.nama)}</p>
+              <p style="margin:0;font-size:12px;color:var(--muted2)">${k.wa}</p>
+            </div>
+            <span style="flex:none;font-size:12px;color:var(--muted2)">${k.waktu}</span>
+          </div>`).join('')}
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="background:var(--maroon-deep);border-radius:18px;padding:22px 24px;color:#F4E3DE">
+        <p style="margin:0 0 6px;font-size:11px;letter-spacing:.14em;color:#D8A7A4;font-weight:600">KABAR RILIS TERAKHIR</p>
+        <p style="margin:0 0 4px;font-size:13px;font-style:italic;color:#E3C6C0">Istri Kedua: Musim 2 · ${rilisTerakhir.tanggal}</p>
+        <p style="margin:0 0 14px;font-family:var(--serif);font-size:19px;font-weight:600;line-height:1.35;color:#FBF6EF">${esc(rilisTerakhir.judul)}</p>
+        <div style="display:flex;gap:14px;font-size:12px;color:#C99B94">
+          <span>1.204 klik ke KBM</span><span>·</span><span>dikirim ke Saluran WA</span>
+        </div>
+      </div>
+      <div class="card" style="padding:22px 24px">
+        <h2 style="margin:0 0 12px;font-family:var(--serif);font-size:18px;font-weight:600">Aksi cepat</h2>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="quick-btn" onclick="goTab('bonus')" style="display:flex;align-items:center;justify-content:space-between;height:46px;padding:0 16px;background:var(--pill);border:none;border-radius:11px;font-size:14px;color:#4A3833;cursor:pointer"><span>Tambah bonus konten</span><span style="color:var(--maroon)">→</span></button>
+          <button class="quick-btn" onclick="goTab('karya')" style="display:flex;align-items:center;justify-content:space-between;height:46px;padding:0 16px;background:var(--pill);border:none;border-radius:11px;font-size:14px;color:#4A3833;cursor:pointer"><span>Perbarui rak buku</span><span style="color:var(--maroon)">→</span></button>
+          <button class="quick-btn" onclick="goTab('database')" style="display:flex;align-items:center;justify-content:space-between;height:46px;padding:0 16px;background:var(--pill);border:none;border-radius:11px;font-size:14px;color:#4A3833;cursor:pointer"><span>Unduh database pembaca</span><span style="color:var(--maroon)">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ---------------- TAB: KABAR RILIS ---------------- */
+function updateRilisPreview(){
+  const teaserLen = state.rilisTeaser.length;
+  document.getElementById('pesanWaBox').textContent = pesanWaText();
+  const counterEl = document.getElementById('teaserCounter');
+  counterEl.textContent = teaserLen + '/140 karakter';
+  counterEl.style.color = teaserLen > 140 ? '#B0483C' : '#9A8078';
+}
+function onRilisKarya(v){ state.rilisKarya = v; state.rilisSukses = false; updateRilisPreview(); }
+function onRilisJudul(v){ state.rilisJudul = v; state.rilisSukses = false; updateRilisPreview(); }
+function onRilisTeaser(v){ state.rilisTeaser = v; state.rilisSukses = false; updateRilisPreview(); }
+
+function terbitkanRilis(){
+  if (!state.rilisJudul.trim()){ document.getElementById('rilisJudulInput').focus(); return; }
+  state.rilisSukses = true;
+  state.riwayat.unshift({ judul: state.rilisJudul, tanggal: 'Hari ini' });
+  render();
+}
+
+function salinPesan(){
+  const text = pesanWaText();
+  try { navigator.clipboard.writeText(text); } catch(e){}
+  state.disalin = true;
+  const btn = document.getElementById('salinBtn');
+  if (btn) btn.textContent = '✓ Tersalin';
+  setTimeout(() => { state.disalin = false; const b = document.getElementById('salinBtn'); if (b) b.textContent = 'Salin Pesan'; }, 2000);
+}
+
+function renderRilis(){
+  const teaserLen = state.rilisTeaser.length;
+  return `
+  <h1 class="page-title">Kabar Rilis</h1>
+  <p class="page-sub" style="max-width:620px;margin-bottom:26px">Tulis pengumuman bab baru — kartu "Baru Terbit" di Beranda ikut diperbarui, dan pesan siap tempel untuk Saluran WhatsApp dibuat otomatis. Tanpa isi cerita, hanya kabar.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 420px;gap:24px;align-items:start">
+    <div class="card" style="padding:26px 28px;display:flex;flex-direction:column;gap:16px">
+      <div>
+        <label class="field-label">Karya</label>
+        <select onchange="onRilisKarya(this.value)">
+          ${Object.keys(linkMap).map(k => `<option value="${esc(k)}" ${state.rilisKarya===k?'selected':''}>${esc(k)}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Judul bab</label>
+        <input id="rilisJudulInput" type="text" value="${esc(state.rilisJudul)}" oninput="onRilisJudul(this.value)" placeholder="Bab 48 — …" />
+      </div>
+      <div>
+        <label class="field-label">Teaser satu kalimat <span style="font-weight:400;color:#9A8078">— tanpa isi cerita</span></label>
+        <textarea rows="3" oninput="onRilisTeaser(this.value)" placeholder="Satu kalimat penggoda, tanpa bocoran…">${esc(state.rilisTeaser)}</textarea>
+        <p id="teaserCounter" style="margin:6px 0 0;font-size:12px;color:${teaserLen>140?'#B0483C':'#9A8078'}">${teaserLen}/140 karakter</p>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="btn-primary" onclick="terbitkanRilis()">Terbitkan ke Beranda</button>
+        ${state.rilisSukses ? '<span style="font-size:13px;color:#1E7A57">✓ Kartu "Baru Terbit" diperbarui</span>' : ''}
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="background:var(--green-bg);border:1px solid rgba(30,122,87,.2);border-radius:18px;padding:20px 22px">
+        <p style="margin:0 0 10px;font-size:11px;letter-spacing:.14em;color:var(--green);font-weight:600">PESAN SIAP TEMPEL — SALURAN WA</p>
+        <div style="background:var(--input-bg);border-radius:12px;padding:14px 16px;border:1px solid rgba(30,122,87,.15)">
+          <p id="pesanWaBox" style="margin:0;font-size:13.5px;line-height:1.7;white-space:pre-wrap">${esc(pesanWaText())}</p>
+        </div>
+        <button id="salinBtn" onclick="salinPesan()" style="margin-top:12px;width:100%;height:46px;background:var(--green);color:#FBF6EF;border:none;border-radius:11px;font-size:14px;font-weight:600;cursor:pointer">Salin Pesan</button>
+        <p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:#5F7A64">Tempel di Saluran WhatsApp-mu — 3 ketukan dari HP, semua pengikut langsung tahu.</p>
+      </div>
+      <div class="card" style="padding:18px 22px">
+        <p style="margin:0 0 10px;font-size:11px;letter-spacing:.14em;color:var(--muted3);font-weight:600">RIWAYAT RILIS</p>
+        ${state.riwayat.map(r => `
+          <div style="display:flex;align-items:baseline;gap:10px;border-bottom:1px solid rgba(122,51,65,.1);padding:9px 0">
+            <span style="flex:1;font-size:13px">${esc(r.judul)}</span>
+            <span style="flex:none;font-size:11px;color:var(--muted2)">${r.tanggal}</span>
+          </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ---------------- TAB: KARYA ---------------- */
+function moveKarya(id, dir){ state.karyaOrder = move(state.karyaOrder, id, dir); render(); }
+
+function renderKarya(){
+  return `
+  <div class="row-between" style="margin-bottom:26px">
+    <div>
+      <h1 class="page-title">Rak Buku</h1>
+      <p class="page-sub">Urutan di sini = urutan tampil di situs. Semua tombol "Baca" mengarah ke KBM.</p>
+    </div>
+    <button class="btn-primary">+ Tambah Karya</button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    ${state.karyaOrder.map(id => {
+      const w = karyaDefs[id];
+      const tayang = w.status === 'TAYANG';
+      return `
+      <div class="card" style="display:flex;align-items:center;gap:18px;padding:16px 20px">
+        <div class="reorder-btns">
+          <button onclick="moveKarya('${id}',-1)">▲</button>
+          <button onclick="moveKarya('${id}',1)">▼</button>
+        </div>
+        <div style="flex:none;width:44px;aspect-ratio:2/3;border-radius:4px;background:${w.coverBg};display:flex;align-items:center;justify-content:center;padding:4px">
+          <span style="font-family:var(--serif);font-size:7px;font-weight:600;line-height:1.3;color:#FBF6EF;text-align:center">${esc(w.judul)}</span>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:10px">
+            <p style="margin:0;font-family:var(--serif);font-size:18px;font-weight:600">${esc(w.judul)}</p>
+            <span style="font-size:10px;letter-spacing:.1em;font-weight:600;color:${tayang?'#1E7A57':'#8A6A5E'};background:${tayang?'#E7F0E6':'#F4E3DE'};border-radius:999px;padding:4px 10px">${w.status}</span>
+          </div>
+          <p style="margin:4px 0 0;font-size:13px;color:var(--muted2)">${w.pembaca} · ${w.link}</p>
+        </div>
+        <button class="btn-outline">Edit</button>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+/* ---------------- TAB: BONUS ---------------- */
+function toggleBonus(id){ state.bonusTerbit[id] = !state.bonusTerbit[id]; render(); }
+
+function renderBonus(){
+  return `
+  <div class="row-between" style="margin-bottom:14px">
+    <div>
+      <h1 class="page-title">Ruang Bonus</h1>
+      <p class="page-sub">Bonus adalah umpan database-mu — makin menarik, makin banyak kontak masuk.</p>
+    </div>
+    <button class="btn-primary">+ Tambah Bonus</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;background:var(--warn-bg);border:1px solid var(--warn-border);border-radius:12px;padding:12px 16px;margin-bottom:22px">
+    <span style="color:var(--warn-text);flex:none">✦</span>
+    <p style="margin:0;font-size:13px;line-height:1.5;color:var(--muted)">Ingat batas konten: bonus = materi pelengkap (deleted scene, POV, surat, trivia) — <strong>bukan lanjutan cerita</strong>. Kelanjutan hanya terbit di KBM.</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    ${Object.keys(bonusDefs).map(id => {
+      const b = bonusDefs[id];
+      const terbit = state.bonusTerbit[id];
+      return `
+      <div class="card" style="display:flex;align-items:center;gap:18px;padding:18px 22px">
+        <div style="flex:1;min-width:0">
+          <span style="font-size:10px;letter-spacing:.14em;color:#B98A7C;font-weight:600">${b.jenis}</span>
+          <p style="margin:4px 0 2px;font-family:var(--serif);font-size:18px;font-weight:600">${esc(b.judul)}</p>
+          <p style="margin:0;font-size:13px;color:var(--muted2);font-style:italic">dari "${esc(b.karya)}" · ${b.dibuka} kali dibuka</p>
+        </div>
+        <button class="switch" onclick="toggleBonus('${id}')" role="switch" aria-checked="${terbit}">
+          <span class="switch-track" style="background:${terbit?'#1E7A57':'#C9B5AC'}">
+            <span class="switch-knob" style="left:${terbit?'21px':'3px'}"></span>
+          </span>
+          <span style="font-size:12px;font-weight:600;color:${terbit?'#1E7A57':'#8A6A5E'};min-width:44px;text-align:left">${terbit?'Terbit':'Draf'}</span>
+        </button>
+        <button class="btn-outline">Edit</button>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+/* ---------------- TAB: PETA BACA ---------------- */
+function movePeta(id, dir){ state.petaOrder = move(state.petaOrder, id, dir); render(); }
+
+function renderPeta(){
+  return `
+  <h1 class="page-title">Peta Baca</h1>
+  <p class="page-sub" style="max-width:620px;margin-bottom:26px">Atur urutan resmi membaca semesta-mu. Panah ▲▼ mengubah urutan yang tampil di situs.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
+    <div class="card" style="padding:22px 24px">
+      <h2 style="margin:0 0 14px;font-family:var(--serif);font-size:19px;font-weight:600">Semesta "Istri Kedua"</h2>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${state.petaOrder.map((id,i) => `
+          <div style="display:flex;align-items:center;gap:14px;background:var(--input-bg);border:1px solid rgba(122,51,65,.16);border-radius:12px;padding:12px 14px">
+            <span style="flex:none;width:28px;height:28px;border-radius:50%;background:var(--maroon-deep);color:#F4E3DE;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600">${i+1}</span>
+            <span style="flex:1;font-family:var(--serif);font-size:16px;font-weight:600">${esc(petaDefs[id])}</span>
+            <div style="display:flex;gap:4px;flex:none">
+              <button onclick="movePeta('${id}',-1)" style="width:34px;height:34px;background:var(--pill);border:none;border-radius:8px;cursor:pointer;color:var(--maroon);font-size:12px">▲</button>
+              <button onclick="movePeta('${id}',1)" style="width:34px;height:34px;background:var(--pill);border:none;border-radius:8px;cursor:pointer;color:var(--maroon);font-size:12px">▼</button>
+            </div>
+          </div>`).join('')}
+      </div>
+      <button style="margin-top:12px;height:44px;width:100%;background:none;border:1.5px dashed rgba(122,51,65,.35);color:var(--maroon);border-radius:11px;font-size:13px;font-weight:600;cursor:pointer">+ Tambah ke semesta ini</button>
+    </div>
+    <div class="card" style="padding:22px 24px">
+      <h2 style="margin:0 0 6px;font-family:var(--serif);font-size:19px;font-weight:600">Novel lepas</h2>
+      <p style="margin:0 0 14px;font-size:13px;color:var(--muted2)">Tampil di bagian "Bisa dibaca kapan saja".</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${['Menantu Pilihan Ibu','Jodoh untuk Laras'].map(t => `
+          <div style="display:flex;align-items:center;gap:14px;background:var(--input-bg);border:1px solid rgba(122,51,65,.16);border-radius:12px;padding:12px 14px">
+            <span style="flex:1;font-family:var(--serif);font-size:16px;font-weight:600">${esc(t)}</span>
+            <span style="flex:none;font-size:11px;color:var(--muted2)">bebas urutan</span>
+          </div>`).join('')}
+      </div>
+      <button style="margin-top:12px;height:44px;width:100%;background:none;border:1.5px dashed rgba(122,51,65,.35);color:var(--maroon);border-radius:11px;font-size:13px;font-weight:600;cursor:pointer">+ Buat semesta baru</button>
+    </div>
+  </div>`;
+}
+
+/* ---------------- TAB: DATABASE ---------------- */
+function filterKontak(q){
+  state.cari = q;
+  const query = q.trim().toLowerCase();
+  const filtered = query ? kontakSemua.filter(k => (k.nama+k.wa).toLowerCase().includes(query)) : kontakSemua;
+  document.getElementById('kontakRows').innerHTML = filtered.map(k => `
+    <div class="table-row">
+      <span style="font-weight:600">${esc(k.nama)}</span>
+      <span style="color:#6A5248">${k.wa}</span>
+      <span><span class="pill">${k.sumber}</span></span>
+      <span style="color:var(--muted2);font-size:13px">${k.tanggal}</span>
+    </div>`).join('');
+  document.getElementById('jumlahTampil').textContent = filtered.length + ' dari 1.284 kontak';
+}
+
+function unduhCSV(){
+  const header = 'Nama,Nomor WA,Sumber,Tanggal\n';
+  const rows = kontakSemua.map(k => `"${k.nama}","${k.wa}","${k.sumber}","${k.tanggal}"`).join('\n');
+  const blob = new Blob([header+rows], { type:'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'database-pembaca-ratna-maharani.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function renderDatabase(){
+  return `
+  <div class="row-between" style="margin-bottom:22px">
+    <div>
+      <h1 class="page-title">Database Pembaca</h1>
+      <p class="page-sub">1.284 kontak — <strong>milikmu selamanya</strong>, tersimpan juga di Google Sheet-mu.</p>
+    </div>
+    <div style="display:flex;gap:10px;flex:none">
+      <a href="#" title="Contoh — di produk asli membuka Google Sheet milik Ratna" style="display:flex;align-items:center;justify-content:center;height:48px;padding:0 20px;background:none;border:1.5px solid var(--maroon);color:var(--maroon);border-radius:12px;font-size:14px;font-weight:600;text-decoration:none">Buka Google Sheet →</a>
+      <button class="btn-primary" onclick="unduhCSV()">Unduh CSV</button>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px">
+    <div class="stat-card" style="border-radius:14px">
+      <p style="margin:0;font-size:12px;color:var(--muted3)">Kontak baru minggu ini</p>
+      <p style="margin:6px 0 0;font-family:var(--serif);font-size:24px;font-weight:700;color:var(--maroon-deep)">+86</p>
+    </div>
+    <div class="stat-card" style="border-radius:14px">
+      <p style="margin:0;font-size:12px;color:var(--muted3)">Sumber terbesar</p>
+      <p style="margin:6px 0 0;font-family:var(--serif);font-size:24px;font-weight:700;color:var(--maroon-deep)">Ruang Bonus</p>
+    </div>
+    <div class="stat-card" style="border-radius:14px">
+      <p style="margin:0;font-size:12px;color:var(--muted3)">Pengikut Saluran WA</p>
+      <p style="margin:6px 0 0;font-family:var(--serif);font-size:24px;font-weight:700;color:var(--maroon-deep)">8.950</p>
+    </div>
+  </div>
+
+  <div class="card" style="overflow:hidden">
+    <div style="display:flex;align-items:center;gap:14px;padding:16px 22px;border-bottom:1px solid rgba(122,51,65,.12)">
+      <input type="text" oninput="filterKontak(this.value)" placeholder="Cari nama atau nomor…" style="flex:1" />
+      <span id="jumlahTampil" style="flex:none;font-size:13px;color:var(--muted2)">${kontakSemua.length} dari 1.284 kontak</span>
+    </div>
+    <div class="table-head"><span>NAMA</span><span>NOMOR WA</span><span>SUMBER</span><span>TANGGAL</span></div>
+    <div id="kontakRows">
+      ${kontakSemua.map(k => `
+        <div class="table-row">
+          <span style="font-weight:600">${esc(k.nama)}</span>
+          <span style="color:#6A5248">${k.wa}</span>
+          <span><span class="pill">${k.sumber}</span></span>
+          <span style="color:var(--muted2);font-size:13px">${k.tanggal}</span>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+/* ---------------- TAB: TEMA ---------------- */
+function pilihTema(key){ state.tema = key; state.temaTersimpan = false; render(); }
+function simpanTema(){ state.temaTersimpan = true; render(); }
+
+function renderTema(){
+  const temaAktif = temaDefs.find(t => t.key === state.tema) || temaDefs[0];
+  return `
+  <div class="row-between" style="margin-bottom:8px">
+    <div>
+      <h1 class="page-title">Tema Situs</h1>
+      <p class="page-sub" style="max-width:560px">Pilih palet warna untuk situs publikmu. Tipografi serif tetap sama — hanya warna yang berubah, jadi rumahmu selalu terasa hangat dan elegan.</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;flex:none">
+      ${state.temaTersimpan ? '<span style="font-size:13px;color:#1E7A57">✓ Tema diterapkan ke situs</span>' : ''}
+      <button class="btn-primary" onclick="simpanTema()">Terapkan ke Situs</button>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:8px;margin:22px 0 14px">
+    <span style="font-size:12px;letter-spacing:.1em;color:var(--muted3);font-weight:600">SEDANG DIPRATINJAU</span>
+    <span style="font-family:var(--serif);font-size:16px;font-weight:600;color:${temaAktif.primary}">${temaAktif.nama}</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:32px">
+    ${temaDefs.map(t => {
+      const aktif = t.key === state.tema;
+      return `
+      <button onclick="pilihTema('${t.key}')" style="text-align:left;background:${t.bg};border:2px solid ${aktif?t.primary:'rgba(122,51,65,.14)'};border-radius:18px;padding:0;overflow:hidden;cursor:pointer;box-shadow:0 2px 12px rgba(92,36,48,.07)">
+        <div style="height:120px;background:${t.hero};position:relative;padding:16px 18px">
+          ${aktif ? `<span style="position:absolute;top:12px;right:12px;width:24px;height:24px;border-radius:50%;background:${t.primary};color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px">✓</span>` : ''}
+          <div style="width:34px;height:34px;border-radius:50%;background:${t.soft};border:1px solid ${t.primary};margin-bottom:10px"></div>
+          <p style="margin:0;font-family:var(--serif);font-size:17px;font-weight:600;color:${t.ink};line-height:1.2">Ratna Maharani</p>
+          <p style="margin:3px 0 0;font-size:10px;font-style:italic;color:${t.primary}">Penulis romance keluarga</p>
+        </div>
+        <div style="background:${t.bg};padding:14px 18px 16px">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+            <span style="height:22px;padding:0 12px;display:flex;align-items:center;border-radius:999px;background:${t.primary};color:#fff;font-size:9px;font-weight:600">Baca di KBM</span>
+            <span style="height:22px;padding:0 12px;display:flex;align-items:center;border-radius:999px;background:none;border:1px solid ${t.primary};color:${t.primary};font-size:9px;font-weight:600">Bonus</span>
+          </div>
+          <div style="display:flex;gap:6px;margin-bottom:12px">
+            <span style="width:22px;height:12px;border-radius:3px;background:${t.deep}"></span>
+            <span style="width:22px;height:12px;border-radius:3px;background:${t.primary}"></span>
+            <span style="width:22px;height:12px;border-radius:3px;background:${t.soft}"></span>
+            <span style="width:22px;height:12px;border-radius:3px;background:${t.ink}"></span>
+          </div>
+          <p style="margin:0 0 3px;font-family:var(--serif);font-size:16px;font-weight:600;color:${t.ink}">${t.nama}</p>
+          <p style="margin:0;font-size:12px;line-height:1.5;color:var(--muted)">${t.desc}</p>
+        </div>
+      </button>`;
+    }).join('')}
+  </div>
+
+  <div style="background:${temaAktif.bg};border:1px solid rgba(122,51,65,.14);border-radius:20px;overflow:hidden">
+    <div style="padding:12px 22px;border-bottom:1px solid rgba(122,51,65,.1);display:flex;align-items:center;gap:8px">
+      <span style="width:10px;height:10px;border-radius:50%;background:#D8A7A4"></span>
+      <span style="width:10px;height:10px;border-radius:50%;background:#E4C08A"></span>
+      <span style="width:10px;height:10px;border-radius:50%;background:#B7C9A8"></span>
+      <span style="margin-left:10px;font-size:12px;color:var(--muted2)">ratnamaharani.id — pratinjau langsung</span>
+    </div>
+    <div style="padding:44px 40px;background:${temaAktif.hero};text-align:center">
+      <span style="display:inline-flex;align-items:center;gap:8px;background:${temaAktif.deep};color:#fff;border-radius:999px;padding:7px 16px;font-size:12px;margin-bottom:16px">★ Penulis Terlaris KBM App 2024</span>
+      <h2 style="margin:0 0 8px;font-family:var(--serif);font-size:38px;font-weight:600;color:${temaAktif.ink}">Ratna Maharani</h2>
+      <p style="margin:0 0 22px;font-style:italic;font-size:17px;color:${temaAktif.primary}">Penulis romance keluarga &amp; rumah tangga</p>
+      <div style="display:flex;gap:12px;justify-content:center">
+        <span style="height:46px;padding:0 24px;display:flex;align-items:center;border-radius:12px;background:${temaAktif.primary};color:#fff;font-size:14px;font-weight:600">Baca di KBM →</span>
+        <span style="height:46px;padding:0 24px;display:flex;align-items:center;border-radius:12px;background:none;border:1.5px solid ${temaAktif.primary};color:${temaAktif.primary};font-size:14px;font-weight:600">Ruang Bonus</span>
+      </div>
+    </div>
+  </div>
+  <p style="margin:14px 2px 0;font-size:12px;color:var(--muted2)">Ini pratinjau — situs publik ikut berubah setelah kamu menekan "Terapkan ke Situs".</p>`;
+}
+
+/* ---------------- ROUTER / RENDER ---------------- */
+const renderers = {
+  ringkasan: renderRingkasan,
+  rilis: renderRilis,
+  karya: renderKarya,
+  bonus: renderBonus,
+  peta: renderPeta,
+  database: renderDatabase,
+  tema: renderTema
+};
+
+function render(){
+  renderNav();
+  document.getElementById('content').innerHTML = renderers[state.tab]();
+}
+
+render();
+</script>
+</body>
+</html>

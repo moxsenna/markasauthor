@@ -1,6 +1,6 @@
 # Interactive Telegram Simulation Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Make Signature `/untuk-penulis` Telegram mock clearer and more interactive so presenters can try author ops (update bab, status, bonus, karya, semesta) without confusion.
 
@@ -41,7 +41,7 @@ tiers/signature-universe/
 - Modify: `tiers/signature-universe/src/lib/demo-store.ts`
 - Create: `tiers/signature-universe/scripts/verify-demo-store.mjs` (verify only)
 
-- [ ] **Step 1: Add helpers at end of `demo-store.ts` (before `toast` or after `publishChapter`)**
+- [x] **Step 1: Add helpers at end of `demo-store.ts` (before `toast` or after `publishChapter`)**
 
 Import already has `AuthorData`, `Work`, `BonusItem`. Add:
 
@@ -96,7 +96,7 @@ export function addUniverseTrivia(
 
 Ensure `Work` is imported in the type import block at top of `demo-store.ts`.
 
-- [ ] **Step 2: Write Node verify script**
+- [x] **Step 2: Write Node verify script**
 
 Create `tiers/signature-universe/scripts/verify-demo-store.mjs`:
 
@@ -143,7 +143,7 @@ assert.equal(trivia[0].q, 'Q?');
 console.log('verify-demo-store: OK');
 ```
 
-- [ ] **Step 3: Run verify**
+- [x] **Step 3: Run verify**
 
 ```bash
 cd tiers/signature-universe
@@ -152,7 +152,7 @@ node scripts/verify-demo-store.mjs
 
 Expected: `verify-demo-store: OK`
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add tiers/signature-universe/src/lib/demo-store.ts tiers/signature-universe/scripts/verify-demo-store.mjs
@@ -166,7 +166,7 @@ git commit -m "feat(ops): demo-store helpers for telegram sim mutations"
 **Files:**
 - Create: `tiers/signature-universe/src/lib/telegram-sim.ts`
 
-- [ ] **Step 1: Create helper module**
+- [x] **Step 1: Create helper module**
 
 ```ts
 /** DOM helpers for Telegram mock — no business persistence here. */
@@ -371,7 +371,7 @@ export function parseCommand(raw: string): string | null {
 }
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add tiers/signature-universe/src/lib/telegram-sim.ts
@@ -385,7 +385,7 @@ git commit -m "feat(ops): telegram-sim DOM helpers for interactive mock"
 **Files:**
 - Modify: `tiers/signature-universe/src/pages/untuk-penulis.astro`
 
-- [ ] **Step 1: Replace intro block under the title with actionable copy + guide strip**
+- [x] **Step 1: Replace intro block under the title with actionable copy + guide strip**
 
 Keep back links and `OpsLayout`. Replace the `<h1>` / `<p>` / bare `<TelegramMock />` section body so after the existing back links you have:
 
@@ -431,7 +431,7 @@ Keep back links and `OpsLayout`. Replace the `<h1>` / `<p>` / bare `<TelegramMoc
 
 Guide chips are wired in Task 4 via `document.querySelectorAll('[data-tg-guide]')` dispatching into the sim `startFlow`.
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add tiers/signature-universe/src/pages/untuk-penulis.astro
@@ -445,7 +445,7 @@ git commit -m "feat(ops): guide strip on telegram simulation page"
 **Files:**
 - Modify: `tiers/signature-universe/src/components/ops/TelegramMock.astro` (full rewrite of markup + script)
 
-- [ ] **Step 1: Replace component markup**
+- [x] **Step 1: Replace component markup**
 
 Frontmatter stays: import `author.json`, cast `AuthorData`, expose `works` + `fallbackChapters` + full `author` JSON for `loadContent`.
 
@@ -466,7 +466,7 @@ Markup structure:
 
 Do **not** hardcode the old static `#tg-menu` buttons; main keyboard is rendered by JS.
 
-- [ ] **Step 2: Script bootstrap**
+- [x] **Step 2: Script bootstrap**
 
 In client script:
 
@@ -551,7 +551,7 @@ Port **Update Bab** fully in this task (existing logic), using:
 - preview `appendKeyboard` Publikasikan / Batalkan
 - `publishChapter` + WA copy UI (reuse styles from old `showWaPreview`)
 
-- [ ] **Step 3: Build check**
+- [x] **Step 3: Build check**
 
 ```bash
 cd tiers/signature-universe
@@ -560,7 +560,7 @@ npm run build
 
 Expected: build success, no TS/astro errors.
 
-- [ ] **Step 4: Manual smoke (dev)**
+- [x] **Step 4: Manual smoke (dev)**
 
 ```bash
 npm run dev
@@ -568,7 +568,7 @@ npm run dev
 
 Open `http://localhost:4323/untuk-penulis` — main keyboard visible, `/start` works, Update Bab end-to-end still publishes.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add tiers/signature-universe/src/components/ops/TelegramMock.astro
@@ -582,7 +582,7 @@ git commit -m "feat(ops): telegram mock shell, menu grid, commands, update flow"
 **Files:**
 - Modify: `tiers/signature-universe/src/components/ops/TelegramMock.astro` (flowStatus / flowRiwayat)
 
-- [ ] **Step 1: Implement `flowStatus`**
+- [x] **Step 1: Implement `flowStatus`**
 
 ```ts
 async function flowStatus() {
@@ -617,11 +617,11 @@ async function flowStatus() {
 }
 ```
 
-- [ ] **Step 2: Ensure `flowRiwayat` uses `loadContent` history (max 10), empty state message, then main menu keyboard**
+- [x] **Step 2: Ensure `flowRiwayat` uses `loadContent` history (max 10), empty state message, then main menu keyboard**
 
-- [ ] **Step 3: Manual check Status numbers vs dashboard after a publish**
+- [x] **Step 3: Manual check Status numbers vs dashboard after a publish**
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add tiers/signature-universe/src/components/ops/TelegramMock.astro
@@ -636,22 +636,22 @@ git commit -m "feat(ops): telegram status and riwayat flows"
 - Modify: `TelegramMock.astro`
 - Uses: `toggleBonusPublished`, `setWorkStatus`
 
-- [ ] **Step 1: `flowBonus`**
+- [x] **Step 1: `flowBonus`**
 
 1. `loadContent` → if no bonuses, bot message + menu
 2. Keyboard list: `${title} · ${published ? 'PUBLIK' : 'DRAFT'}` value=id
 3. On pick: keyboard Tampilkan/Sembunyikan (label based on current) + Kembali
 4. On toggle: `toggleBonusPublished('signature', id, author)` → bot confirm new state → menu
 
-- [ ] **Step 2: `flowKarya`**
+- [x] **Step 2: `flowKarya`**
 
 1. List works with status
 2. Pick work → keyboard `TAYANG` | `TAMAT` | Kembali
 3. `setWorkStatus('signature', slug, status, author)` → confirm → menu
 
-- [ ] **Step 3: Manual** — toggle bonus, open dashboard Bonus tab; change karya status, open Rak Buku
+- [x] **Step 3: Manual** — toggle bonus, open dashboard Bonus tab; change karya status, open Rak Buku
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add tiers/signature-universe/src/components/ops/TelegramMock.astro
@@ -666,7 +666,7 @@ git commit -m "feat(ops): telegram bonus toggle and karya status flows"
 - Modify: `TelegramMock.astro`
 - Uses: `addUniverseTrivia`
 
-- [ ] **Step 1: `flowSemesta`**
+- [x] **Step 1: `flowSemesta`**
 
 1. Explain mini scope: tambah trivia saja
 2. `appendTextControls` Q sample e.g. `Siapa tokoh utama di …?`
@@ -675,13 +675,13 @@ git commit -m "feat(ops): telegram bonus toggle and karya status flows"
 5. Save via `addUniverseTrivia('signature', {q,a}, author)`
 6. Confirm + menu
 
-- [ ] **Step 2: `flowBantuan`** — dual-surface, localStorage, command list (`/start /update /status /riwayat /bantuan /batal`)
+- [x] **Step 2: `flowBantuan`** — dual-surface, localStorage, command list (`/start /update /status /riwayat /bantuan /batal`)
 
-- [ ] **Step 3: Cancel** — any flow: `/batal` or danger button clears controls, bot “Dibatalkan.”, `resetIdle(true)`
+- [x] **Step 3: Cancel** — any flow: `/batal` or danger button clears controls, bot “Dibatalkan.”, `resetIdle(true)`
 
-- [ ] **Step 4: Manual trivia appears under Semesta tab
+- [x] **Step 4: Manual trivia appears under Semesta tab
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add tiers/signature-universe/src/components/ops/TelegramMock.astro
@@ -694,7 +694,7 @@ git commit -m "feat(ops): telegram semesta trivia, help, cancel polish"
 
 **Files:** none (verify only)
 
-- [ ] **Step 1: Build**
+- [x] **Step 1: Build**
 
 ```bash
 cd tiers/signature-universe
@@ -703,25 +703,25 @@ npm run build
 
 Expected: success.
 
-- [ ] **Step 2: Dev checklist (spec §8)**
+- [x] **Step 2: Dev checklist (spec §8)**
 
 With `npm run dev` on port 4323:
 
-- [ ] Guide strip chips start flows
-- [ ] Typing indicator visible
-- [ ] History append (switch menus without wipe)
-- [ ] Update Bab → Rilis + home reflect
-- [ ] Status consistent
-- [ ] Bonus toggle mirrors
-- [ ] Karya status mirrors
-- [ ] Trivia mirrors Semesta
-- [ ] `/batal` mid-flow
-- [ ] Commands `/start` `/update` `/status`
-- [ ] Isi contoh fills input
-- [ ] Header shows simulasi
-- [ ] Mobile width OK
+- [x] Guide strip chips start flows
+- [x] Typing indicator visible
+- [x] History append (switch menus without wipe)
+- [x] Update Bab → Rilis + home reflect
+- [x] Status consistent
+- [x] Bonus toggle mirrors
+- [x] Karya status mirrors
+- [x] Trivia mirrors Semesta
+- [x] `/batal` mid-flow
+- [x] Commands `/start` `/update` `/status`
+- [x] Isi contoh fills input
+- [x] Header shows simulasi
+- [x] Mobile width OK
 
-- [ ] **Step 3: Final commit if only polish leftovers**
+- [x] **Step 3: Final commit if only polish leftovers**
 
 ```bash
 git add -A tiers/signature-universe/src
@@ -730,7 +730,7 @@ git status
 git commit -m "fix(ops): telegram sim QA polish"
 ```
 
-- [ ] **Step 4: Optional cleanup**
+- [x] **Step 4: Optional cleanup**
 
 Delete `scripts/verify-demo-store.mjs` if not wanted long-term, or keep for smoke.
 
