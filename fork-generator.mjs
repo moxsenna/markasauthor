@@ -354,5 +354,14 @@ slim("ctx.fillText(`WORKING VOLUMES  /  ${book.roman}`, 68, 82);", "ctx.fillText
   out = out.replace(plMarker, `<strong id="pointer-label-title">${data[0].Title}</strong>`);
 }
 
+const finalOverride = `
+    @media (max-width: 560px) {
+      .selection { grid-template-columns: 1fr; gap: 2px; }
+      .counter { padding-top: 0; }
+      .selection__title { font-size: 1.55rem; }
+    }`;
+if (!out.includes("</style>")) throw new Error("style close not found");
+out = out.replace("</style>", `${finalOverride}\n    </style>`);
+
 writeFileSync(resolve(ROOT, "majarani-shelf.html"), out, "utf8");
 console.log(`forked -> majarani-shelf.html (${data.length} books)`);

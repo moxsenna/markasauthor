@@ -31,3 +31,5 @@ dist/
 .idea/
 *.swp
 *~
+
+dist-pages/

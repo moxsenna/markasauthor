@@ -43,3 +43,4 @@ Scope: Samakan background dengan tema global terang, ringankan Three.js agar jau
 
 - [x] G9: Mobile 390px tanpa overflow horizontal, UI terlihat, Open/Escape berfungsi
   EVIDENCE: manual 2026-09-18 — sesi fresh 390x844: scrollWidth-clientWidth=0, browse-ui tampil, h1 + 75 markers; tombol OPEN bisa diklik setelah strip markers dipindah ke baris sendiri (overlap prev-OPEN -4px = renggang); chain Open (mode-detail + judul benar) lalu Escape kembali ke shelf; console 0 errors. Screenshot final-mobile-fresh.png, final-mobile-ok.png.
+  UPDATE: feedback "teks tidak kelihatan" — judul menumpuk counter di ≤560px karena patch terselip sebelum aturan canonical (kalah cascade). Perbaikan: seleksi di-stack vertikal via override block di akhir stylesheet + cache-bust iframe ?v=2; verifikasi stacked=true di 390px (fb-stacked2.png).
