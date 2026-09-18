@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MarkasAuthor — Showcase Buku Majarani</title>
+<meta name="description" content="Showcase buku Majarani dengan Three.js — 75 karya pilihan di KBM.">
+<!--
+  Wrapper replikasi `CompleteShelfLandingPage` dari @designcodeio/threeui
+  (source revision SHA-256 606f200fed86) untuk proyek static tanpa build step.
+
+  Dokumen Three.js canonical (public/landing-pages/complete-shelf-v2.html,
+  byte-exact, SHA-256 terverifikasi) dimuat ke dalam iframe, persis seperti
+  LandingPageFrame.tsx: sandbox attr, styling frame, onLoad customization,
+  data-state ready, dan title.
+
+  Props terkonfigurasi (headingFont="iowan-old-style", bodyFont="inter",
+  headingWeight="400", bodyWeight="400", primaryColor="#c87046",
+  headingSize=60, bodySize=12, headingLetterSpacing=-0.055) — semua nilai ini
+  SUDAH menjadi default authored di dokumen canonical:
+    --accent: #c87046 · --serif: "Iowan Old Style" · --mono: "Inter"
+    .selection__title { font-weight:400; letter-spacing:-0.055em; ... }
+  sehingga tidak diperlukan style customization tambahan; hasil render
+  identik dengan output komponen React ThreeUI.
+-->
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #080808; }
+  /* .shader-frame — class dari configured usage, mengikuti threeui.css
+     (.threeui-background: relative, 100%, overflow hidden) */
+  .shader-frame {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 100vh;
+    overflow: hidden;
+    background: #080808;
+  }
+  /* Replikasi LandingPageFrame.tsx: outer div + iframe styling + data-state */
+  .threeui-background.landing-page-frame {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #080808;
+    pointer-events: auto;
+  }
+  .threeui-background.landing-page-frame iframe {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #080808;
+  }
+  .threeui-background.landing-page-frame[data-state="loading"] iframe {
+    opacity: 0;
+  }
+</style>
+</head>
+<body>
+  <div class="shader-frame">
+    <div class="threeui-background landing-page-frame" data-state="loading">
+      <iframe
+        title="Majarani — 75 Karya Pilihan"
+        src="./majarani-shelf.html"
+        sandbox="allow-downloads allow-forms allow-modals allow-popups allow-same-origin allow-scripts"
+        loading="eager"></iframe>
+    </div>
+  </div>
+  <script>
+    // Replikasi onLoad handler LandingPageFrame: flip data-state ke "ready"
+    // sehingga frame terlihat (opacity 0 -> 1). Sama seperti setReady(true).
+    var frameEl = document.querySelector('.threeui-background.landing-page-frame');
+    var iframe = frameEl.querySelector('iframe');
+    function onReady() {
+      frameEl.setAttribute('data-state', 'ready');
+    }
+    if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
+      onReady();
+    }
+    iframe.addEventListener('load', onReady);
+  </script>
+</body>
+</html>
